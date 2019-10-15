@@ -1,4 +1,6 @@
-
+//Author
+//Sudarsana Sandeep
+//100963087
 public class Fox extends Slot {
 	
 	private short xPos2;
