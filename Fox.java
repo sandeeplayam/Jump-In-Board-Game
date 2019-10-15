@@ -6,10 +6,10 @@ public class Fox extends Slot {
 	private boolean isVertical;
 	
 	public Fox (short xPos, short yPos, short xPos2, short yPos2) {
-		this.xPos = xPos;
-		this.yPos = yPos;
+		super(xPos, yPos);
 		this.xPos2 = xPos2;
 		this.yPos2 = yPos2;
+		
 		if (yPos == yPos2) {
 			isVertical = true;
 		} else {
