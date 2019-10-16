@@ -4,37 +4,50 @@ import java.util.ArrayList;
 Sudarsana Sandeep
 100963087*/
 public class Hole extends Slot {
-	
+
 	private ArrayList<Slot> gamePieceList;
-	
-	public Hole (short xPos, short yPos) {
+
+	public Hole(int xPos, int yPos) {
 		super(xPos, yPos);
-		ArrayList<Slot> gamePieceList = new ArrayList<Slot>();
+		this.gamePieceList = new ArrayList<Slot>();
+		super.setName("HH");
 	}
-	
-	public boolean hasGamePiece () {
+
+	public boolean hasGamePiece() {
 		if (gamePieceList.isEmpty()) {
 			return false;
-		} 
+		}
 		return true;
 	}
-	
+
 	public boolean hasRabbit() {
-		if (gamePieceList.get(0) instanceof Rabbit) {
-			return true;
+		if (!gamePieceList.isEmpty()) {
+			if (gamePieceList.get(0) instanceof Rabbit) {
+				return true;
+			}
 		}
 		return false;
-		
+
+	}
+
+	public void addGamePiece(Slot piece) {
+		if (this.gamePieceList.isEmpty()) {
+			this.gamePieceList.add(piece);
+		}
+
+	}
+
+	public void removeGamePiece() {
+		this.gamePieceList.remove(0);
 	}
 	
-	public void addGamePiece (Slot piece) {
-		if (gamePieceList.isEmpty()) {
-			gamePieceList.add(piece);
+	@Override
+	public String toString() {
+		if (this.hasGamePiece()) {
+			return gamePieceList.get(0).toString();
+		} else {
+			return super.toString();
 		}
 		
-	}
-	
-	public void removeGamePiece (Slot piece) {
-		gamePieceList.remove(piece);
 	}
 }

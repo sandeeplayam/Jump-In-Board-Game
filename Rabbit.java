@@ -2,11 +2,13 @@
 //Sudarsana Sandeep
 //100963087
 public class Rabbit extends Slot {
-	
-	private String rabbitColour;
-	
-	public Rabbit (short xPos, short yPos, String rabbitColour) {
+
+	public Rabbit(int xPos, int yPos, String name) {
 		super(xPos, yPos);
-		this.rabbitColour = rabbitColour;
+		super.setName(name);
 	}
+
+//	public String toString() {
+//		return super.toString();
+//	}
 }

@@ -1,37 +1,41 @@
 /**
-@author Danish Butt
-*/
-
+ * @author Danish Butt
+ */
 
 public class Slot {
 
-	private short xPos;
-	private short yPos;
-	
-	
-	//General Constructor
-	public Slot (short xPos, short yPos) {
-		this.xPos=xPos;
-		this.yPos=yPos;
-		
-	}
-	
-	
-	//Setter
-	public void setPos(short x, short y) {
-		this.xPos=x;
-		this.yPos=y;
-	}
-	
+	private int xPos;
+	private int yPos;
+	private String name;
 
-	//Getters
-	public short getX() {
-		return xPos;
+	// General Constructor
+	public Slot(int xPos, int yPos) {
+		this.xPos = xPos;
+		this.yPos = yPos;
+		this.name = "SS";
 	}
 
-	public short getY() {
-		return yPos;
+	// Setter
+	public void setPos(int x, int y) {
+		this.xPos = x;
+		this.yPos = y;
 	}
-	
+
+	// Getters
+	public int getX() {
+		return this.xPos;
+	}
+
+	public int getY() {
+		return this.yPos;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String toString() {
+		return this.name;
+	}
 
 }

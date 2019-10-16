@@ -13,11 +13,12 @@ import java.util.Scanner;
 
 /////////////////////////////////////////UPDATE CHANGES TO UML/////////////////////////////////////////////////////////
 /*
-	board class doesnt need gamePieces because game class passes objects and all it needs to do is check the board postion
-	Should add "tostring()" in each slot class so to print the board all it needs is to call each tostring for each object
-		hole with a mushroom/rabbit inside will overide the default hole tostring
-	Added multiple methods and fields to this class
-	Added method "addPiece(Slot)" to Board game class
+ * board class doesnt need gamePieces because game class passes objects and all
+ * it needs to do is check the board postion Should add "tostring()" in each
+ * slot class so to print the board all it needs is to call each tostring for
+ * each object hole with a mushroom/rabbit inside will overide the default hole
+ * tostring Added multiple methods and fields to this class Added method
+ * "addPiece(Slot)" to Board game class
  */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class Game {
@@ -31,14 +32,13 @@ public class Game {
 	private boolean quitGame;
 	private CommandWords commandWords;
 
-	
 	public static void main(String[] args) {
 		Game game = new Game();
 		game.play();
 	}
 
 	/**
-	 * Constructor of Game class that initializes the 
+	 * Constructor of Game class that initializes the
 	 */
 	public Game() {
 		this.quitGame = false;
@@ -67,6 +67,12 @@ public class Game {
 			} while (parseCommand(commandInput) == false);
 
 		} while (this.gameBoard.checkWin() == false || this.quitGame == true);
+		
+		printBoard();
+		if (this.gameBoard.checkWin()) {
+			System.out.println("You won! Thanks for playing");
+		}
+		
 		sc.close();
 	}
 
@@ -88,11 +94,13 @@ public class Game {
 		if (words.length > 0) {
 			switch (words[0]) {
 			case "move":
-				if (words.length == 4) { //if there are 4 words with first being 'move'
+				if (words.length == 4) { // if there are 4 words with first being 'move'
 					// if rest of words are a command word
-					if (this.commandWords.isCommand(words[1], 1) && this.commandWords.isCommand(words[2], 2) && this.commandWords.isCommand(words[3], 3)) {
-						//Call the Board class move function to move the gamepiece (words 1 and 2) in the direction (word 3)
-						this.gameBoard.move(this.gamePieces.get(words[1] + " " + words[2]), word[3]);
+					if (this.commandWords.isCommand(words[1], 1) && this.commandWords.isCommand(words[2], 2)
+							&& this.commandWords.isCommand(words[3], 3)) {
+						// Call the Board class move function to move the gamepiece (words 1 and 2) in
+						// the direction (word 3)
+						this.gameBoard.move(this.gamePieces.get(words[1] + " " + words[2]), words[3]);
 					}
 					return true;
 				} else {
@@ -118,6 +126,7 @@ public class Game {
 
 	/**
 	 * Set up the Board initial layout based on a random integer
+	 * 
 	 * @param challengeNum
 	 */
 	public void createBoard(int challengeNum) {
@@ -125,18 +134,18 @@ public class Game {
 
 		switch (challengeNum) {
 		case 1:
-			this.this.rabbitWhite = new Rabbit(1, 0);
-			this.gamePieces.put("rabbit white", this.this.rabbitWhite);
-			this.rabbitOrange = new Rabbit(2, 4);
+			this.rabbitWhite = new Rabbit(0, 1, "RW");
+			this.gamePieces.put("rabbit white", this.rabbitWhite);
+			this.rabbitOrange = new Rabbit(4, 2, "RO");
 			this.gamePieces.put("rabbit orange", this.rabbitOrange);
 			this.hole1 = new Hole(0, 0);
 			this.hole2 = new Hole(0, 4);
 			this.hole3 = new Hole(2, 2);
-			this.hole4 = new Hole(0, 4);
+			this.hole4 = new Hole(4, 0);
 			this.hole5 = new Hole(4, 4);
-			this.mushroom1 = new Mushroom(3, 0);
-			this.mushroom2 = new Mushroom(2, 1);
-			this.mushroom3 = new Mushroom(2, 3);
+			this.mushroom1 = new Mushroom(0, 3);
+			this.mushroom2 = new Mushroom(1, 2);
+			this.mushroom3 = new Mushroom(3, 2);
 			this.gameBoard.addPiece(this.rabbitWhite);
 			this.gameBoard.addPiece(this.rabbitOrange);
 			this.gameBoard.addPiece(this.hole1);
@@ -148,26 +157,32 @@ public class Game {
 			this.gameBoard.addPiece(this.mushroom2);
 			this.gameBoard.addPiece(this.mushroom3);
 			
+			this.commandWords.addRabbitColour("white");
+			this.commandWords.addRabbitColour("orange");
+			break;
+
 		case 2:
-			this.rabbitWhite = new Rabbit(3, 1);
+			this.rabbitWhite = new Rabbit(1, 3, "RW");
 			this.gamePieces.put("rabbit white", this.rabbitWhite);
-			this.rabbitOrange = new Rabbit(4, 4);
+			this.rabbitOrange = new Rabbit(4, 4, "RO");
 			this.gamePieces.put("rabbit orange", this.rabbitOrange);
-			this.rabbitGrey = new Rabbit(3, 4);
+			this.rabbitGrey = new Rabbit(4, 3, "RG");
 			this.gamePieces.put("rabbit grey", this.rabbitGrey);
-			this.foxRed = new Fox(1,1,0,1);
+			this.foxRed = new Fox(1, 1, 1, 0, "FR");
 			this.gamePieces.put("fox red", this.foxRed);
-			this.foxRed = new Fox(1,3,1,2);
+			this.foxOrange = new Fox(3, 1, 2, 1, "FO");
 			this.gamePieces.put("fox orange", this.foxOrange);
 			this.hole1 = new Hole(0, 0);
-			this.hole2 = new Hole(0, 4);
-			this.mushroom1 = new Mushroom(4, 0);
+			this.hole2 = new Hole(4, 0);
+			this.mushroom1 = new Mushroom(0, 4);
+			this.hole2.addGamePiece(mushroom1);
 			this.hole2.addGamePiece(this.mushroom1);
 			this.hole3 = new Hole(2, 2);
-			this.hole4 = new Hole(0, 4);
+			this.hole4 = new Hole(4, 0);
+			this.mushroom2 = new Mushroom(4, 0);
+			this.hole4.addGamePiece(mushroom2);
 			this.hole5 = new Hole(4, 4);
-			this.mushroom2 = new Mushroom(2, 1);
-			this.mushroom3 = new Mushroom(2, 3);
+			this.mushroom3 = new Mushroom(3, 2);
 			this.gameBoard.addPiece(this.rabbitWhite);
 			this.gameBoard.addPiece(this.rabbitOrange);
 			this.gameBoard.addPiece(this.rabbitGrey);
@@ -181,8 +196,8 @@ public class Game {
 			this.gameBoard.addPiece(this.mushroom1);
 			this.gameBoard.addPiece(this.mushroom2);
 			this.gameBoard.addPiece(this.mushroom3);
+			break;
 		}
-		
 
 	}
 
