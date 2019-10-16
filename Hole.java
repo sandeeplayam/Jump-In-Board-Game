@@ -21,34 +21,18 @@ public class Hole extends Slot {
 	}
 
 	public boolean hasRabbit() {
-<<<<<<< HEAD
-<<<<<<< HEAD
 		if (gamePieceList.hasGamePiece()) {
-			
-		}
-=======
-		if (gamePieceList.get(0) instanceof Rabbit) {
-			return true;
-		}
-		return false;
-		
->>>>>>> 674301fe4cddd5f0471bdc80d1737d50b10f1e71
-=======
-		if (!gamePieceList.isEmpty()) {
 			if (gamePieceList.get(0) instanceof Rabbit) {
 				return true;
 			}
 		}
 		return false;
-
->>>>>>> c4a8f8da078a60ec3c9b97453c85560f2fe6fd37
 	}
 
 	public void addGamePiece(Slot piece) {
 		if (this.gamePieceList.isEmpty()) {
 			this.gamePieceList.add(piece);
 		}
-
 	}
 
 	public void removeGamePiece() {
@@ -62,6 +46,5 @@ public class Hole extends Slot {
 		} else {
 			return super.toString();
 		}
-		
 	}
 }
