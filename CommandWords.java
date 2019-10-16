@@ -4,8 +4,9 @@ public class CommandWords {
 
 	private static final String[] validCommands = { "quit", "rules", "commands", "move", "fox", "rabbit", "up", "down",
 			"left", "right" };
-	//Stores the list of rabbit and fox colours the current challenge on the board has so user can call toString and check
-	private ArrayList<String> rabbitColours; 
+	// Stores the list of rabbit and fox colours the current challenge on the board
+	// has so user can call toString and check
+	private ArrayList<String> rabbitColours;
 	private ArrayList<String> foxColours;
 
 	/**
@@ -17,7 +18,8 @@ public class CommandWords {
 	}
 
 	/**
-	 * Compares inputed command and the position of word (wordNum) to the command list to see if it is a valid command
+	 * Compares inputed command and the position of word (wordNum) to the command
+	 * list to see if it is a valid command
 	 * 
 	 * @param command One word from the line of text the player inputs
 	 * @param wordNum Position number for the word entered
@@ -25,39 +27,39 @@ public class CommandWords {
 	 */
 	public boolean isCommand(String command, int wordNum) {
 		switch (wordNum) {
-			case 0: //If first word in user input
-				for (int i = 0; i < 4; i++) {
-					if (command == validCommands[i]) {
-						return true;
-					}
+		case 0: // If first word in user input
+			for (int i = 0; i < 4; i++) {
+				if (command.equals(validCommands[i])) {
+					return true;
 				}
-				break;
-			case 1://If second word in user input
-				for (int i = 4; i < 6; i++) {
-					if (command == validCommands[i]) {
-						return true;
-					}
+			}
+			break;
+		case 1:// If second word in user input
+			for (int i = 4; i < 6; i++) {
+				if (command.equals(validCommands[i])) {
+					return true;
 				}
-				break;
-			case 2: //If third word in user input
-				for (int i = 0; i < this.rabbitColours.size()-1; i++) {
-					if (command == this.rabbitColours.get(i)) {
-						return true;
-					}
+			}
+			break;
+		case 2: // If third word in user input
+			for (int i = 0; i < this.rabbitColours.size(); i++) {
+				if (command.equals(this.rabbitColours.get(i))) {
+					return true;
 				}
-				for (int i = 0; i < this.foxColours.size()-1; i++) {
-					if (command == this.foxColours.get(i)) {
-						return true;
-					}
+			}
+			for (int i = 0; i < this.foxColours.size(); i++) {
+				if (command.equals(this.foxColours.get(i))) {
+					return true;
 				}
-				break;
-			case 3: //If fourth word in user input
-				for (int i = 6; i < validCommands.length; i++) {
-					if (command == validCommands[i]) {
-						return true;
-					}
+			}
+			break;
+		case 3: // If fourth word in user input
+			for (int i = 6; i < validCommands.length; i++) {
+				if (command.equals(validCommands[i])) {
+					return true;
 				}
-				break;
+			}
+			break;
 		}
 		return false;
 	}
@@ -70,9 +72,10 @@ public class CommandWords {
 	public void addRabbitColour(String rabbitColour) {
 		this.rabbitColours.add(rabbitColour);
 	}
-	
+
 	/**
 	 * Adds the fox colour to the list of valid commands
+	 * 
 	 * @param foxColour the colour of a fox
 	 */
 	public void addFoxColour(String foxColour) {
@@ -80,7 +83,8 @@ public class CommandWords {
 	}
 
 	/**
-	 * Converts the list of valid commands to a string with spaces in between each command
+	 * Converts the list of valid commands to a string with spaces in between each
+	 * command
 	 * 
 	 * @return s String of all valid commands
 	 */
