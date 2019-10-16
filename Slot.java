@@ -1,5 +1,8 @@
 /**
  * @author Danish Butt
+ * 
+ * This class is used to create a Slot type. A slot is considered to be one piece on the board.
+ *  The xPos and yPos variables are used to set/get the location of slot within the 2-D array.
  */
 
 public class Slot {
