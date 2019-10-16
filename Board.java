@@ -397,35 +397,4 @@ public class Board {
 		}
 	}
 
-	public static void main(String[] args) {
-
-		/*
-		 * int size =5; boolean BoardDone =false; //Create scanner object Scanner
-		 * challenge = new Scanner(System.in);
-		 * 
-		 * 
-		 * System.out.println("Enter challege number"); int chal = challenge.nextInt();
-		 * 
-		 * Board g = new Board(size,chal); String b =g.toStringBoard();
-		 * System.out.println(b);
-		 * 
-		 * System.out.
-		 * println("Make a move as follows: 'action' 'description' 'direction'");
-		 * System.out.print("                       ");
-		 * System.out.println("Rabbit-> hop orange left");
-		 * System.out.print("                       ");
-		 * System.out.println("Fox-> slide big up"); System.out.println("Go ahead: ");
-		 * 
-		 * Scanner Board = new Scanner(System.in); do {
-		 * 
-		 * String move = Board.nextLine();
-		 * 
-		 * if(move.equals("quit")) {
-		 * System.out.println("Nice try, better luck next time."); break; }
-		 * 
-		 * g.checkCommand(move); BoardDone =g.didIwin();
-		 * 
-		 * }while(!BoardDone); Board.close(); challenge.close();
-		 */
-	}
 }
