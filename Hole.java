@@ -21,7 +21,7 @@ public class Hole extends Slot {
 	}
 
 	public boolean hasRabbit() {
-		if (gamePieceList.hasGamePiece()) {
+		if (!gamePieceList.isEmpty()) {
 			if (gamePieceList.get(0) instanceof Rabbit) {
 				return true;
 			}
