@@ -17,7 +17,7 @@ import java.util.Scanner;
 	Should add "tostring()" in each slot class so to print the board all it needs is to call each tostring for each object
 		hole with a mushroom/rabbit inside will overide the default hole tostring
 	Added multiple methods and fields to this class
-	Added method "addSlot(Slot)" to Board game class
+	Added method "addPiece(Slot)" to Board game class
  */
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class Game {
@@ -137,20 +137,20 @@ public class Game {
 			this.mushroom1 = new Mushroom(3, 0);
 			this.mushroom2 = new Mushroom(2, 1);
 			this.mushroom3 = new Mushroom(2, 3);
-			this.gameBoard.addSlot(this.rabbitWhite);
-			this.gameBoard.addSlot(this.rabbitOrange);
-			this.gameBoard.addSlot(this.hole1);
-			this.gameBoard.addSlot(this.hole2);
-			this.gameBoard.addSlot(this.hole3);
-			this.gameBoard.addSlot(this.hole4);
-			this.gameBoard.addSlot(this.hole5);
-			this.gameBoard.addSlot(this.mushroom1);
-			this.gameBoard.addSlot(this.mushroom2);
-			this.gameBoard.addSlot(this.mushroom3);
+			this.gameBoard.addPiece(this.rabbitWhite);
+			this.gameBoard.addPiece(this.rabbitOrange);
+			this.gameBoard.addPiece(this.hole1);
+			this.gameBoard.addPiece(this.hole2);
+			this.gameBoard.addPiece(this.hole3);
+			this.gameBoard.addPiece(this.hole4);
+			this.gameBoard.addPiece(this.hole5);
+			this.gameBoard.addPiece(this.mushroom1);
+			this.gameBoard.addPiece(this.mushroom2);
+			this.gameBoard.addPiece(this.mushroom3);
 			
 		case 2:
 			this.rabbitWhite = new Rabbit(3, 1);
-			this.gamePieces.put("rabbit white", this.this.rabbitWhite);
+			this.gamePieces.put("rabbit white", this.rabbitWhite);
 			this.rabbitOrange = new Rabbit(4, 4);
 			this.gamePieces.put("rabbit orange", this.rabbitOrange);
 			this.rabbitGrey = new Rabbit(3, 4);
@@ -168,19 +168,19 @@ public class Game {
 			this.hole5 = new Hole(4, 4);
 			this.mushroom2 = new Mushroom(2, 1);
 			this.mushroom3 = new Mushroom(2, 3);
-			this.gameBoard.addSlot(this.rabbitWhite);
-			this.gameBoard.addSlot(this.rabbitOrange);
-			this.gameBoard.addSlot(this.rabbitGrey);
-			this.gameBoard.addSlot(this.foxRed);
-			this.gameBoard.addSlot(this.foxOrange);
-			this.gameBoard.addSlot(this.hole1);
-			this.gameBoard.addSlot(this.hole2);
-			this.gameBoard.addSlot(this.hole3);
-			this.gameBoard.addSlot(this.hole4);
-			this.gameBoard.addSlot(this.hole5);
-			this.gameBoard.addSlot(this.mushroom1);
-			this.gameBoard.addSlot(this.mushroom2);
-			this.gameBoard.addSlot(this.mushroom3);
+			this.gameBoard.addPiece(this.rabbitWhite);
+			this.gameBoard.addPiece(this.rabbitOrange);
+			this.gameBoard.addPiece(this.rabbitGrey);
+			this.gameBoard.addPiece(this.foxRed);
+			this.gameBoard.addPiece(this.foxOrange);
+			this.gameBoard.addPiece(this.hole1);
+			this.gameBoard.addPiece(this.hole2);
+			this.gameBoard.addPiece(this.hole3);
+			this.gameBoard.addPiece(this.hole4);
+			this.gameBoard.addPiece(this.hole5);
+			this.gameBoard.addPiece(this.mushroom1);
+			this.gameBoard.addPiece(this.mushroom2);
+			this.gameBoard.addPiece(this.mushroom3);
 		}
 		
 
