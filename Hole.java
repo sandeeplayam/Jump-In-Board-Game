@@ -13,15 +13,25 @@ public class Hole extends Slot {
 	}
 	
 	public boolean hasGamePiece () {
-		if (gamePieceList.contains() == true) {
-			return true;
-		} else {
+		if (gamePieceList.isEmpty()) {
 			return false;
+		} 
+		return true;
+	}
+	
+	public boolean hasRabbit() {
+		if (gamePieceList.get(0) instanceof Rabbit) {
+			return true;
 		}
+		return false;
+		
 	}
 	
 	public void addGamePiece (Slot piece) {
-		gamePieceList.add(piece);
+		if (gamePieceList.isEmpty()) {
+			gamePieceList.add(piece);
+		}
+		
 	}
 	
 	public void removeGamePiece (Slot piece) {

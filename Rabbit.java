@@ -3,7 +3,10 @@
 //100963087
 public class Rabbit extends Slot {
 	
-	public Rabbit (short xPos, short yPos) {
+	private String rabbitColour;
+	
+	public Rabbit (short xPos, short yPos, String rabbitColour) {
 		super(xPos, yPos);
+		this.rabbitColour = rabbitColour;
 	}
 }
