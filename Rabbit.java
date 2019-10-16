@@ -7,8 +7,4 @@ public class Rabbit extends Slot {
 		super(xPos, yPos);
 		super.setName(name);
 	}
-
-//	public String toString() {
-//		return super.toString();
-//	}
 }
