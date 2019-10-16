@@ -20,9 +20,17 @@ public class Hole extends Slot {
 	}
 	
 	public boolean hasRabbit() {
+<<<<<<< HEAD
 		if (gamePieceList.hasGamePiece()) {
 			
 		}
+=======
+		if (gamePieceList.get(0) instanceof Rabbit) {
+			return true;
+		}
+		return false;
+		
+>>>>>>> 674301fe4cddd5f0471bdc80d1737d50b10f1e71
 	}
 	
 	public void addGamePiece (Slot piece) {
