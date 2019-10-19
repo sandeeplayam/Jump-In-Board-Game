@@ -52,16 +52,21 @@ public class Game {
 	 */
 	public void play() {
 
+		int chal = 0;
+
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Enter challenge number: ");
-		
-		
-		int chal = Integer.parseInt(sc.nextLine());		
-		
+
+		while (!sc.hasNextInt()) {
+			System.out.println("Only numbers please");
+			sc.nextLine();
+		}
+
+		chal = sc.nextInt();
 		createBoard(chal); // change to random int once more challenges are available
 
 		String commandInput;
-		
+
 		// clear(consume) rest of line for scanner
 		sc.nextLine();
 
@@ -75,9 +80,9 @@ public class Game {
 				System.out.print(">");
 				commandInput = sc.nextLine();
 			} while (parseCommand(commandInput) == false);
-			
+
 		} while (this.gameBoard.checkWin() == false && this.quitGame == false);
-		
+
 		if (this.gameBoard.checkWin()) {
 			printBoard();
 			System.out.println("You won! Thanks for playing");
@@ -111,18 +116,19 @@ public class Game {
 						// Call the Board class move function to move the gamepiece (words 1 and 2) in
 						// the direction (word 3)
 
-						//if there's a piece with proper colors
+						// if there's a piece with proper colors
 						if (gamePieces.containsKey(words[1] + " " + words[2])) {
-							
-							boolean moveHappened = this.gameBoard.move(this.gamePieces.get(words[1] + " " + words[2]), words[3]);
-							
-							if(moveHappened) {
+
+							boolean moveHappened = this.gameBoard.move(this.gamePieces.get(words[1] + " " + words[2]),
+									words[3]);
+
+							if (moveHappened) {
 								return true;
-							}else {
+							} else {
 								return false;
 							}
 						}
-						
+
 						System.out.println("There's no such " + words[1]);
 						return false;
 					} else {
@@ -203,12 +209,12 @@ public class Game {
 			this.hole4 = new Hole(0, 4);
 			this.mushroom1 = new Mushroom(0, 4);
 			this.hole4.addGamePiece(mushroom1);
-			
+
 			this.hole3 = new Hole(2, 2);
 			this.hole5 = new Hole(4, 4);
 
 			this.mushroom3 = new Mushroom(3, 2);
-			
+
 			this.gameBoard.addPiece(this.rabbitWhite);
 			this.gameBoard.addPiece(this.rabbitOrange);
 			this.gameBoard.addPiece(this.rabbitGrey);
@@ -222,15 +228,14 @@ public class Game {
 			this.gameBoard.addPiece(this.mushroom1);
 			this.gameBoard.addPiece(this.mushroom2);
 			this.gameBoard.addPiece(this.mushroom3);
-			
-			
+
 			this.commandWords.addRabbitColour("white");
 			this.commandWords.addRabbitColour("orange");
 			this.commandWords.addRabbitColour("grey");
-			
+
 			this.commandWords.addFoxColour("red");
 			this.commandWords.addFoxColour("orange");
-		
+
 			break;
 		}
 

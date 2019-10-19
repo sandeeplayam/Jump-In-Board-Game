@@ -87,6 +87,10 @@ public class Board {
 	public boolean checkWin() {
 
 		int occupiedHoles = 0;
+		
+		if(Holes.size()==0) {
+			return false;
+		}
 		// Check all holes
 		for (Hole h : Holes) {
 			// If hole has a rabbit, increment number of holes with a rabbit
