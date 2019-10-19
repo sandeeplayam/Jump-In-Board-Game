@@ -54,9 +54,10 @@ public class Game {
 
 		Scanner sc = new Scanner(System.in);
 		System.out.print("Enter challenge number: ");
-
 		
-		int chal = sc.nextInt();
+		
+		int chal = Integer.parseInt(sc.nextLine());		
+		
 		createBoard(chal); // change to random int once more challenges are available
 
 		String commandInput;
