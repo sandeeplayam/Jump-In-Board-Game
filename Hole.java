@@ -27,14 +27,12 @@ public class Hole extends Slot {
 			}
 		}
 		return false;
-
 	}
 
 	public void addGamePiece(Slot piece) {
 		if (this.gamePieceList.isEmpty()) {
 			this.gamePieceList.add(piece);
 		}
-
 	}
 
 	public void removeGamePiece() {
@@ -48,6 +46,5 @@ public class Hole extends Slot {
 		} else {
 			return super.toString();
 		}
-		
 	}
 }
