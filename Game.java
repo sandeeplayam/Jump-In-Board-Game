@@ -1,4 +1,4 @@
-import java.util.ArrayList;
+
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -51,9 +51,18 @@ public class Game {
 	 * game or wins
 	 */
 	public void play() {
+
 		Scanner sc = new Scanner(System.in);
+		System.out.print("Enter challenge number: ");
+
+		
+		int chal = sc.nextInt();
+		createBoard(chal); // change to random int once more challenges are available
+
 		String commandInput;
-		createBoard(1); // change to random int once more challenges are available
+		
+		// clear(consume) rest of line for scanner
+		sc.nextLine();
 
 		System.out.println("Welcome to a text based version of the game JUMP IN'");
 		printRules();
@@ -65,14 +74,14 @@ public class Game {
 				System.out.print(">");
 				commandInput = sc.nextLine();
 			} while (parseCommand(commandInput) == false);
-
-		} while (this.gameBoard.checkWin() == false || this.quitGame == true);
+			
+		} while (this.gameBoard.checkWin() == false && this.quitGame == false);
 		
-		printBoard();
 		if (this.gameBoard.checkWin()) {
+			printBoard();
 			System.out.println("You won! Thanks for playing");
 		}
-		
+
 		sc.close();
 	}
 
@@ -100,12 +109,26 @@ public class Game {
 							&& this.commandWords.isCommand(words[3], 3)) {
 						// Call the Board class move function to move the gamepiece (words 1 and 2) in
 						// the direction (word 3)
-						this.gameBoard.move(this.gamePieces.get(words[1] + " " + words[2]), words[3]);
+
+						//if there's a piece with proper colors
+						if (gamePieces.containsKey(words[1] + " " + words[2])) {
+							
+							boolean moveHappened = this.gameBoard.move(this.gamePieces.get(words[1] + " " + words[2]), words[3]);
+							
+							if(moveHappened) {
+								return true;
+							}else {
+								return false;
+							}
+						}
+						
+						System.out.println("There's no such " + words[1]);
+						return false;
+					} else {
+						return false;
 					}
-					return true;
-				} else {
-					break;
 				}
+				break;
 			case "rules": // if command is rules call print rules method
 				printRules();
 				return false;
@@ -114,8 +137,8 @@ public class Game {
 				return false;
 			case "quit": // if command is quit set quit game variable to true
 				this.quitGame = true;
-				System.out.print("Thanks for playing");
-				return false;
+				System.out.println("Thanks for playing!");
+				return true;
 			}
 		}
 
@@ -156,7 +179,7 @@ public class Game {
 			this.gameBoard.addPiece(this.mushroom1);
 			this.gameBoard.addPiece(this.mushroom2);
 			this.gameBoard.addPiece(this.mushroom3);
-			
+
 			this.commandWords.addRabbitColour("white");
 			this.commandWords.addRabbitColour("orange");
 			break;
@@ -164,7 +187,7 @@ public class Game {
 		case 2:
 			this.rabbitWhite = new Rabbit(1, 3, "RW");
 			this.gamePieces.put("rabbit white", this.rabbitWhite);
-			this.rabbitOrange = new Rabbit(4, 4, "RO");
+			this.rabbitOrange = new Rabbit(2, 4, "RO");
 			this.gamePieces.put("rabbit orange", this.rabbitOrange);
 			this.rabbitGrey = new Rabbit(4, 3, "RG");
 			this.gamePieces.put("rabbit grey", this.rabbitGrey);
@@ -174,15 +197,17 @@ public class Game {
 			this.gamePieces.put("fox orange", this.foxOrange);
 			this.hole1 = new Hole(0, 0);
 			this.hole2 = new Hole(4, 0);
-			this.mushroom1 = new Mushroom(0, 4);
-			this.hole2.addGamePiece(mushroom1);
-			this.hole2.addGamePiece(this.mushroom1);
-			this.hole3 = new Hole(2, 2);
-			this.hole4 = new Hole(4, 0);
 			this.mushroom2 = new Mushroom(4, 0);
-			this.hole4.addGamePiece(mushroom2);
+			this.hole2.addGamePiece(this.mushroom2);
+			this.hole4 = new Hole(0, 4);
+			this.mushroom1 = new Mushroom(0, 4);
+			this.hole4.addGamePiece(mushroom1);
+			
+			this.hole3 = new Hole(2, 2);
 			this.hole5 = new Hole(4, 4);
+
 			this.mushroom3 = new Mushroom(3, 2);
+			
 			this.gameBoard.addPiece(this.rabbitWhite);
 			this.gameBoard.addPiece(this.rabbitOrange);
 			this.gameBoard.addPiece(this.rabbitGrey);
@@ -196,6 +221,15 @@ public class Game {
 			this.gameBoard.addPiece(this.mushroom1);
 			this.gameBoard.addPiece(this.mushroom2);
 			this.gameBoard.addPiece(this.mushroom3);
+			
+			
+			this.commandWords.addRabbitColour("white");
+			this.commandWords.addRabbitColour("orange");
+			this.commandWords.addRabbitColour("grey");
+			
+			this.commandWords.addFoxColour("red");
+			this.commandWords.addFoxColour("orange");
+		
 			break;
 		}
 
