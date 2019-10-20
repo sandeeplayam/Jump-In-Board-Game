@@ -4,7 +4,7 @@ public class CommandWords {
 
 	private static final String[] validCommands = { "quit", "rules", "commands", "move", "fox", "rabbit", "up", "down",
 			"left", "right" };
-	// Stores the list of rabbit and fox colours the current challenge on the board
+	// Stores the list of rabbit and fox colours being used on the current challenge on the board
 	// has so user can call toString and check
 	private ArrayList<String> rabbitColours;
 	private ArrayList<String> foxColours;
@@ -28,16 +28,15 @@ public class CommandWords {
 	public boolean isCommand(String command, int wordNum) {
 
 		switch (wordNum) {
-		case 0: // If first word in user input
+		case 0: // If first wordis one of the first 4 strings in validCommands
 			for (int i = 0; i < 4; i++) {
 				if (command.equals(validCommands[i])) {
-
 					return true;
 				}
 			}
 			break;
 		case 1:// If second word in user input and on the board
-
+			//Outputs a valid response if there are no rabbits or foxes on the board
 			if (this.rabbitColours.size() == 0 && command.equals("rabbit")) {
 				System.out.println("There are no rabbits on the board");
 				return false;
@@ -48,31 +47,34 @@ public class CommandWords {
 				System.out.println("There is no such game piece, try 'rabbit' or 'fox'");
 			}
 
+			//is either 5th or 6th strings in validCommands
 			for (int i = 4; i < 6; i++) {
 				if (command.equals(validCommands[i])) {
-
 					return true;
 				}
 			}
 
 			break;
 		case 2: // If third word in user input
-
+			//If inputted fox colour is valid return true
 			for (int i = 0; i < this.foxColours.size(); i++) {
 				if (command.equals(this.foxColours.get(i))) {
 					return true;
 				}
 			}
-
+			
+			//If inputted rabbit colour is valid return true
 			for (int i = 0; i < this.rabbitColours.size(); i++) {
 				if (command.equals(this.rabbitColours.get(i))) {
 					return true;
 				}
 			}
+			//If a colour that isnt valid is entered, print this
 			System.out.println("There is no such color, For fox ->'orange' or 'red'");
 			System.out.println("                        For rabbit -> 'orange', 'white' or 'grey'");
 			break;
 		case 3: // If fourth word in user input
+			//If a valid direction is entered (strings 7-10 in validCommands array
 			for (int i = 6; i < validCommands.length; i++) {
 				if (command.equals(validCommands[i])) {
 					return true;
