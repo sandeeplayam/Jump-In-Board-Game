@@ -11,16 +11,6 @@ import java.util.Scanner;
  *
  */
 
-/////////////////////////////////////////UPDATE CHANGES TO UML/////////////////////////////////////////////////////////
-/*
- * board class doesnt need gamePieces because game class passes objects and all
- * it needs to do is check the board postion Should add "tostring()" in each
- * slot class so to print the board all it needs is to call each tostring for
- * each object hole with a mushroom/rabbit inside will overide the default hole
- * tostring Added multiple methods and fields to this class Added method
- * "addPiece(Slot)" to Board game class
- */
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 public class Game {
 
 	private Board gameBoard;
@@ -38,7 +28,7 @@ public class Game {
 	}
 
 	/**
-	 * Constructor of Game class that initializes the
+	 * Constructor of Game class that initializes the variables
 	 */
 	public Game() {
 		this.quitGame = false;
@@ -52,41 +42,60 @@ public class Game {
 	 */
 	public void play() {
 
-		int chal = 0;
-
 		Scanner sc = new Scanner(System.in);
-		System.out.print("Enter challenge number: ");
-
-		while (!sc.hasNextInt()) {
-			System.out.println("Only numbers please");
-			sc.nextLine();
-		}
-
-		chal = sc.nextInt();
-		createBoard(chal); // change to random int once more challenges are available
-
-		String commandInput;
-
-		// clear(consume) rest of line for scanner
-		sc.nextLine();
-
-		System.out.println("Welcome to a text based version of the game JUMP IN'");
-		printRules();
-		printCommands();
+		int chal; // stores the challenge number
+		String commandInput; // Stores the command the user enters into the game
 
 		do {
-			printBoard();
+			this.quitGame = false;
+
+			// Accept a value from player to specify which difficulty to play on
+			System.out.print("Enter challenge number (1 for easy, 2 for hard): ");
+			chal = sc.nextInt();
+
+			while (chal < 1 || chal > 2) { // repeat until challenge number is either 1 or 2
+				System.out.print("Not a valid challenge number, Enter '1' for easy or '2' for hard: ");
+				chal = sc.nextInt();
+			}
+			createBoard(chal);
+
+			// clear(consume) rest of line for scanner
+			sc.nextLine();
+
+			System.out.println("Welcome to a text based version of the game JUMP IN'");
+			printRules();
+			printCommands();
+
 			do {
-				System.out.print(">");
-				commandInput = sc.nextLine();
-			} while (parseCommand(commandInput) == false);
+				printBoard();
+				// input command repeatedly until a valid command is entered
+				do {
+					System.out.print(">");
+					commandInput = sc.nextLine();
+				} while (parseCommand(commandInput) == false);
+			} while (this.gameBoard.checkWin() == false && this.quitGame == false); // repeat as long as player didnt
+																					// win or quit
 
-		} while (this.gameBoard.checkWin() == false && this.quitGame == false);
-
-		if (this.gameBoard.checkWin()) {
-			printBoard();
-			System.out.println("You won! Thanks for playing");
-		}
+			if (this.gameBoard.checkWin()) {// if won game
+				printBoard();
+				System.out.println("You won!");
+				
+				//Ask user if they would like to play again and store result in boolean replay 
+				System.out.print("Would you like to play again (yes/no)?\n>");
+				String input = sc.nextLine();
+				while (!input.equals("yes") && !input.equals("no")) { //repeat until input is 'yes' or 'no'
+					System.out.print("Not a valid input. Enter 'yes' or 'no'\n>");
+					input = sc.nextLine();
+				}
+				if (input.equals("no")) { //if player doesnt want to play again, set replay quitgame to true
+					this.quitGame = true;
+				}
+			} 
+			
+			if (this.quitGame) {//if quit true print a message
+				System.out.println("Thanks for playing!");
+			}
+		} while (!this.quitGame); // repeat as long as player wishes to replay or until player quits game
 
 		sc.close();
 	}
@@ -110,15 +119,14 @@ public class Game {
 			switch (words[0]) {
 			case "move":
 				if (words.length == 4) { // if there are 4 words with first being 'move'
-					// if rest of words are a command word
+					// if rest of words are a valid command word
 					if (this.commandWords.isCommand(words[1], 1) && this.commandWords.isCommand(words[2], 2)
 							&& this.commandWords.isCommand(words[3], 3)) {
-						// Call the Board class move function to move the gamepiece (words 1 and 2) in
-						// the direction (word 3)
 
 						// if there's a piece with proper colors
 						if (gamePieces.containsKey(words[1] + " " + words[2])) {
-
+							// Call the Board class move function to move the gamepiece (words 1 and 2) in
+							// the direction (word 3)
 							boolean moveHappened = this.gameBoard.move(this.gamePieces.get(words[1] + " " + words[2]),
 									words[3]);
 
@@ -144,7 +152,6 @@ public class Game {
 				return false;
 			case "quit": // if command is quit set quit game variable to true
 				this.quitGame = true;
-				System.out.println("Thanks for playing!");
 				return true;
 			}
 		}
@@ -270,7 +277,7 @@ public class Game {
 				"To move a rabbit or fox type \"move\", the animal type, the colour of the animal, and direction.\n"
 						+ "Type 'rules' for how to play, 'commands' if you would like the list of commands, or 'quit' if you would like stop playing.\n"
 						+ "The command list is: " + this.commandWords.toString() + ".\n"
-						+ "Examples of working commands are: \"move rabbit white up\" \"move fox red right\" \"help\" \"quit\"");
+						+ "Examples of working commands are: \"move rabbit white up\" \"move fox red right\" \"rules\" \"commands\" \"quit\"");
 	}
 
 }
