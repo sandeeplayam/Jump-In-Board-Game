@@ -43,24 +43,25 @@ public class Game {
 	public void play() {
 
 		Scanner sc = new Scanner(System.in);
-		int chal; // stores the challenge number
-		String commandInput; // Stores the command the user enters into the game
+		int chal = 0; // stores the challenge number
+		String input; // Stores the command the user enters into the game
 
 		do {
 			this.quitGame = false;
 
 			// Accept a value from player to specify which difficulty to play on
-			System.out.print("Enter challenge number (1 for easy, 2 for hard): ");
-			chal = sc.nextInt();
-
-			while (chal < 1 || chal > 2) { // repeat until challenge number is either 1 or 2
-				System.out.print("Not a valid challenge number, Enter '1' for easy or '2' for hard: ");
-				chal = sc.nextInt();
-			}
+			do {
+				System.out.print("Enter challenge number (1 for easy, 2 for hard): ");
+				input = sc.nextLine();
+				
+				//Input must be 1 or 2
+				if (input.equals("1")) {
+					chal = 1;
+				} else if (input.equals("2")) {
+					chal = 2;
+				}
+			} while (chal < 1 || chal > 2); //Input must be 1 or 2 to exit loop
 			createBoard(chal);
-
-			// clear(consume) rest of line for scanner
-			sc.nextLine();
 
 			System.out.println("Welcome to a text based version of the game JUMP IN'");
 			printRules();
@@ -71,8 +72,8 @@ public class Game {
 				// input command repeatedly until a valid command is entered
 				do {
 					System.out.print(">");
-					commandInput = sc.nextLine();
-				} while (parseCommand(commandInput) == false);
+					input = sc.nextLine();
+				} while (parseCommand(input) == false);
 			} while (this.gameBoard.checkWin() == false && this.quitGame == false); // repeat as long as player didnt
 																					// win or quit
 
@@ -82,7 +83,7 @@ public class Game {
 				
 				//Ask user if they would like to play again and store result in boolean replay 
 				System.out.print("Would you like to play again (yes/no)?\n>");
-				String input = sc.nextLine();
+				input = sc.nextLine();
 				while (!input.equals("yes") && !input.equals("no")) { //repeat until input is 'yes' or 'no'
 					System.out.print("Not a valid input. Enter 'yes' or 'no'\n>");
 					input = sc.nextLine();
@@ -152,6 +153,8 @@ public class Game {
 				return false;
 			case "quit": // if command is quit set quit game variable to true
 				this.quitGame = true;
+				return true;
+			case "show": //if command is show, return true meaning it will show the board and prompt user 
 				return true;
 			}
 		}
@@ -262,8 +265,8 @@ public class Game {
 	 * Prints the opening line of the game
 	 */
 	public void printRules() {
-		System.out.println("The goal is to get all of the rabbits into a hole. Rabbits must jump over "
-				+ "atleast one object, landing on the first empty space after the obstacle or they "
+		System.out.println("The goal is to get all of the rabbits into a hole. Rabbits must jump over \n"
+				+ "atleast one object, landing on the first empty space after the obstacle or they \n"
 				+ "cannot move. Foxes can only slide backwards and fowards but cannot jump over objects.");
 	}
 
@@ -275,9 +278,11 @@ public class Game {
 	public void printCommands() {
 		System.out.println(
 				"To move a rabbit or fox type \"move\", the animal type, the colour of the animal, and direction.\n"
-						+ "Type 'rules' for how to play, 'commands' if you would like the list of commands, or 'quit' if you would like stop playing.\n"
+						+ "A piece on the board starting with R is rabbit, a piece starting with F is fox and the letter after is the first letter of \n"
+						+ "the colour, HH is hole, MM is mushroom and SS means the board is empty\n"
+						+ "Type 'rules' for how to play, 'commands' if you would like the list of commands, 'show to print board, or 'quit' if you would like stop playing.\n"
 						+ "The command list is: " + this.commandWords.toString() + ".\n"
-						+ "Examples of working commands are: \"move rabbit white up\" \"move fox red right\" \"rules\" \"commands\" \"quit\"");
+						+ "Examples of working commands are: \"move rabbit white up\" \"move fox red right\" \"rules\" \"commands\" \"show\" \"quit\"");
 	}
 
 }
