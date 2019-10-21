@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class CommandWords {
 
-	private static final String[] validCommands = { "quit", "rules", "commands", "move", "fox", "rabbit", "up", "down",
+	private static final String[] VALID_COMMANDS = { "quit", "rules", "commands", "move", "fox", "rabbit", "up", "down",
 			"left", "right" };
 	// Stores the list of rabbit and fox colours being used on the current challenge on the board
 	// has so user can call toString and check
@@ -30,7 +30,7 @@ public class CommandWords {
 		switch (wordNum) {
 		case 0: // If first wordis one of the first 4 strings in validCommands
 			for (int i = 0; i < 4; i++) {
-				if (command.equals(validCommands[i])) {
+				if (command.equals(VALID_COMMANDS[i])) {
 					return true;
 				}
 			}
@@ -49,7 +49,7 @@ public class CommandWords {
 
 			//is either 5th or 6th strings in validCommands
 			for (int i = 4; i < 6; i++) {
-				if (command.equals(validCommands[i])) {
+				if (command.equals(VALID_COMMANDS[i])) {
 					return true;
 				}
 			}
@@ -75,8 +75,8 @@ public class CommandWords {
 			break;
 		case 3: // If fourth word in user input
 			//If a valid direction is entered (strings 7-10 in validCommands array
-			for (int i = 6; i < validCommands.length; i++) {
-				if (command.equals(validCommands[i])) {
+			for (int i = 6; i < VALID_COMMANDS.length; i++) {
+				if (command.equals(VALID_COMMANDS[i])) {
 					return true;
 				}
 			}
@@ -112,7 +112,7 @@ public class CommandWords {
 	 */
 	public String toString() {
 		String s = "";
-		for (String command : validCommands) {
+		for (String command : VALID_COMMANDS) {
 			s += command + " ";
 		}
 		for (int i = 0; i < this.rabbitColours.size(); i++) {
