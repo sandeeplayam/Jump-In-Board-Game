@@ -43,11 +43,12 @@ public class Game {
 	public void play() {
 
 		Scanner sc = new Scanner(System.in);
-		int chal = 0; // stores the challenge number
+		int chal; // stores the challenge number
 		String input; // Stores the command the user enters into the game
 
 		do {
 			this.quitGame = false;
+			chal = 0;
 
 			// Accept a value from player to specify which difficulty to play on
 			do {
