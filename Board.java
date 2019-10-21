@@ -135,7 +135,7 @@ public class Board {
 					System.out.println("No obstacle to hop over");
 					return false;
 				// If the checked slot is outside the board
-				} else if (go == 0) {
+				} else if (go < 0) {
 					System.out.println("Can't hop out of board, there's no escape :)");
 					return false;
 				}
@@ -174,7 +174,7 @@ public class Board {
 					System.out.println("No obstacle to hop over");
 					return false;
 				//If that slot is outside the board
-				} else if (go == 0) {
+				} else if (go < 0) {
 					System.out.println("Can't hop out of board, there's no escape :)");
 					return false;
 				}
@@ -212,7 +212,7 @@ public class Board {
 					System.out.println("No obstacle to hop over");
 					return false;
 				// If the checked slot is outside the board
-				} else if (go == 0) {
+				} else if (go < 0) {
 					System.out.println("Can't hop out of board, there's no escape :)");
 					return false;
 				}
@@ -249,7 +249,7 @@ public class Board {
 					System.out.println("No obstacle to hop over");
 					return false;
 				// If the checked slot is outside the board
-				} else if (go == 0) {
+				} else if (go < 0) {
 					System.out.println("Can't hop out of board, there's no escape :)");
 					return false;
 				}
@@ -449,9 +449,9 @@ public class Board {
 	 * @return Int the number of obstacles the rabbit can hop over (0, 1, -1)
 	 */
 	public int canHop(int row, int col, String direction) {
-		//if slot being checked is out of the board, returns special int so can be distinguished from "no obstacle"
+		//if slot being checked is out of the board, returns special int (negative size of board) so can be distinguished from "no obstacle"
 		if (row < 0 || col < 0 || row >= board.length || col >= board.length) {
-			return -1;
+			return -5;
 		}
 		// if there's an obstacle, check if there are more obstacles ahead
 		if (board[row][col] instanceof Mushroom || board[row][col] instanceof Rabbit || board[row][col] instanceof Fox
