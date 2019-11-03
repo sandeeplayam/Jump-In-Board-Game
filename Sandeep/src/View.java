@@ -213,7 +213,7 @@ public class View {
 		ImageIcon mushroomImage = new ImageIcon(getClass().getResource("mushroom image.png"));
 		Image img5 = mushroomImage.getImage();
 		Image newImg5 = img5.getScaledInstance(57, 75, java.awt.Image.SCALE_SMOOTH);
-		rabbitImage = new ImageIcon(newImg5);
+		mushroomImage = new ImageIcon(newImg5);
 		
 		JPanel startLevel = new JPanel();
 		startLevel.setLayout(new GridBagLayout());
