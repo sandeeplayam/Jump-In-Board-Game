@@ -17,7 +17,6 @@ public class View implements ActionListener{
 	private JFrame frame;
 	private int levelNumber;
 	private Board board;
-	private ArrayList<JButton> movingPieces;
 
 	/**
 	 * Launch the application.
@@ -46,10 +45,9 @@ public class View implements ActionListener{
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
-		movingPieces = new ArrayList<JButton>();
 		levelNumber = 0;
 		frame = new JFrame();
-		frame.setSize(750, 750);
+		frame.setSize(600, 600);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
@@ -89,12 +87,14 @@ public class View implements ActionListener{
 		
 		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
 		JLabel logo = new JLabel(logoImage);
-		logo.setBounds(97, 60, 500, 200);
+		int logoWidth = 500 ,logoHeight = 200;
+		logo.setBounds(frame.getWidth()/2-logoWidth/2, frame.getHeight()/10, logoWidth, logoHeight);
 		startMenu.add(logo);
 		
 		JButton newGame = new JButton("New Game");
 		newGame.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		newGame.setBounds(250, 350, 180, 40);
+		int buttonWidth = 180 ,buttonHeight = 40;
+		newGame.setBounds(frame.getWidth()/2-buttonWidth/2, frame.getHeight()/10+logoHeight+buttonHeight, buttonWidth, buttonHeight);
 		startMenu.add(newGame);
 		
 		newGame.addActionListener(this);
@@ -105,29 +105,25 @@ public class View implements ActionListener{
 		levelSelect.setLayout(null);
 		frame.getContentPane().add(levelSelect);
 		
+		int buttonWidth = 180, buttonHeight = 40;
+		
 		JButton level1 = new JButton("Level 1");
 		level1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		level1.setBounds(50, 500, 180, 40);
+		level1.setBounds(frame.getWidth()/2-30-buttonWidth, frame.getHeight()/2, buttonWidth, buttonHeight);
 		levelSelect.add(level1);
 		
 		JButton level2 = new JButton("Level 2");
 		level2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		level2.setBounds(250, 500, 180, 40);
+		level2.setBounds(frame.getWidth()/2+30, frame.getHeight()/2, buttonWidth, buttonHeight);
 		levelSelect.add(level2);
-		
-		JButton level3 = new JButton("Level 3");
-		level3.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		level3.setBounds(450, 500, 180, 40);
-		levelSelect.add(level3);
 		
 		JButton start = new JButton("Start");
 		start.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		start.setBounds(250, 350, 180, 40);
+		start.setBounds(frame.getWidth()/2-buttonWidth/2, frame.getHeight()/2+buttonHeight+buttonHeight, buttonWidth, buttonHeight);
 		levelSelect.add(start);
 		
 		level1.addActionListener(this);		
-		level2.addActionListener(this);		
-		level3.addActionListener(this);
+		level2.addActionListener(this);
 		start.addActionListener(this);
 	}
 	
@@ -147,9 +143,6 @@ public class View implements ActionListener{
 			case "Level 2":
 				levelNumber = 2;
 				break;
-//			case "Level 3":
-//				levelNumber = 3;
-//				break;
 			case "Start":
 				if(levelNumber > 0) {
 					startLevel();
@@ -287,6 +280,7 @@ public class View implements ActionListener{
 				tempButton.setIcon(imageIcon);
 				tempButton.setSize(square);
 				tempButton.addActionListener(this);
+				tempButton.setBorder(BorderFactory.createEmptyBorder());
 				
 				startLevel.add(tempButton,gbc);
 			}
