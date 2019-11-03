@@ -10,14 +10,14 @@ import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.GridBagConstraints;
 import java.awt.event.*;
-import java.util.ArrayList;
+
 
 public class View implements ActionListener{
 
 	private JFrame frame;
 	private int levelNumber;
 	private Board board;
-
+	private JPanel startLevel;
 	/**
 	 * Launch the application.
 	 */
@@ -145,8 +145,9 @@ public class View implements ActionListener{
 				break;
 			case "Start":
 				if(levelNumber > 0) {
-					startLevel();
+					startLevel(); 
 					((CardLayout) frame.getContentPane().getLayout()).next(frame.getContentPane());
+					
 				}
 				break;
 			default:
@@ -179,6 +180,7 @@ public class View implements ActionListener{
 						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 				if(optionReturn == 0) {
 					levelNumber = 0;
+					((CardLayout)frame.getContentPane().getLayout()).removeLayoutComponent(startLevel);
 					((CardLayout) frame.getContentPane().getLayout()).first(frame.getContentPane());
 				}
 				break;
@@ -188,7 +190,8 @@ public class View implements ActionListener{
 	}
 	
 	public void startLevel() {
-		JPanel startLevel = new JPanel();
+		
+		startLevel = new JPanel();
 		board = new Board(levelNumber);
 		GridBagConstraints gbc = new GridBagConstraints();
 		Slot[][] tempBoard = board.getBoard();
@@ -200,6 +203,7 @@ public class View implements ActionListener{
 		for (int x = 0; x < 5; x++) {
 			
 			for (int y = 0; y < 5; y++) {
+			
 				JButton tempButton;
 				ImageIcon imageIcon;
 				Image image;
@@ -230,32 +234,38 @@ public class View implements ActionListener{
 				}
 				else if(tempClass == Fox.class) {
 					Fox tempFox = (Fox) tempBoard[x][y];
+					
+					
 					if(tempFox.getX() == x && tempFox.getY() == y) {
 						if(tempFox.getVertical()) {
 							if(tempFox.getTailX() == x - 1) {
-								fileName = "Fox logo Hdown.png"; //change to vertical head down fox file
-								gbc.gridx = x - 1;
+								fileName = "Fox Hdown.png"; //change to vertical head down fox file
+								gbc.gridy = x - 1;
 							}
 							else {
-								fileName = "Fox logo Hup.png"; //change to vertical head up fox file
+								fileName = "Fox Hup.png"; //change to vertical head up fox file
 							}
 						//	buttonName = "VFox";
 							gbc.gridheight = 2; //overriding height dimension
 						}
 						else {
+							
 							if(tempFox.getTailY() == y - 1) {
-								fileName = "Fox logo Hleft.png"; //change to horizontal head right fox file
-								gbc.gridy = y - 1;
+								
+								gbc.gridx = y - 1;
+								fileName = "Fox Hright.png"; //change to horizontal head left fox file
+								
 							}
 							else {
-								fileName = "Fox logo Hright.png"; //change to horizontal head left fox file
+								
+								fileName = "Fox Hleft.png"; //change to horizontal head right fox file
 							}
 							//buttonName = "HFox";
 							gbc.gridwidth = 2; //overriding width dimension
 						}
 					}
 					else {
-						break;
+						continue;
 					}
 				}
 				else if(tempClass == Mushroom.class) {
@@ -271,10 +281,11 @@ public class View implements ActionListener{
 					fileName = "empty slot.png";
 				}
 				
+				//System.out.println("fox add"+x+y);
 				tempButton = new JButton();
 				imageIcon = new ImageIcon(getClass().getResource(fileName));
 				image = imageIcon.getImage();
-				image = image.getScaledInstance(100, 100 , Image.SCALE_SMOOTH);
+				image = image.getScaledInstance(gbc.gridwidth*100, gbc.gridheight*100 , Image.SCALE_SMOOTH);
 				imageIcon = new ImageIcon(image);
 				
 				tempButton.setIcon(imageIcon);
