@@ -22,13 +22,13 @@ public class TestModel {
 		System.out.println(toStrind2DArray());
 
 		// Challenge 1
-		/*
-		 * System.out.println(board.toStringBoard()); board.move(4,2,2,2);
-		 * System.out.println(board.toStringBoard()); board.move(2,2,0,2);
-		 * System.out.println(board.toStringBoard()); board.move(0,1,0,4);
-		 * System.out.println(board.toStringBoard()); board.move(0,2,2,2);
-		 * System.out.println(board.toStringBoard());
-		 */
+//		
+//		 System.out.println(board.toStringBoard()); board.move(4,2,2,2);
+//		 System.out.println(board.toStringBoard()); board.move(2,2,0,2);
+//		 System.out.println(board.toStringBoard()); board.move(0,1,0,4);
+//		 System.out.println(board.toStringBoard()); board.move(0,2,2,2);
+//		 System.out.println(board.toStringBoard());
+		 
 
 		// Challenge 2
 		System.out.println(board.toStringBoard());
@@ -37,6 +37,8 @@ public class TestModel {
 		board.move(1, 3, 1, 0);
 		System.out.println(board.toStringBoard());
 		board.move(1, 2, 1, 4);
+		System.out.println(board.toStringBoard());
+		board.move(1, 4, 1, 2);
 		System.out.println(board.toStringBoard());
 //		board.move(3, 1, 4, 1);
 //		System.out.println(board.toStringBoard());
