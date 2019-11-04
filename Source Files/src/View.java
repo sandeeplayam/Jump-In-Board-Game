@@ -16,7 +16,6 @@ public class View implements ActionListener {
 	private JFrame frame;
 	private int levelNumber;
 	private Board board;
-	private JPanel startLevel;
 	private int xPos, yPos, xPos2, yPos2;
 	private JMenuItem moveItem;
 
@@ -151,7 +150,7 @@ public class View implements ActionListener {
 		
 		moveItem.setVisible(true);
 
-		startLevel = new JPanel();
+		JPanel startLevel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();
 		Slot[][] tempBoard = board.getBoard();
 		Dimension square = new Dimension(100, 100);
