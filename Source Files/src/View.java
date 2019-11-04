@@ -333,7 +333,8 @@ public class View implements ActionListener {
 						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 				if (optionReturn == 0) {
 					levelNumber = 0;
-					((CardLayout) frame.getContentPane().getLayout()).removeLayoutComponent(startLevel);
+					frame.getContentPane().removeAll();
+					startMenu();
 					((CardLayout) frame.getContentPane().getLayout()).first(frame.getContentPane());
 				}
 				break;
@@ -356,7 +357,8 @@ public class View implements ActionListener {
 								new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 						if (optionWin == 0) { // if yes
 							levelNumber = 0;
-							((CardLayout) frame.getContentPane().getLayout()).removeLayoutComponent(startLevel);
+							frame.getContentPane().removeAll();
+							startMenu();
 							((CardLayout) frame.getContentPane().getLayout()).first(frame.getContentPane());
 						} else {
 							System.exit(0);
