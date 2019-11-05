@@ -1,3 +1,6 @@
+// author: Danish Butt 101000319
+
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -12,7 +15,7 @@ public class FoxTest {
 	@Before
 	public void setUp() {
 		
-		
+		//Create fox with coordinates
 		fox = new Fox(2,2,2,1);
 		
 		//Set up new board
@@ -24,7 +27,7 @@ public class FoxTest {
 			}
 		}
 		
-		board[2][2]= fox;
+		board[2][2]= fox;   
 		
 	}
 
@@ -32,7 +35,7 @@ public class FoxTest {
 	public void testGetVertical() {
 		
 		//fox is not vertical
-		assertFalse(fox.getVertical());
+		assertFalse(fox.getVertical());       
 		
 		//fox is vertical
 		Fox fox2= new Fox (1,1,2,1);       
@@ -41,7 +44,7 @@ public class FoxTest {
 	
 	@Test
 	public void testGetTailX() {
-		assertEquals (2, fox.getTailX());
+		assertEquals (2, fox.getTailX());                  
 	}
 	
 	@Test
@@ -50,18 +53,14 @@ public class FoxTest {
 	}
 
 	
-	//@Test
-	//public void testCanSlide() {
-		
-		//assertEquals (2, fox.canSlide(board,2,2,3,0));
-		
-	//}
-	
 	@Test 
 	public void testMove() {
 		
-		assertTrue (fox.move(board, 2, 4));
+		assertTrue (fox.move(board, 2, 4));  //moved fox to new coordinates
+
+		assertFalse(fox.move(board, 2, 5));  //move not valid (out of bounds)
 		
+		assertFalse(fox.move(board, 0, 2));  //move not valid (this particular fox can't move up/down only right/left)
 	}
 	
 }

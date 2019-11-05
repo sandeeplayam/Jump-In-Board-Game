@@ -1,3 +1,5 @@
+//author Danish Butt 101000319
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -28,12 +30,12 @@ public class SlotTest {
 	
 	@Test
 	public void testGetX() {
-		assertEquals(3, slot.getX());
+		assertEquals(3, slot.getX());     //get's x value
 	}
 	
 	@Test
 	public void testGetY() {
-		assertEquals(4,slot.getY());
+		assertEquals(4,slot.getY());      //get's y value
 		
 	}
 

@@ -1,3 +1,5 @@
+//author Danish Butt 101000319
+
 import static org.junit.Assert.*;
 
 import org.junit.Before;
@@ -17,12 +19,14 @@ public class MushroomTest {
 	@Test
 	public void testGetX() {
 		
+		//Get's x value
 		assertTrue (mushroom.getX() == 2);
 	}
 	
 	@Test
 	public void testGetY() {
 		
+		//Get's y value
 		assertTrue (mushroom.getY() == 1);
 	}
 

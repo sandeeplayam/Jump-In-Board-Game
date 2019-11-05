@@ -1,3 +1,5 @@
+//author Danish Butt 101000319
+
 import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
@@ -10,7 +12,7 @@ public class HoleTest {
 	
 	@Before
 	public void setUp() {
-		 hole = new Hole (3,2);
+		 hole = new Hole (3,2);    
 	}
 
 	
@@ -70,7 +72,7 @@ public class HoleTest {
 	public void getGamePiece() {
 		
 		hole.addGamePiece(rabbit); //adds a game piece
-		assertEquals(rabbit, hole.getGamePiece());
+		assertEquals(rabbit, hole.getGamePiece()); //get's game piece (and make's sure it's a rabbit)
 		
 	}
 
