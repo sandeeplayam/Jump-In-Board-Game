@@ -170,7 +170,8 @@ public class Fox extends Slot {
 				return false;
 			}
 
-			xPos2 = followX + spaces;
+//			xPos2 = followX + spaces;
+			xPos2 = followX + (xPos - leadX);
 			yPos2 = this.getTailY();
 
 		} else { // if moves right or left
@@ -200,7 +201,8 @@ public class Fox extends Slot {
 			}
 
 			xPos2 = this.getTailX();
-			yPos2 = followY + spaces;
+//			yPos2 = followY + spaces;
+			yPos2 = followY + (yPos - leadY);
 		}
 
 		if (this.getX() > xPos && getTailX() == getX() - 1) { // move up looking down
