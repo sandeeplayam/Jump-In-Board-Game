@@ -1,12 +1,12 @@
 
 /**
- * The Board class of a text based version of JumpIn'. This
- *  class contains the "board" of the game, which is the 5x5 Grid of slots
- *  for objects(hole, mushroom, rabbit, fox) to be placed in.
+ * The Board class is what controls the model portion of the MVC for the game 
+ * JumpIn'. This class creates and initializes the board with the objects on 
+ * the board. The View class calls the methods in this class to update the GUI.
  * 
- * Milestone 1:
+ * Milestone 1 author: Omar, Milestone 2 author: Tharsan
+ * 
  * @author Omar Elberougy
- * Milestone 2:
  * @author Tharsan Sivathasan
  *
  */
@@ -15,6 +15,8 @@ import java.util.*;
 
 public class Board {
 
+	// 2d array to hold locations of pieces of type Slot on the board
+	// Array lists' to hold the objects of piece Slot that can fit on the board.
 	private Slot[][] board;
 	private ArrayList<Slot> rabbits;
 	private ArrayList<Slot> foxes;
@@ -23,8 +25,8 @@ public class Board {
 
 	/**
 	 * Constructor of the board, that initializes the array lists that will be
-	 * filled with slot objects, and initializes the board with the challenge number
-	 * inputed
+	 * filled with slot objects, and initializes the board initial layout with the
+	 * challenge number inputed
 	 * 
 	 * @param challengeNum A number representing a starting board layout
 	 */
@@ -35,14 +37,15 @@ public class Board {
 		mushrooms = new ArrayList<Slot>();
 		foxes = new ArrayList<Slot>();
 
-		// Initialize the entire 2d array with slot objects
+		// Initialize the 2d array 'board' with slot objects
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
 				board[i][j] = new Slot(i, j);
 			}
 		}
 
-		// Set up the Board initial layout based on inputed challenge number
+		// Creates objects that will be added to the board and it is added to the
+		// individual arraylists based on inputed challenge number
 		switch (challengeNum) {
 		case 1:
 			rabbits.add(new Rabbit(0, 1, Color.WHITE));
@@ -75,11 +78,11 @@ public class Board {
 			mushrooms.add(new Mushroom(3, 2));
 			break;
 		}
-		this.addPiecesToBoard();
+		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
 	}
 
 	/**
-	 * Getter for the 2D array of Slots
+	 * Getter for the 2D array holding all the Slots
 	 * 
 	 * @return Slot[][] of all slots created in board
 	 */
@@ -88,10 +91,7 @@ public class Board {
 	}
 
 	/**
-	 * Adds a game piece to the board
-	 * 
-	 * @param s A slot which can be any type of game piece (Hole, Mushroom, Fox, or
-	 *          rabbit)
+	 * Adds all the pieces in the array lists to the board
 	 */
 	private void addPiecesToBoard() {
 
@@ -124,15 +124,16 @@ public class Board {
 	}
 
 	/**
-	 * Checks if player won the game
+	 * Checks if player won the game and returns boolean by checking if all the
+	 * rabbits are in a hole
 	 * 
-	 * @return boolean True if All rabbits are in a Hole, False otherwise
+	 * @return boolean True if won, False otherwise
 	 */
 	public boolean checkWin() {
 
 		int occupiedHoles = 0;
 
-		// If hole has a rabbit, increment number of holes with a rabbit
+		// If hole has a rabbit, increment occupied holes with a rabbit
 		for (Slot h : holes) {
 			if (((Hole) h).hasRabbit()) {
 				occupiedHoles++;
@@ -156,71 +157,17 @@ public class Board {
 	 * @param y2 Destination y value of coordinate of the object that will be moved
 	 * @return boolean whether the piece was moved correctly
 	 */
-	public boolean move(int x1, int y1, int x2, int y2) {/////////////////////////////////// FIX USING INSTANCEOF ISSUE
-		if (board[x1][y1].getClass() == Rabbit.class) { // is a rabbit
-			return ((Rabbit) board[x1][y1]).move(board, x2, y2);
-		} else if ((board[x1][y1].getClass() == Hole.class && ((Hole) board[x1][y1]).hasRabbit())) { // is a hole with a rabbit
-																							// inside
+	public boolean move(int x1, int y1, int x2, int y2) {
+		if (board[x1][y1].getClass() == Rabbit.class) { // if is a rabbit
+			return ((Rabbit) board[x1][y1]).move(board, x2, y2); // call move method for that rabbit
+		} // if is a hole with a rabbit inside
+		else if ((board[x1][y1].getClass() == Hole.class && ((Hole) board[x1][y1]).hasRabbit())) {
+			// call move method for that rabbit inside the hole
 			return ((Rabbit) ((Hole) board[x1][y1]).getGamePiece()).move(board, x2, y2);
-		} else { // else it is a fox
-			return ((Fox) board[x1][y1]).move(board, x2, y2);
+		} else if (board[x1][y1].getClass() == Fox.class) { // if it is a fox
+			return ((Fox) board[x1][y1]).move(board, x2, y2); // call move method for that fox
+		} else { // else it is a mushroom, hole, or empty slot
+			return false;
 		}
 	}
-
-	////////////////////////////////////////////////// JUST TO TEST REMOVE BEFORE SUBMITTING//////////
-	/**
-	 * Gets the string representation/view of the board
-	 * 
-	 * @return A String representing the current state/view of the board
-	 */
-	public String toStringBoard() {
-		String b = "";
-		for (int i = 0; i < 5; i++) {
-			for (int j = 0; j < 5; j++) {
-
-				if (board[i][j] instanceof Rabbit) {
-					Color m = ((Rabbit) board[i][j]).getColor();
-					if (m.equals(Color.WHITE)) {
-						b += "RW";
-					} else if (m.equals(Color.ORANGE)) {
-						b += "RO";
-					} else if (m.equals(Color.GRAY)) {
-						b += "RG";
-					}
-				} else if (board[i][j] instanceof Mushroom) {
-					b += "MM";
-				} else if (board[i][j] instanceof Hole) {
-					if (((Hole) board[i][j]).hasGamePiece()) {
-						if (((Hole) board[i][j]).hasRabbit()) {
-							Color m = ((Rabbit) ((Hole) board[i][j]).getGamePiece()).getColor();
-							if (m.equals(Color.WHITE)) {
-								b += "RW";
-							} else if (m.equals(Color.ORANGE)) {
-								b += "RO";
-							} else if (m.equals(Color.GRAY)) {
-								b += "RG";
-							}
-						} else {
-							b += "MM";
-						}
-					} else {
-						b += "HH";
-					}
-				} else if (board[i][j] instanceof Fox) {
-					if (((Fox)board[i][j]).getX() == i && ((Fox)board[i][j]).getY() == j) {
-						b += "HF";
-					} else if (((Fox)board[i][j]).getTailX() == i && ((Fox)board[i][j]).getTailY() == j) {
-						b += "TF";
-					}
-				} else if (board[i][j] instanceof Slot) {
-					b += "SS";
-				}
-//				b += board[i][j].toString();
-				b += " ";
-			}
-			b += "\n";
-		}
-		return b;
-	}
-	///////////////////////////////////////////////////////////////////////////////////////////////
 }
