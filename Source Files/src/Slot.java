@@ -1,11 +1,14 @@
-/** 
- * This class is used to create a Slot type. A slot is considered to be one piece on the board.
- * The xPos and yPos variables are used for the location of slot within the 2-D array. 
- * Example: [xPos][yPos] 
+/**
+ * The Slot class of java game based on the children's game "JumpIn". This class
+ * contains the constructor which creates a instance of a Slot. The class also
+ * has methods which can be invoked on the Slot instance
  * 
- * Milestone 1:
+ * This class is used to create an instance of type Slot. A slot is considered
+ * to be one piece on the board.
+ * 
+ * Milestone 1 author: Danish; Milestone 2 author: Tharsan
+ * 
  * @author Danish Butt
- * Milestone 2:
  * @author Tharsan Sivathasan
  */
 
@@ -15,7 +18,11 @@ public class Slot {
 	private int yPos;
 
 	/**
-	 * General Constructor for Slot class
+	 * Constructor for slot class that accepts coordinates and stores those
+	 * coordinates
+	 * 
+	 * @param xPos x coordinate of object
+	 * @param yPos x coordinate of object
 	 */
 	public Slot(int xPos, int yPos) {
 		this.xPos = xPos;
@@ -23,24 +30,30 @@ public class Slot {
 	}
 
 	/**
-	 * This is a setter which is used to set the initial values of x and y.
-	 * @param x This corresponds to the first value [x][]
-	 * @param y This corresponds to the second value [] [y] 
-	 * @return void
+	 * Set the position of the rabbit
+	 * 
+	 * @param x x coordinate
+	 * @param y y coordinate
 	 */
 	public void setPos(int x, int y) {
 		this.xPos = x;
 		this.yPos = y;
 	}
 
-	
 	/**
-	 * Getters
+	 * Returns x coordinate
+	 * 
+	 * @return x coordinate
 	 */
 	public int getX() {
 		return this.xPos;
 	}
 
+	/**
+	 * Returns y coordinate
+	 * 
+	 * @return y coordinate
+	 */
 	public int getY() {
 		return this.yPos;
 	}
