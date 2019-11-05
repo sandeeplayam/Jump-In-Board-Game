@@ -1,17 +1,23 @@
 /**
+ * The Mushroom class of java game based on the children's game "JumpIn". This class
+ * contains the constructor which creates a instance of a Mushroom. The class also
+ * has methods which can be invoked on the Mushroom instance. It extends the Slot
+ * class and gets the variables and methods from that class
  * 
- * This class is used to create a mushroom that is placed on the board
+ * Milestone 1 author: Danish; Milestone 2 author: Tharsan
  * 
- * Milestone 1:
  * @author Danish Butt
- * Milestone 2:
  * @author Tharsan Sivathasan
  */
 
 public class Mushroom extends Slot {
 
-	/** General Constructor
-	 * Set's the initial position of the mushroom. Also set's the name of the mushroom (MM).
+	/**
+	 * Constructor for Mushroom class that accepts coordinates and stores those
+	 * coordinates
+	 * 
+	 * @param xPos x coordinate of object
+	 * @param yPos x coordinate of object
 	 */
 	public Mushroom(int xPos, int yPos) {
 		super(xPos, yPos);
