@@ -1,6 +1,9 @@
 //author Danish Butt 101000319
 
 import static org.junit.Assert.*;
+
+import java.awt.Color;
+
 import org.junit.Before;
 import org.junit.Test;
 
@@ -12,7 +15,8 @@ public class HoleTest {
 	
 	@Before
 	public void setUp() {
-		 hole = new Hole (3,2);    
+		 hole = new Hole (3,2);
+		 rabbit = new Rabbit (3,2, Color.WHITE); 
 	}
 
 	
