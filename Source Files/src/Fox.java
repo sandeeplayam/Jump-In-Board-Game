@@ -146,6 +146,9 @@ public class Fox extends Slot {
 		int followX = -1, followY = -1;
 
 		if (this.getY() == yPos) { // if moves up or down
+			if(!isVertical) {
+				return false;
+			}
 			if (this.getX() > xPos) { // if moves up
 				if (getTailX() == getX() - 1) { // looking down
 					leadX = getTailX();
@@ -175,6 +178,9 @@ public class Fox extends Slot {
 			yPos2 = this.getTailY();
 
 		} else { // if moves right or left
+			if(isVertical) {
+				return false;
+			}
 			if (this.getY() > yPos) { // if moves left
 				if (this.getTailY() == getY() - 1) { // looking right
 					leadY = getTailY();
@@ -215,6 +221,20 @@ public class Fox extends Slot {
 			yTemp = yPos;
 			yPos = yPos2;
 			yPos2 = yTemp;
+		}else if(this.getX() < xPos && getTailX() == getX() + 1) { // move down looking up
+			
+			int xTemp;
+			xTemp = xPos;
+			xPos = xPos2;
+			xPos2 = xTemp;
+			
+		}else if (this.getY() < yPos && this.getTailY() == getY() + 1) { // move right looking left
+			
+			int yTemp;
+			yTemp = yPos;
+			yPos = yPos2;
+			yPos2 = yTemp;
+			
 		}
 
 		if (spaces == 0) { // If fox doesnt move

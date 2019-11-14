@@ -2,8 +2,10 @@
 
 import static org.junit.Assert.*;
 
+
 import org.junit.Before;
 import org.junit.Test;
+
 
 public class BoardTest {
 
@@ -22,10 +24,10 @@ public class BoardTest {
 		assertFalse(board.checkWin());
 		
 		//Rabbits are in hole
-		board.move(4,2,2,2);
-		board.move(2,2,0,2);
-		board.move(0,1,0,4);
-		board.move(0,2,2,2);
+		board.move(4,2,2,2,1);
+		board.move(2,2,0,2,1);
+		board.move(0,1,0,4,1);
+		board.move(0,2,2,2,1);
 		assertTrue(board.checkWin());
 
 	}
@@ -34,15 +36,15 @@ public class BoardTest {
 	public void testMove() {
 		
 		//Move all the rabbits into the hole to check if the move method works properly
-		board.move(4,2,0,2);
-		board.move(4,2,2,2);
-		board.move(2,2,0,2);
-		board.move(0,1,0,4);
-		board.move(0,2,2,2);
+		board.move(4,2,0,2,1);
+		board.move(4,2,2,2,1);
+		board.move(2,2,0,2,1);
+		board.move(0,1,0,4,1);
+		board.move(0,2,2,2,1);
 		assertTrue(board.checkWin()); //Since this evaluates to true this means that the move method works properly
 		
 		//Check when move is not valid
-		assertFalse(board.move(4, 2, 0, 5));
+		assertFalse(board.move(4, 2, 0, 5,1));
 		
 	}
 

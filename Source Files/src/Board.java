@@ -22,6 +22,7 @@ public class Board {
 	private ArrayList<Slot> foxes;
 	private ArrayList<Slot> mushrooms;
 	private ArrayList<Slot> holes;
+	private ActionStorage moves;
 
 	/**
 	 * Constructor of the board, that initializes the array lists that will be
@@ -31,6 +32,8 @@ public class Board {
 	 * @param challengeNum A number representing a starting board layout
 	 */
 	public Board(int challengeNum) {
+
+		moves = new ActionStorage();
 		board = new Slot[5][5];
 		holes = new ArrayList<Slot>();
 		rabbits = new ArrayList<Slot>();
@@ -157,17 +160,78 @@ public class Board {
 	 * @param y2 Destination y value of coordinate of the object that will be moved
 	 * @return boolean whether the piece was moved correctly
 	 */
-	public boolean move(int x1, int y1, int x2, int y2) {
+	public boolean move(int x1, int y1, int x2, int y2, int undo) {
+		boolean success = false;
 		if (board[x1][y1].getClass() == Rabbit.class) { // if is a rabbit
-			return ((Rabbit) board[x1][y1]).move(board, x2, y2); // call move method for that rabbit
+			success = ((Rabbit) board[x1][y1]).move(board, x2, y2); // call move method for that rabbit
 		} // if is a hole with a rabbit inside
 		else if ((board[x1][y1].getClass() == Hole.class && ((Hole) board[x1][y1]).hasRabbit())) {
 			// call move method for that rabbit inside the hole
-			return ((Rabbit) ((Hole) board[x1][y1]).getGamePiece()).move(board, x2, y2);
+			success = ((Rabbit) ((Hole) board[x1][y1]).getGamePiece()).move(board, x2, y2);
 		} else if (board[x1][y1].getClass() == Fox.class) { // if it is a fox
-			return ((Fox) board[x1][y1]).move(board, x2, y2); // call move method for that fox
-		} else { // else it is a mushroom, hole, or empty slot
-			return false;
+			success = ((Fox) board[x1][y1]).move(board, x2, y2); // call move method for that fox
 		}
+
+		if (success && undo > 0) {
+			moves.addMove(x1, y1, x2, y2, undo);
+		}
+
+		return success;
+
+	}
+
+	public void undo() {
+		int numMoves = moves.getNumMoves();
+
+		int extrax = moves.getX(numMoves) - moves.getX(numMoves - 1);
+		int extray = moves.getY(moves.getNumMoves()) - moves.getY(moves.getNumMoves() - 1);
+
+		if ((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Fox.class) {
+			if (extray == 0) {
+				if (moves.getX(numMoves) > moves.getX(numMoves - 1)) {
+					this.move(moves.getX(numMoves) - 1, moves.getY(numMoves), moves.getX(numMoves - 1),
+							moves.getY(numMoves - 1), 0);
+
+				} else if (moves.getX(numMoves) < moves.getX(numMoves - 1)) {
+					this.move(moves.getX(numMoves), moves.getY(numMoves), moves.getX(numMoves - 1) + 1,
+							moves.getY(numMoves - 1), 0);
+
+				}
+
+			} else if (extrax == 0) {
+				if (moves.getY(numMoves) > moves.getY(numMoves - 1)) {
+					this.move(moves.getX(numMoves), moves.getY(numMoves) - 1, moves.getX(numMoves - 1),
+							moves.getY(numMoves - 1), 0);
+
+				} else if (moves.getY(numMoves) < moves.getY(numMoves - 1)) {
+					this.move(moves.getX(numMoves), moves.getY(numMoves), moves.getX(numMoves - 1),
+							moves.getY(numMoves - 1) + 1, 0);
+
+				}
+			}
+
+		} else {
+
+			this.move(moves.getX(numMoves), moves.getY(numMoves), moves.getX(numMoves - 1), moves.getY(numMoves - 1),
+					0);
+
+		}
+
+		moves.addUndoMove();
+	}
+
+	public void redo() {
+		int index = moves.getRedoy().size() - 1;
+		this.move(moves.getundoX(index - 1), moves.getundoY(index - 1), moves.getundoX(index), moves.getundoY(index),
+				2);
+		moves.removeUndo();
+	}
+
+	public boolean canUndo() {
+		return (moves.getNumMoves() != -1);
+	}
+
+	public boolean canRedo() {
+		return (!moves.getRedox().isEmpty());
 	}
 }

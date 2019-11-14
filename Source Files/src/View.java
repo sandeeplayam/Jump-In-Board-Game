@@ -1,6 +1,6 @@
 import javax.swing.*;
-
-import java.awt.CardLayout;
+//import java.awt.BorderLayout;
+//import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
@@ -9,7 +9,6 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.GridBagConstraints;
-import java.awt.event.*;
 
 /**
  * This class is what controls the View and controller portion of the MVC for
@@ -24,13 +23,29 @@ import java.awt.event.*;
  * @author Omar Elberougy
  *
  */
-public class View implements ActionListener {
+public class View {
 
 	private JFrame frame;
-	private int levelNumber;
-	private Board board;
-	private int xPos, yPos, xPos2, yPos2;
 	private JMenuItem moveItem;
+	private JMenuItem undo;
+	private JMenuItem redo;
+	private Controller controller;
+
+	public JFrame getFrame() {
+		return this.frame;
+	}
+
+	public void displayMove(boolean display) {
+		moveItem.setVisible(display);
+	}
+
+	public void displayUndo(boolean display) {
+		undo.setVisible(display);
+	}
+
+	public void displayRedo(boolean display) {
+		redo.setVisible(display);
+	}
 
 	/**
 	 * Creates instance of the view class allowing the GUI to be shown
@@ -54,29 +69,23 @@ public class View implements ActionListener {
 	 * Constructor for the class that initalizes the frame and creates a menubar
 	 */
 	public View() {
+		controller = new Controller(this);
 		// initialize the beginning and end coordinates to -1 (which is not found on the
 		// board) so we know if the value changes
-		xPos = -1;
-		yPos = -1;
-		xPos2 = -1;
-		yPos2 = -1;
-		levelNumber = 0;// Initialize the level number
 
 		frame = new JFrame("Jump In'");// Set name of frame
 		// Set icon of frame to a rabbit image
-		ImageIcon logoImage = new ImageIcon(getClass().getResource("Grabbit.png"));
+		ImageIcon logoImage = new ImageIcon(getClass().getResource("Wrabbit.png"));
 		frame.setIconImage(logoImage.getImage());
-		frame.setSize(505, 552);
+		frame.setSize(515, 560);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
 
-		// Create cart layout so in the future we can implement the unlimited undos and
-		// redos
-		CardLayout cards = new CardLayout();
+//		BorderLayout border = new BorderLayout();
 		JPanel gamePanel = new JPanel(); // panel that stores the card layout
-		gamePanel.setLayout(cards);
+		// gamePanel.setLayout(border);
 		frame.setContentPane(gamePanel);
 
 		startMenu(); // Calls method that creates a card displays that card on the frame
@@ -96,21 +105,35 @@ public class View implements ActionListener {
 		moveItem = new JMenuItem("Move");
 		frame.getJMenuBar().add(Box.createHorizontalGlue());
 		frame.getJMenuBar().add(moveItem);
-		moveItem.addActionListener(this);
+		moveItem.addActionListener(controller);
 		moveItem.setVisible(false);
+		// redo
+		redo = new JMenuItem("Redo");
+		frame.getJMenuBar().add(Box.createHorizontalGlue());
+		frame.getJMenuBar().add(redo);
+		redo.addActionListener(controller);
+		redo.setVisible(false);
+		// undo
+		undo = new JMenuItem("Undo");
+		frame.getJMenuBar().add(Box.createHorizontalGlue());
+		frame.getJMenuBar().add(undo);
+		undo.addActionListener(controller);
+		undo.setVisible(false);
 
-		rules.addActionListener(this);
-		quit.addActionListener(this);
-		returnMain.addActionListener(this);
+		rules.addActionListener(controller);
+		quit.addActionListener(controller);
+		returnMain.addActionListener(controller);
+
 	}
 
 	/**
 	 * Method that creates a panel of the start screen and adds it to the list of
 	 * panels in card layout which can be cycled through
 	 */
-	private void startMenu() {
+	public void startMenu() {
+		frame.getContentPane().removeAll();
 		JPanel startMenu = new JPanel();
-		startMenu.setLayout(null);
+
 		frame.getContentPane().add(startMenu);// Adds the start menu to the card layout
 
 		// Shows the logo on the start screen
@@ -132,16 +155,19 @@ public class View implements ActionListener {
 				buttonWidth, buttonHeight);
 		startMenu.add(newGame);
 
-		newGame.addActionListener(this);
+		newGame.addActionListener(controller);
+
+		frame.validate();
+		frame.repaint();
 	}
 
 	/**
 	 * Method that creates a panel of the level select screen and adds it to the
 	 * list of panels in card layout which can be cycled through
 	 */
-	private void levelSelect() {
+	public void levelSelect() {
+		frame.getContentPane().removeAll();
 		JPanel levelSelect = new JPanel();
-		levelSelect.setLayout(null);
 		frame.getContentPane().add(levelSelect);
 
 		int buttonWidth = 180, buttonHeight = 40; // button dimensions
@@ -163,25 +189,32 @@ public class View implements ActionListener {
 				buttonWidth, buttonHeight);
 		levelSelect.add(start);
 
-		level1.addActionListener(this);
-		level2.addActionListener(this);
-		start.addActionListener(this);
+		level1.addActionListener(controller);
+		level2.addActionListener(controller);
+		start.addActionListener(controller);
+
+		frame.validate();
+		frame.repaint();
+
 	}
 
 	/**
 	 * This method creates a panel for when the board gui is showing. Uses a
 	 * gridbaglayout to add pieces on the board's 2d array
 	 */
-	public void startLevel() {
+	public void startLevel(Board b) {
 
 		moveItem.setVisible(true); // move item is visible
+		redo.setVisible(true);
+		undo.setVisible(true);
 
 		JPanel startLevel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();
-		Slot[][] tempBoard = board.getBoard();
+		Slot[][] tempBoard = b.getBoard();
 		Dimension square = new Dimension(100, 100); // size of each button in the grid (except fox)
 
 		startLevel.setLayout(new GridBagLayout());
+		frame.getContentPane().removeAll();
 		frame.getContentPane().add(startLevel);
 
 		// Iterates over the board's 2d array
@@ -191,6 +224,7 @@ public class View implements ActionListener {
 				JButton tempButton;
 				ImageIcon imageIcon;
 				Image image;
+
 				String fileName = "";
 				// get class to determine if its a rabbit fox mushroom hole or slot
 				Class<? extends Slot> tempClass = tempBoard[x][y].getClass();
@@ -276,7 +310,7 @@ public class View implements ActionListener {
 				tempButton.setIcon(imageIcon); // set picture in icon to image
 				tempButton.setSize(square); // set dimensions of button
 				tempButton.setFocusPainted(false);
-				tempButton.addActionListener(this);
+				tempButton.addActionListener(controller);
 				tempButton.setBorder(BorderFactory.createEmptyBorder());
 
 				startLevel.add(tempButton, gbc);
@@ -291,131 +325,8 @@ public class View implements ActionListener {
 		JLabel label = new JLabel();
 		startLevel.add(label, gbc);
 
-	}
+		frame.validate();
+		frame.repaint();
 
-	/**
-	 * Method that is implemented from the action listener interface. This method is
-	 * called whenever an action from a Jmenu or Jbutton object that added
-	 * themselves to the action listener is pressed. It does a different action
-	 * based on where the event was from
-	 */
-	public void actionPerformed(ActionEvent e) {
-		String text;
-		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
-			JButton tempButton = (JButton) e.getSource();
-			text = tempButton.getText();
-			switch (text) {
-			case "New Game":// if the button is the new game button
-				levelSelect();
-				((CardLayout) frame.getContentPane().getLayout()).next(frame.getContentPane());
-				break;
-			case "Level 1":// if the button is the level 1 button
-				levelNumber = 1;
-				break;
-			case "Level 2":// if the button is the level 2 button
-				levelNumber = 2;
-				break;
-			case "Start":// if the button is the start button
-				if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
-					board = new Board(levelNumber); // initialize the board object with the level number picked
-					startLevel(); // initialize the panel that holds the board gui
-					// switch to the startlevel card
-					((CardLayout) frame.getContentPane().getLayout()).next(frame.getContentPane());
-				}
-				break;
-			default: // if a button from the board gui is pressed
-				int y = ((JButton) e.getSource()).getX() / 100, x = ((JButton) e.getSource()).getY() / 100;
-				Slot[][] gameBoard = board.getBoard(); // get the current 2d array layout and save it to gameboard
-				// if its a object that can be moved
-				if (gameBoard[x][y].getClass() == Fox.class || gameBoard[x][y].getClass() == Rabbit.class
-						|| (gameBoard[x][y].getClass() == Hole.class) && ((Hole) gameBoard[x][y]).hasRabbit()) {
-					// set beginning coordinates
-					xPos = x;
-					yPos = y;
-				} // if it is an object that can be moved to (slot or empty hole
-				else if (gameBoard[x][y].getClass() == Slot.class
-						|| (gameBoard[x][y].getClass() == Hole.class) && !((Hole) gameBoard[x][y]).hasGamePiece()) {
-					// set end coordinates
-					xPos2 = x;
-					yPos2 = y;
-				}
-				break;
-			}
-		} else if (e.getSource().getClass() == JMenuItem.class) { // if the event came from a jmenu object
-			JMenuItem tempMenuItem = (JMenuItem) e.getSource();
-			text = tempMenuItem.getText(); // get name of the object
-			switch (text) {
-			case "Rules":// if jmenuitem pressed was called rules
-				// display the rules
-				JOptionPane.showMessageDialog(frame,
-						"-Rabbits can only jump over other game pieces and they are allowed to jump over multiple pieces\n"
-								+ "-Only one rabbit per hole\n" + "-Foxes move either vertically or horizontally\n"
-								+ "-Game is won once all rabbits are in the hole",
-						"Rules", JOptionPane.OK_OPTION, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-				break;
-			case "Quit":// if jmenuitem pressed was called quit
-				// ask player if they wasnt to quit
-				int optionQuit = JOptionPane.showConfirmDialog(null, "Are you sure you want to quit?", "Quit",
-						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-				if (optionQuit == 0) { // if they selected yes, end the program
-					System.exit(0);
-				}
-				break;
-			case "Return to Main Menu":// if jmenuitem pressed was called return to main menu
-				// confirm with player if they actually want to go to the main menu
-				int optionReturn = JOptionPane.showConfirmDialog(null,
-						"Are you sure you want to return to the main menu?", "Return to Main Menu",
-						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-				if (optionReturn == 0) { // if they select yes
-					// change the panel to the starting screen
-					moveItem.setVisible(false); // hide move button on menu bar
-					levelNumber = 0;
-					frame.getContentPane().removeAll();
-					startMenu();
-					((CardLayout) frame.getContentPane().getLayout()).first(frame.getContentPane());
-				}
-				break;
-			case "Move":// if jmenuitem pressed was called move
-				if (xPos + yPos != -2 && xPos2 + yPos2 != -2) {// if player selected a beginning and ending position
-					if (board.move(xPos, yPos, xPos2, yPos2)) { // try to move the pieces and if successful
-						startLevel();
-						((CardLayout) frame.getContentPane().getLayout()).next(frame.getContentPane());
-					} else { // if move was not successful
-						// display dialog box saying it was an invalid move
-						JOptionPane.showMessageDialog(frame, "Invalid Move", "Invalid Move", JOptionPane.ERROR_MESSAGE);
-					}
-					// reset the pressed button coordinates
-					xPos = -1;
-					yPos = -1;
-					xPos2 = -1;
-					yPos2 = -1;
-					if (board.checkWin()) { // if you win
-						// display dialog box saying you win and asking if they wasnt to play again
-						int optionWin = JOptionPane.showConfirmDialog(null,
-								"Congratulations, you won! Would you like to play again?", "You Win",
-								JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-								new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-						if (optionWin == 0) { // if player selects yes
-							levelNumber = 0;//
-							frame.getContentPane().removeAll();
-							startMenu();// initialize the panel that holds the board gui
-							// switch to the startlevel card
-							((CardLayout) frame.getContentPane().getLayout()).first(frame.getContentPane());
-						} else { // if player doesnt want to play again
-							System.exit(0); // exit program
-						}
-					}
-				} else {// if player didnt select a beginning and ending position
-					// show a dialog box telling user that it was an invalid move
-					JOptionPane.showMessageDialog(frame,
-							"Invalid Move: Select an object to move and a valid place to move it", "Invalid Move",
-							JOptionPane.ERROR_MESSAGE);
-				}
-				break;
-			}
-
-		}
 	}
 }
