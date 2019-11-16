@@ -1,4 +1,6 @@
 import javax.swing.*;
+
+import java.awt.BorderLayout;
 //import java.awt.BorderLayout;
 //import java.awt.CardLayout;
 import java.awt.Color;
@@ -9,6 +11,7 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.Image;
 import java.awt.GridBagConstraints;
+
 
 /**
  * This class is what controls the View and controller portion of the MVC for
@@ -66,7 +69,7 @@ public class View {
 	}
 
 	/**
-	 * Constructor for the class that initalizes the frame and creates a menubar
+	 * Constructor for the class that initializes the frame and creates a menubar
 	 */
 	public View() {
 		controller = new Controller(this);
@@ -132,31 +135,22 @@ public class View {
 	 */
 	public void startMenu() {
 		frame.getContentPane().removeAll();
-		JPanel startMenu = new JPanel();
-
-		frame.getContentPane().add(startMenu);// Adds the start menu to the card layout
-
+		JPanel startMenu = new JPanel( new BorderLayout() );
+		
 		// Shows the logo on the start screen
 		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
 		JLabel logo = new JLabel(logoImage);
-		int logoWidth = 500, logoHeight = 200;
-		// set x location in frame to be centered in the middle and y location to be
-		// near the top
-		logo.setBounds(frame.getWidth() / 2 - logoWidth / 2, frame.getHeight() / 10, logoWidth, logoHeight);
-		startMenu.add(logo);
+		logo.setPreferredSize( new Dimension(300, 350) );
+		startMenu.add(logo, BorderLayout.NORTH);
 
 		// Create a button and adds it to the startmenu screen
 		JButton newGame = new JButton("New Game");
 		newGame.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		int buttonWidth = 180, buttonHeight = 40;
-		// set x location in frame to be centered in the middle and y location below the
-		// logo
-		newGame.setBounds(frame.getWidth() / 2 - buttonWidth / 2, frame.getHeight() / 10 + logoHeight + buttonHeight,
-				buttonWidth, buttonHeight);
-		startMenu.add(newGame);
+		startMenu.add(newGame, BorderLayout.SOUTH);
 
 		newGame.addActionListener(controller);
-
+		
+		frame.add(startMenu);// Adds the start menu to the JFrame
 		frame.validate();
 		frame.repaint();
 	}
@@ -167,27 +161,28 @@ public class View {
 	 */
 	public void levelSelect() {
 		frame.getContentPane().removeAll();
-		JPanel levelSelect = new JPanel();
+		JPanel levelSelect = new JPanel( new BorderLayout() );
 		frame.getContentPane().add(levelSelect);
+		
+		// Shows the logo on the level select screen
+		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
+		JLabel logo = new JLabel(logoImage);
+		logo.setPreferredSize( new Dimension(300, 350) );
+		levelSelect.add(logo, BorderLayout.NORTH);
 
-		int buttonWidth = 180, buttonHeight = 40; // button dimensions
-
-		// creates 2 level buttons to be placed side by side
+		// Creates 2 level buttons to be placed side by side
 		JButton level1 = new JButton("Level 1");
 		level1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		level1.setBounds(frame.getWidth() / 2 - 30 - buttonWidth, frame.getHeight() / 2, buttonWidth, buttonHeight);
-		levelSelect.add(level1);
+		levelSelect.add(level1, BorderLayout.WEST);
+		
 		JButton level2 = new JButton("Level 2");
 		level2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		level2.setBounds(frame.getWidth() / 2 + 30, frame.getHeight() / 2, buttonWidth, buttonHeight);
-		levelSelect.add(level2);
+		levelSelect.add(level2, BorderLayout.EAST);
 
 		// Creates a start button that is placed below the level buttons
 		JButton start = new JButton("Start");
 		start.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		start.setBounds(frame.getWidth() / 2 - buttonWidth / 2, frame.getHeight() / 2 + buttonHeight + buttonHeight,
-				buttonWidth, buttonHeight);
-		levelSelect.add(start);
+		levelSelect.add(start, BorderLayout.SOUTH);
 
 		level1.addActionListener(controller);
 		level2.addActionListener(controller);
