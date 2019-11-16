@@ -1,3 +1,5 @@
+//Authors: Omar Elberougy, David Ou, Sudarsana Sandeep
+
 import java.awt.Point;
 import java.util.Stack;
 
@@ -95,8 +97,8 @@ public class ActionStorage {
 	}
 	
 	public void clearUndos() {
-		redoy = new Stack<Integer>();
-		redox = new Stack<Integer>();
+		redoy.clear();
+		redox.clear();
 	}
 	
 }
