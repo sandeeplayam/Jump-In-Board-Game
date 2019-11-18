@@ -1,10 +1,10 @@
 import java.awt.Color;
 
 /**
- * The Rabbit class of java game based on the children's game "JumpIn". This class
- * contains the constructor which creates a instance of a Rabbit. The class also
- * has methods which can be invoked on the rabbit instance. It extends the Slot
- * class and gets the variables and methods from that class
+ * The Rabbit class of java game based on the children's game "JumpIn". This
+ * class contains the constructor which creates a instance of a Rabbit. The
+ * class also has methods which can be invoked on the rabbit instance. It
+ * extends the Slot class and gets the variables and methods from that class
  * 
  * Milestone 1 author: Sandeep; Milestone 2 author: Tharsan
  * 
@@ -15,6 +15,7 @@ import java.awt.Color;
 public class Rabbit extends Slot {
 
 	private Color color; // Stores the color of the rabbit instance
+	private ActionStorage moves;
 
 	/**
 	 * Constructor of Rabbit class that initializes its variables
@@ -26,6 +27,8 @@ public class Rabbit extends Slot {
 	public Rabbit(int xPos, int yPos, Color color) {
 		super(xPos, yPos);
 		this.color = color;
+		moves = new ActionStorage();
+
 	}
 
 	/**
@@ -47,7 +50,7 @@ public class Rabbit extends Slot {
 	 * @param spaces    starting spaces jumped (should always be 0)
 	 * @return spaces jumped
 	 */
-	private int canHop(Slot[][] board, int row, int col, int direction, int spaces) {
+	public int canHop(Slot[][] board, int row, int col, int direction, int spaces) {
 		// if slot being checked is out of the board, returns special int so can be
 		// distinguished from "no obstacle"
 		if (row < 0 || col < 0 || row >= board.length || col >= board.length) {
@@ -90,7 +93,7 @@ public class Rabbit extends Slot {
 	 * @param yPos  the desired x location to move the rabbit
 	 * @return boolean whether a move was performed
 	 */
-	public boolean move(Slot[][] board, int xPos, int yPos) {
+	public boolean move(Slot[][] board, int xPos, int yPos, int undo) {
 
 		// is in the board
 		if (xPos < 0 || yPos < 0 || xPos >= board.length || yPos >= board.length) {
@@ -149,9 +152,42 @@ public class Rabbit extends Slot {
 		} else { // else change that position to an empty slot
 			board[this.getX()][this.getY()] = new Slot(this.getX(), this.getY());
 		}
+
+		if (undo > 0) {
+			moves.addMove(this.getX(), this.getY(), xPos, yPos, undo);
+
+		}
+
 		// Set the rabbit's position
 		this.setPos(xPos, yPos);
 
 		return true;
 	}
+
+	public boolean undo(Slot[][] b) {
+		int numMoves = moves.getNumMoves();
+	//	System.out.println("to-> " + moves.getX(numMoves - 1) + " " + moves.getY(numMoves - 1));
+
+		if (this.move(b, moves.getX(numMoves - 1), moves.getY(numMoves - 1), 0)) {
+		//	System.out.println("goodundo");
+			moves.addUndoMove();
+			return true;
+		}
+		return false;
+
+	}
+
+	public void redo(Slot[][] b) {
+		int index = moves.getRedoy().size() - 1;
+		//System.out.println(index);
+		if (this.move(b, moves.getundoX(index), moves.getundoY(index), 2)) {
+			moves.removeUndo();
+		}
+
+	}
+
+	public boolean canUndo() {
+		return (moves.getNumMoves() != -1);
+	}
+
 }

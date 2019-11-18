@@ -1,3 +1,4 @@
+import java.awt.Color;
 
 /**
  * The Fox class of java game based on the children's game "JumpIn". This class
@@ -17,6 +18,8 @@ public class Fox extends Slot {
 	private int xPos2; // stores the coordinate of the tail x position
 	private int yPos2;// stores the coordinate of the tail y position
 	private boolean isVertical; // stores a boolean on whether the fox is vertical on the board
+	private Color color;
+	private ActionStorage moves;
 
 	/**
 	 * Constructor of Fox class that initializes its variables. Fox is made of two
@@ -27,10 +30,12 @@ public class Fox extends Slot {
 	 * @param xPos2 Fox tail x coordinate
 	 * @param yPos2 Fox tail y coordinate
 	 */
-	public Fox(int xPos, int yPos, int xPos2, int yPos2) {
+	public Fox(int xPos, int yPos, int xPos2, int yPos2, Color c) {
 		super(xPos, yPos);
 		this.xPos2 = xPos2;
 		this.yPos2 = yPos2;
+		this.color = c;
+		moves = new ActionStorage();
 
 		if (yPos == yPos2) { // checking if fox is vertical
 			isVertical = true;
@@ -83,6 +88,37 @@ public class Fox extends Slot {
 		return yPos2;
 	}
 
+	public boolean forward(int direction) {
+		boolean d = false;
+		switch (direction) {
+		case 1:// up
+
+			if (this.getX() < this.getTailX()) {
+				d = true;
+			}
+			break;
+		case 2:// down
+			if (this.getX() > this.getTailX()) {
+				d = true;
+			}
+			break;
+		case 3:// right
+
+			if (this.getY() > this.getTailY()) {
+				d = true;
+			}
+			break;
+		case 4:// left
+			if (this.getY() < this.getTailY()) {
+				d = true;
+			}
+			break;
+
+		}
+
+		return d;
+	}
+
 	/**
 	 * Calculates maximum number of spaces a fox can slide in a given direction and
 	 * returns that value
@@ -94,7 +130,7 @@ public class Fox extends Slot {
 	 * @param spaces    starting spaces jumped (should always be 0)
 	 * @return spaces a fox can slide in a given direction
 	 */
-	private int canSlide(Slot[][] board, int row, int col, int direction, int spaces) {
+	public int canSlide(Slot[][] board, int row, int col, int direction, int spaces) {
 		// if slot being checked is out of the board
 		if (row < 0 || col < 0 || row >= board.length || col >= board.length) {
 			return spaces - 1;
@@ -128,7 +164,7 @@ public class Fox extends Slot {
 	 * @param yPos  the desired x location to move the fox
 	 * @return boolean whether a move was performed
 	 */
-	public boolean move(Slot[][] board, int xPos, int yPos) {
+	public boolean move(Slot[][] board, int xPos, int yPos, int undo) {
 
 		// check if the destination is within the row/column and coordinate is in the
 		// board
@@ -142,11 +178,11 @@ public class Fox extends Slot {
 		int xPos2 = -1;
 		int yPos2 = -1;
 
-		int leadX = -1, leadY = -1; // coordinate that is closest to direction that is being moved
-		int followX = -1, followY = -1;
+		int leadX = this.getX(), leadY = this.getY(); // coordinate that is closest to direction that is being moved
+		int followX = this.getTailX(), followY = this.getTailY();
 
 		if (this.getY() == yPos) { // if moves up or down
-			if(!isVertical) {
+			if (!isVertical) {
 				return false;
 			}
 			if (this.getX() > xPos) { // if moves up
@@ -178,7 +214,7 @@ public class Fox extends Slot {
 			yPos2 = this.getTailY();
 
 		} else { // if moves right or left
-			if(isVertical) {
+			if (isVertical) {
 				return false;
 			}
 			if (this.getY() > yPos) { // if moves left
@@ -205,10 +241,25 @@ public class Fox extends Slot {
 			if (Math.abs(yPos - leadY) > Math.abs(spaces)) {
 				return false;
 			}
+			
+		//	System.out.println("spaces "+spaces);
 
 			xPos2 = this.getTailX();
 //			yPos2 = followY + spaces;
 			yPos2 = followY + (yPos - leadY);
+		}
+
+		if (spaces == 0) { // If fox doesnt move
+			return false;
+		}
+
+		if (this.getY() > yPos || this.getX() > xPos) {// if going left or up
+			followY = leadY;// use lead as starting point for moving fox
+			followX = leadX;
+		}
+
+		if (undo > 0) {
+			moves.addMove(followX, followY, xPos, yPos, undo);
 		}
 
 		if (this.getX() > xPos && getTailX() == getX() - 1) { // move up looking down
@@ -221,24 +272,18 @@ public class Fox extends Slot {
 			yTemp = yPos;
 			yPos = yPos2;
 			yPos2 = yTemp;
-		}else if(this.getX() < xPos && getTailX() == getX() + 1) { // move down looking up
-			
+		} else if (this.getX() < xPos && getTailX() == getX() + 1) { // move down looking up
+
 			int xTemp;
 			xTemp = xPos;
 			xPos = xPos2;
 			xPos2 = xTemp;
-			
-		}else if (this.getY() < yPos && this.getTailY() == getY() + 1) { // move right looking left
-			
+		} else if (this.getY() < yPos && this.getTailY() == getY() + 1) { // move right looking left
+
 			int yTemp;
 			yTemp = yPos;
 			yPos = yPos2;
 			yPos2 = yTemp;
-			
-		}
-
-		if (spaces == 0) { // If fox doesnt move
-			return false;
 		}
 
 		// Change current fox position on board to slot
@@ -252,5 +297,61 @@ public class Fox extends Slot {
 		this.setPos(xPos, yPos, xPos2, yPos2);
 
 		return true;
+	}
+
+	public Color getColor() {
+		return color;
+	}
+
+	public void setColor(Color color) {
+		this.color = color;
+	}
+
+	public void redo(Slot[][] b) {
+		int index = moves.getRedoy().size() - 1;
+
+		if(this.move(b, moves.getundoX(index), moves.getundoY(index), 2)) {
+			moves.removeUndo();
+		}
+		
+	}
+
+	public boolean undo(Slot[][] b) {
+		int numMoves = moves.getNumMoves();
+		boolean success = false;
+
+		int extrax = moves.getX(numMoves) - moves.getX(numMoves - 1);
+		int extray = moves.getY(moves.getNumMoves()) - moves.getY(moves.getNumMoves() - 1);
+
+		if (extray == 0) {
+			if (moves.getX(numMoves) > moves.getX(numMoves - 1)) {
+				success = this.move(b, moves.getX(numMoves - 1), moves.getY(numMoves - 1), 0);
+
+			} else if (moves.getX(numMoves) < moves.getX(numMoves - 1)) {
+				success = this.move(b, moves.getX(numMoves - 1) + 1, moves.getY(numMoves - 1), 0);
+
+			}
+
+		} else if (extrax == 0) {
+			if (moves.getY(numMoves) > moves.getY(numMoves - 1)) {
+				success = this.move(b, moves.getX(numMoves - 1), moves.getY(numMoves - 1), 0);
+
+			} else if (moves.getY(numMoves) < moves.getY(numMoves - 1)) {
+				success = this.move(b, moves.getX(numMoves - 1), moves.getY(numMoves - 1) + 1, 0);
+
+			}
+		}
+
+		//System.out.println("succesundo "+success);
+		if (success) {
+
+			moves.addUndoMove();
+		}
+		return success;
+
+	}
+
+	public boolean canUndo() {
+		return (moves.getNumMoves() != -1);
 	}
 }
