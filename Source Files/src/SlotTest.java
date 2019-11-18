@@ -11,13 +11,13 @@ public class SlotTest {
 	
 	@Before
 	public void setUp() {
-		slot = new Slot (3,4);
+		slot = new Slot (3,4);             //Create slot at [3][4]
 	}
 
 	@Test
 	public void testSlot() {
-		assertEquals(3, slot.getX());
-		assertEquals(4, slot.getY());
+		assertEquals(3, slot.getX());       //Checks x value of slot
+		assertEquals(4, slot.getY());       //Checks y value of slot
 	}
 	
 	@Test
