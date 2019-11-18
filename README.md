@@ -1,10 +1,10 @@
 @author Danish Butt
 
 
-This is the second milestone of the project and contains a gui based playable version of the game. The rest of the deliverables include the code (source + executable jar file), documentation (design decisions, java docs, user manual), units tests and UML/sequence diagrams. The authors are Omar Elberougy, David Ou, Sudarsana Sandeep, Danish Butt, and Tharsan Sivathasan.
+This is the third milestone of the project and contains a gui based playable version of the game with additional features such as undo/redo and a solver. The rest of the deliverables include the code (source + executable jar file), documentation (design decisions, java docs, user manual), units tests and UML/sequence diagrams. The authors are Omar Elberougy, David Ou, Sudarsana Sandeep, Danish Butt, and Tharsan Sivathasan.
 
-There are no known issues this time.
+There were no known issues this time.
 
-There were some changes made from last time. The first thing is that the game/command words class was deleted as it was no longer needed as the view takes care of it. The parser class was also deleted as it is being replaced by the mouse. Lastly, the move method was moved into each of the rabbit/foxes class to allow for high cohesion. This was done to fix the previous issue of low cohesion with the board class. 
+There were some changes made from last time. The first thing is that the view and controller were separated into 2 different components. In the last iteration they were both in the view class. The second thing is that an 
 
-The plan for the next milestone will be to add a solver and an unlimited redo button. 
+The plan for the next milestone will be to add a solve/load feature and a game level builder.
