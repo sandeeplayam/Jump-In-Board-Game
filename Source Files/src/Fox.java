@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 /**
  * The Fox class of java game based on the children's game "JumpIn". This class
@@ -241,8 +242,8 @@ public class Fox extends Slot {
 			if (Math.abs(yPos - leadY) > Math.abs(spaces)) {
 				return false;
 			}
-			
-		//	System.out.println("spaces "+spaces);
+
+			// System.out.println("spaces "+spaces);
 
 			xPos2 = this.getTailX();
 //			yPos2 = followY + spaces;
@@ -298,41 +299,24 @@ public class Fox extends Slot {
 
 		return true;
 	}
-	
-	/**
-	 * getColor method retrieves the color of the fox
-	 * @return color of the fox
-	 */
+
 	public Color getColor() {
 		return color;
 	}
-	
-	/**
-	 * setColor method sets the color of the fox
-	 * @param color is the color one would like the fox to be set to
-	 */
+
 	public void setColor(Color color) {
 		this.color = color;
 	}
-	
-	/**
-	 * redo method performs the redo operation on foxes 
-	 * @param b 2d array of slots
-	 */
+
 	public void redo(Slot[][] b) {
 		int index = moves.getRedoy().size() - 1;
 
-		if(this.move(b, moves.getundoX(index), moves.getundoY(index), 2)) {
+		if (this.move(b, moves.getundoX(index), moves.getundoY(index), 2)) {
 			moves.removeUndo();
 		}
-		
+
 	}
-	
-	/**
-	 * undo method performs the undo operation on foxes
-	 * @param b 2d array of slots
-	 * @return true or false based on if the undo operation was performed
-	 */
+
 	public boolean undo(Slot[][] b) {
 		int numMoves = moves.getNumMoves();
 		boolean success = false;
@@ -359,7 +343,7 @@ public class Fox extends Slot {
 			}
 		}
 
-		//System.out.println("succesundo "+success);
+		// System.out.println("succesundo "+success);
 		if (success) {
 
 			moves.addUndoMove();
@@ -367,12 +351,43 @@ public class Fox extends Slot {
 		return success;
 
 	}
-	
-	/**
-	 * canUndo method checks if a undo operation can be performed
-	 * @return true or false depending on if an undo operation can be performed
-	 */
+
 	public boolean canUndo() {
 		return (moves.getNumMoves() != -1);
+	}
+
+	public ArrayList<Integer> possibleMoves(Board board) {
+
+		int dir = 1;
+		ArrayList<Integer> foxMoves = new ArrayList<Integer>();
+
+		while (dir < 5) {
+
+			int spaces = 0;
+
+			if (this.forward(dir)) {
+
+				spaces = (this.canSlide(board.getBoard(), this.getX(), this.getY(), dir, 0));// uses head as lead
+
+			} else {// use tail
+				spaces = (this.canSlide(board.getBoard(), this.getTailX(), this.getTailY(), dir, 0));// uses tail as the
+																										// lead
+			}
+
+			if (((dir < 3) && this.getVertical()) || ((dir > 2) && (!this.getVertical()))) {// If
+																							// going
+																							// proper
+																							// direction
+
+				if (spaces > 0) {
+					foxMoves.add(dir);
+					foxMoves.add(spaces);
+				}
+			}
+
+			dir++;
+		}
+		
+		return foxMoves;
 	}
 }
