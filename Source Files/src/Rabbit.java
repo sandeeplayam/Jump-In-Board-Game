@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.util.ArrayList;
 
 /**
  * The Rabbit class of java game based on the children's game "JumpIn". This
@@ -10,7 +11,7 @@ import java.awt.Color;
  * 
  * @author Sudarsana Sandeep
  * @author Tharsan Sivathasan
- * @author Omar Elberougy
+ *
  */
 public class Rabbit extends Slot {
 
@@ -38,6 +39,27 @@ public class Rabbit extends Slot {
 	 */
 	public Color getColor() {
 		return color;
+	}
+	
+	public ArrayList<Integer> possibleMoves(Board board) {
+		
+		int dir = 1;
+		ArrayList<Integer> rabMoves = new ArrayList<Integer>();
+
+		while (dir < 5) {
+
+			int spaces = ((Rabbit) this).canHop(board.getBoard(), this.getX(), this.getY(), dir, 0);
+
+			if (spaces > 1) {
+
+				rabMoves.add(dir);
+				rabMoves.add(spaces);
+			}
+
+			dir++;
+		}
+		
+		return rabMoves;
 	}
 
 	/**
@@ -163,38 +185,29 @@ public class Rabbit extends Slot {
 
 		return true;
 	}
-	
-	/**
-	 * undo method performs the undo operation on rabbits
-	 * @param b 2d array of slots
-	 * @return true or false depending on if the undo operation was performed on rabbits
-	 */
+
 	public boolean undo(Slot[][] b) {
 		int numMoves = moves.getNumMoves();
+	//	System.out.println("to-> " + moves.getX(numMoves - 1) + " " + moves.getY(numMoves - 1));
 
 		if (this.move(b, moves.getX(numMoves - 1), moves.getY(numMoves - 1), 0)) {
+		//	System.out.println("goodundo");
 			moves.addUndoMove();
 			return true;
 		}
 		return false;
+
 	}
-	
-	/**
-	 * redo method performs the redo operation on rabbits
-	 * @param b 2d array of slots
-	 */
+
 	public void redo(Slot[][] b) {
 		int index = moves.getRedoy().size() - 1;
+		//System.out.println(index);
 		if (this.move(b, moves.getundoX(index), moves.getundoY(index), 2)) {
 			moves.removeUndo();
 		}
 
 	}
-	
-	/**
-	 * canUndo method checks if the undo operation can be performed
-	 * @return true if undo can be performed, false if it cannot be performed
-	 */
+
 	public boolean canUndo() {
 		return (moves.getNumMoves() != -1);
 	}
