@@ -1,9 +1,6 @@
 import java.awt.Color;
-import java.awt.Point;
+
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Queue;
 
@@ -12,100 +9,69 @@ public class Solver {
 	private ArrayList<ArrayList<Integer>> attempts2;
 	private ArrayList<Integer> solution;
 	private Queue<ArrayList<Integer>> q;
-	private HashSet<Color> exceptions;
-	private HashMap<Slot, Point> lastpos;
-	private HashMap<Slot, Point> foxTail;
-	private boolean moveMade;
 	private Color lastFox;
 	private boolean allChecked;
-	private int levelNumber;
-
 	private Board check;
 
 	public Solver(Board b) {
-		levelNumber = 1;
 		allChecked = false;
 		q = new LinkedList<ArrayList<Integer>>();
-		exceptions = new HashSet<Color>();
-		lastpos = new HashMap<>();
-		foxTail = new HashMap<>();
-		moveMade = false;
 		solution = new ArrayList<Integer>();
 		attempts2 = new ArrayList<ArrayList<Integer>>();
 		this.check = b;
 		lastFox = Color.PINK;
 
 	}
-
+	
 	public void solve(Board b, Slot start, ArrayList<Integer> current) {
 
-		Iterator<Color> exceptionsItr = exceptions.iterator();
 		// if first try
 		if (attempts2.isEmpty()) {
 			allChecked = true;
 		}
-		moveMade = false;
-		System.out.println("Start " + start.getX() + " " + start.getY());
-		// System.out.println(board.getBoard()[start.getX()][start.getY()].getClass());
-		System.out.println(check.getBoard()[start.getX()][start.getY()].getClass());
+		
 		ArrayList<Integer> attempt = new ArrayList<Integer>();
-		if (!current.isEmpty()) {
-			System.out.println("curr" + current);
+		
+		if (!current.isEmpty()) {//if not the first try 
+			//setup the board using list of given moves (current)
 			for (int z = 0; z < current.size(); z += 4) {
 
 				check.move(current.get(z), current.get(z + 1), current.get(z + 2), current.get(z + 3), 1);
-				System.out.println("setup ");
-				System.out.println("move " + current.get(z) + " " + current.get(z + 1));
-				System.out.println("to " + current.get(z + 2) + " " + current.get(z + 3));
+			
 
 			}
+			//add current list of moves to attempt being made
 			attempt.addAll(current);
 
-		} else {
-			System.out.println("empty");
-			lastpos.put(start, new Point(start.getX(), start.getY()));
-			if (start instanceof Fox) {
-				foxTail.put(start, new Point(((Fox) start).getTailX(), ((Fox) start).getTailY()));
-			}
-
+		} else {//first move or node
+		
+			//add current attempt to queue
 			q.add(new ArrayList<Integer>(attempt));
 		}
-
-		// System.out.println(check.getBoard()[1][1].getClass());
-		// System.out.println(check.getBoard()[2][1].getClass());
-		// ArrayList<Integer> parents = new ArrayList<Integer>();
-		System.out.println("startx+y " + start.getX() + " " + start.getY());
-		System.out.println("first " + q);
-		// attempt.add(9);// 9 will be used to define moving a different piece opposed
-		// to moving the same
-		// piece over and over again
-
+	
+		//keep searching until queue is empty(no more moves to check) or solution is found
 		while (solution.isEmpty() && !q.isEmpty()) {
 
 			boolean used = false;// boolean to see if object was used as an obstacle
 
-			System.out.println("LEVEL NUMBER " + levelNumber);
-
+			//index of last X and Y coordinates an object moved to
 			int checkX = current.size() - 2;
 			int checkY = current.size() - 1;
 
-			System.out.println(current);
-			System.out.println(checkX);
-			System.out.println(checkY);
+			//if last piece moved was a fox
 			if (checkX >= 0 && check.getBoard()[current.get(checkX)][current.get(checkY)].getClass() == Fox.class) {
 
-				//System.out.println("last mover is fox");
-				lastFox = ((Fox) check.getBoard()[current.get(checkX)][current.get(checkY)]).getColor();// last fox
-																										// moved
-																										// according to
-																										// sequence of
-																										// moves
+				//set color of lastFox moved 
+				lastFox = ((Fox) check.getBoard()[current.get(checkX)][current.get(checkY)]).getColor();
 			} else if (checkX >= 0) {// rabbit made last move
-			//	System.out.println("last mover is rab");
 
+				//set lastFox color to a color a fox hopefully cannot have
 				lastFox = Color.pink;
+				
+				//initialize variables that are added to x and y coordinates
 				int loopx = 0, loopy = 0;
 
+				//check which direction the rabbit was hoping
 				if (current.get(checkY) > current.get(checkY - 2)) {// going right
 
 					loopx = 1;
@@ -119,14 +85,12 @@ public class Solver {
 					loopy = -1;
 				}
 
-				if (current.get(checkX) == current.get(checkX - 2)) {// going left right
+				if (current.get(checkX) == current.get(checkX - 2)) {// going left or right
 
+					//check if in the last move, a rabbit jumped over the current piece (used it as an obstacle)
 					for (int d = current.get(checkY - 2); d != current.get(checkY) - loopx;) {
 						d += loopx;
-//						System.out.println("d");
-//						System.out.println(d);
-//						System.out.println(gox + (x * rabMoves.get(i)));
-						// System.out.println(check.getBoard()[current.get(checkX)][d].getClass());
+
 						if (check.getBoard()[current.get(checkX)][d].getClass() == Rabbit.class
 								&& start.getClass() == Rabbit.class
 								&& ((Rabbit) check.getBoard()[current.get(checkX)][d]).getColor()
@@ -148,15 +112,15 @@ public class Solver {
 							used = true;
 						}
 					}
+			
+					
+			    //if going up or down
 				} else {
-					System.out.println(current);
-					System.out.println(checkX);
-					System.out.println(loopy);
+					
+					//check if in the last move, a rabbit jumped over the current piece (used it as an obstacle)
 					for (int d = current.get(checkX - 2); d != current.get(checkX) - loopy;) {
 						d += loopy;
-//							System.out.println("d");
-//							System.out.println(d);
-//							System.out.println(gox + (x * rabMoves.get(i)));
+			
 						if (start.getClass() == Rabbit.class
 								&& check.getBoard()[d][current.get(checkY)].getClass() == Rabbit.class
 								&& ((Rabbit) check.getBoard()[d][current.get(checkY)]).getColor()
@@ -183,226 +147,120 @@ public class Solver {
 
 			}
 
-			int spaces = 0;
-
+			//if object making a move is a rabbit (that may be in a hole)
 			if (start.getClass() == Rabbit.class || (start.getClass() == Hole.class && ((Hole) start).hasRabbit())) {
 
-//				if(start.getClass()==Hole.class) {
-//					start = ((Hole)start).getGamePiece();
-//				}
+				//get list of possible moves
+				ArrayList<Integer> rabMoves = ((Rabbit)start).possibleMoves(check);
 
-				// foxmove = 0;
-
-				int dir = 1;
-				ArrayList<Integer> rabMoves = new ArrayList<Integer>();
-
-				while (dir < 5) {
-
-					spaces = ((Rabbit) start).canHop(check.getBoard(), start.getX(), start.getY(), dir, 0);
-
-					if (spaces > 1) {
-
-						rabMoves.add(dir);
-						rabMoves.add(spaces);
-					}
-
-					// foxMoves.add(9);//to distinguish amount of spaces in different directions
-
-					dir++;
-				}
-
-				System.out.println("rabmoves" + rabMoves);
-
+				//if moves are possible
 				if (!rabMoves.isEmpty()) {
-					System.out.println("before add " + attempt);
+					//add current position to current attempt
 					attempt.add(start.getX());
 					attempt.add(start.getY());
-					System.out.println("add move " + attempt);
 
+					//initialize variables used for traversing the board
 					int x = 1;
 					int y = 1;
+					//check list of moves
 					for (int i = 0; i < rabMoves.size(); i++) {
-						System.out.println("i " + i);
-//						System.out.println("i "+i);
-//						System.out.println("i " + i);
-//						System.out.println(start.getX() + " " + start.getY());
+	
 						if (i % 2 == 0) {// if checking direction value in the list
 							switch (rabMoves.get(i)) {
 							case 1:// up
 								x = -1;
 								y = 0;
 								break;
-							case 2:
+							case 2://down
 								x = 1;
 								y = 0;
 								break;
-							case 3:
+							case 3://right
 								y = 1;
 								x = 0;
 								break;
-							case 4:
+							case 4://left
 								y = -1;
 								x = 0;
 								break;
 
 							}
 
-						} else {// checking spaces
+						} else {// checking number of spaces that can be jumped to
 
+							//initial position
 							int gox = start.getX();
 							int goy = start.getY();
 
-							// if piece is trying to backtrack
-							System.out.println(lastpos);
-//							System.out.println("exce " + exceptions);
-////							System.out.println(lastpos);
-//							System.out.println("if contains"
-//									+ (gox + (x * rabMoves.get(i)) + " & " + (goy + (y * rabMoves.get(i)))));
-
 							Rabbit temp = new Rabbit(0, 0, Color.white);
 
+							//set temp rabbit
 							if (start.getClass() == Rabbit.class) {
 
 								temp = (Rabbit) start;
 
+							//set temp rabbit from hole
 							} else {
 
 								temp = ((Rabbit) ((Hole) start).getGamePiece());
 
 							}
 
-							// Color cPiece = ((Rabbit) temp).getColor();
 
+							//if rabbit can undo and undo was successful (boolean undo, undos then returns if the undo was successful)
 							if (temp.canUndo() && temp.undo(check.getBoard())) {
-								System.out.println("Canundo");
 
-								// temp.undo(check.getBoard());
+								//record position of rabbit after undo
 								int tempx = temp.getX();
 								int tempy = temp.getY();
-								// System.out.println("old xny " + tempx + " " + tempy);
+								//redo to current state
 								temp.redo(check.getBoard());
 
-//								System.out.println((gox + (x * rabMoves.get(i))));
-//								System.out.println(goy + (y * rabMoves.get(i)));
+								//if coordinates of undo are the same as the coordinates of the current move then rabbit is trying to backtrack
+								if (tempx == (gox + (x * rabMoves.get(i))) && tempy == (goy + (y * rabMoves.get(i)))) {
 
-								if (tempx == (gox + (x * rabMoves.get(i))) && tempy == (goy + (y * rabMoves.get(i)))) {/// if
-									/// backtracking
-
-									System.out.println("backtracking");
-
-//							if (lastpos.containsKey(start) && (lastpos.get(start).x == (gox + (x * rabMoves.get(i)))
-//									&& (lastpos.get(start).y == (goy + (y * rabMoves.get(i)))))) {
-
-//									boolean canBack = false;
-//
-//									exceptionsItr = exceptions.iterator();
-//									while (exceptionsItr.hasNext()) {
-//										Color c = (Color) exceptionsItr.next();
-//
-//										if (c != null && c.equals(cPiece)) {
-//
-//											exceptionsItr.remove();
-//											canBack = true;
-//											System.out.println("canback");
-//										}
-//
-//									}
-
-//								for (Color c : exceptions) {
-//									if (c != null && c.equals(cPiece)) {
-//
-//										exceptions.remove(c);
-//										canBack = true;
-//										System.out.println("canback");
-//									}
-//
-//								}
-
+									//if rabbit wasn't used as an obstacle, then it's not allowed to backtrack
 									if (!used) {
-										System.out.println("canotback");
+										//remove move from list
 										rabMoves.remove(i - 1);
 										rabMoves.remove(i - 1);
+										//decrement counter index
 										i -= 2;
+										//check next possible move
 										continue;
 									}
 								}
 							}
-							System.out.println("continued?");
+							//move possible so reset boolean 
 							used = false;
-							moveMade = true;
 
-							// System.out.println("att "+attempt);
-
-//							System.out.println("try" + attempts);
-//							if (goy == goy + (y * rabMoves.get(i))) {// if going up/down
-//
-//								for (int d = gox + x; d != gox + (x * rabMoves.get(i)); d += x) {
-////									System.out.println("d");
-////									System.out.println(d);
-////									System.out.println(gox + (x * rabMoves.get(i)));
-//									if (check.getBoard()[d][goy] instanceof Rabbit) {
-//
-//										exceptions.add(((Rabbit) check.getBoard()[d][goy]).getColor());
-//									} else if (check.getBoard()[d][goy] instanceof Fox) {
-//										exceptions.add(((Fox) check.getBoard()[d][goy]).getColor());
-//									} else if (check.getBoard()[d][goy] instanceof Hole
-//											&& ((Hole) check.getBoard()[d][goy]).hasRabbit()) {
-//
-//										exceptions.add(
-//												((Rabbit) ((Hole) check.getBoard()[d][goy]).getGamePiece()).getColor());
-//
-//									}
-//								}
-//
-//							} else {
-//
-//								for (int d = goy + y; d != goy + (y * rabMoves.get(i)); d += y) {
-//
-//									if (check.getBoard()[gox][d] instanceof Rabbit) {
-//
-//										exceptions.add(((Rabbit) check.getBoard()[gox][d]).getColor());
-//									} else if (check.getBoard()[gox][d] instanceof Fox) {
-//										exceptions.add(((Fox) check.getBoard()[gox][d]).getColor());
-//									} else if (check.getBoard()[gox][d] instanceof Hole
-//											&& ((Hole) check.getBoard()[gox][d]).hasRabbit()) {
-//
-//										exceptions.add(
-//												((Rabbit) ((Hole) check.getBoard()[gox][d]).getGamePiece()).getColor());
-//
-//									}
-//								}
-//
-//							}
-
-//							System.out.println("beforeq " + q);
+							//add destination coordinates in current attempt
 							attempt.add(gox + (x * rabMoves.get(i)));
 							attempt.add(goy + (y * rabMoves.get(i)));
-							System.out.println("Addattempt " + attempt);
+							//add current attempt to queue
 							q.add(new ArrayList<Integer>(attempt));
+							//change lastFox color to a color not given to a fox, so it's allowed to make a move next turn
 							lastFox = Color.PINK;
-							System.out.println("qadd " + q);
-
+							//reset the board to original state
 							check.reset();
 
-//							System.out.println("attenpt" + attempt);
-							System.out.println(rabMoves);
+							//loop to make all moves in current attempt
 							for (int z = 0; z < attempt.size(); z += 4) {
 								check.move((int) attempt.get(z), (int) attempt.get(z + 1), (int) attempt.get(z + 2),
 										(int) attempt.get(z + 3), 1);
-//								System.out.println("move " + (int) attempt.get(z) + " " + (int) attempt.get(z + 1));
-//								System.out.println("to " + (int) attempt.get(z + 2) + " " + (int) attempt.get(z + 3));
 
 							}
 
+							//if attempt resulted in a win, record moves as solution and return
 							if (check.checkWin()) {
 								this.solution = attempt;
-								// return attempt;
 								return;
 
 							}
-//							// System.out.println("atter"+attempts);
+							//remove destination coordinates from attempt to leave space for next possible move by the same piece
 							attempt.remove(attempt.size() - 1);
 							attempt.remove(attempt.size() - 1);
+							//undo last move if possible
 							if (check.canUndo()) {
 								check.undo();
 							}
@@ -411,56 +269,23 @@ public class Solver {
 
 					}
 
-//					if(moveMade) {
-//						attempts2.add(q.poll());
-//
-//					}
-
 				}
 
+			//if current piece is a fox and isn't the same fox that made the previous move	
 			} else if (start.getClass() == Fox.class && !lastFox.equals(((Fox) start).getColor())) {
 
+				//set lastFox color to current fox's color
 				lastFox = ((Fox) start).getColor();
-
-				// foxmove++;
-				int dir = 1;
-				ArrayList<Integer> foxMoves = new ArrayList<Integer>();
-				Fox tempfox = (Fox) start;
-				while (dir < 5) {
-
-					if (tempfox.forward(dir)) {
-
-						spaces = (tempfox.canSlide(check.getBoard(), start.getX(), start.getY(), dir, 0));// uses head
-
-					} else {// use tail
-						spaces = (tempfox.canSlide(check.getBoard(), tempfox.getTailX(), tempfox.getTailY(), dir, 0));
-					}
-
-//					System.out.println(start.getX() + " " + start.getY());
-//					System.out.println("dir " + dir);
-//					System.out.println("spaces " + spaces);
-					if (((dir < 3) && ((Fox) start).getVertical()) || ((dir > 2) && (!((Fox) start).getVertical()))) {// If
-																														// going
-																														// proper
-																														// direction
-
-						if (spaces > 0) {
-							foxMoves.add(dir);
-							foxMoves.add(spaces);
-						}
-					}
-
-					// foxMoves.add(9);//to distinguish amount of spaces in different directions
-
-					dir++;
-				}
-
-				System.out.println("foxmoves " + foxMoves);
+				//get list of possible moves
+				ArrayList<Integer> foxMoves = ((Fox) start).possibleMoves(check);
+				
+				//if move possible
 				if (!foxMoves.isEmpty()) {
 
+					//add current position
 					attempt.add(start.getX());
 					attempt.add(start.getY());
-
+					//initialize values for traversing the board
 					int x = 1;
 					int y = 1;
 					for (int i = 0; i < foxMoves.size(); i++) {
@@ -470,40 +295,33 @@ public class Solver {
 								x = -1;
 								y = 0;
 								break;
-							case 2:
+							case 2://down
 								x = 1;
 								y = 0;
 								break;
-							case 3:
+							case 3://right
 								y = 1;
 								x = 0;
 								break;
-							case 4:
+							case 4://left
 								y = -1;
 								x = 0;
 								break;
 
 							}
 
-						} else {// checking spaces
-							boolean canBack = false;
+						} else {// checking spaces					
 
+							//loop for the amount of spaces a fox can move
 							for (int n = 1; n <= foxMoves.get(i); n++) {
-								System.out.println("n " + n);
-								// parents.add(index);
+								//initialize current position
 								int gox = start.getX();
 								int goy = start.getY();
-
-//								System.out.println(lastpos);
-//								System.out.println(foxTail);
-//								System.out.println("if " + lastpos.containsKey(start) + " & " + one + " & " + two
-//										+ " & " + three + " & " + four);
-
-								// if piece is trying to backtrack
-//								if (lastpos.containsKey(start)) {
+								
 								int goTx = ((Fox) start).getTailX();
 								int goTy = ((Fox) start).getTailY();
 
+								//if fox is not going forward, switch head and tail
 								if (!((Fox) start).forward(foxMoves.get(i - 1))) {
 									gox = ((Fox) start).getTailX();
 									goy = ((Fox) start).getTailY();
@@ -512,92 +330,73 @@ public class Solver {
 
 								}
 
+								//if fox can undo and undo is successful
 								if (((Fox) start).canUndo() && ((Fox) start).undo(check.getBoard())) {
-									System.out.println("canFundo");
-									// ((Fox) start).undo(check.getBoard());
+									//record position of fox after undo
 									int tempx = start.getX();
 									int tempy = start.getY();
 									int tempTx = ((Fox) start).getTailX();
 									int tempTy = ((Fox) start).getTailY();
+									//redo the undo
 									((Fox) start).redo(check.getBoard());
 
+									//check if coordinates are same as the move's destination coordinates
 									boolean one = (tempx == (gox + (x * n)));
 									boolean two = (tempy == (goy + (y * n)));
 									boolean three = (tempTx == (goTx + (x * n)));
 									boolean four = (tempTy == (goTy + (y * n)));
 
 									if (one && two && three && four) {// if backtracking
-										System.out.println("backtracking");
-//										Color cPiece = ((Fox) start).getColor();
-//
-//										exceptionsItr = exceptions.iterator();
-//										while (exceptionsItr.hasNext()) {
-//											Color c = (Color) exceptionsItr.next();
-//
-//											if (c != null && c.equals(cPiece)) {
-//
-//												exceptionsItr.remove();
-//												canBack = true;
-//												System.out.println("canback");
-//											}
-//
-//										}
 
-//										for (Color c : exceptions) {
-//											if (c != null && c.equals(cPiece)) {
-//
-//												exceptions.remove(c);
-//												canBack = true;
-//											}
-//										}
-
+										//if fox wasn't used as an obstacle
 										if (!used) {
-
+											//remove move and decrement index
 											foxMoves.remove(i - 1);
 											foxMoves.remove(i - 1);
 											i -= 2;
-
+											//check next move
 											break;
 										}
 
 									}
 								}
+								
+								//move possible so reset boolean
 								used = false;
-								moveMade = true;
 
-//								// add child nodes
-//								q.add(gox + (x * n));
-//								q.add(goy + (y * n));
-
+								//if destination coordinates are outside the board, check next move
 								if ((gox + (x * n) <= 0) || (goy + (y * n) <= 0) || (gox + (x * n) >= 5)
 										|| (goy + (y * n) >= 5)) {
 
 									break;
 								}
+
+								//add destination to attempt
 								attempt.add(gox + (x * n));
 								attempt.add(goy + (y * n));
-								System.out.println(attempt);
+								//add attempt to queue
 								q.add(new ArrayList<Integer>(attempt));
-
-								System.out.println("qadd " + q);
+								//reset the board
 								check.reset();
 
+								//loop to make moves in current attempt
 								for (int z = 0; z < attempt.size(); z += 4) {
 									check.move((int) attempt.get(z), (int) attempt.get(z + 1), (int) attempt.get(z + 2),
 											(int) attempt.get(z + 3), 1);
 
 								}
+								//if attempt resulted in solution, record it and return
 								if (check.checkWin()) {
 									this.solution = attempt;
 									return;
 								}
+								//remove last destination to leave space for next possible move by the same piece
 								attempt.remove(attempt.size() - 1);
 								attempt.remove(attempt.size() - 1);
+								
+								//undo the move if possible
 								if (check.canUndo()) {
 									check.undo();
-								}
-								if (canBack) {
-									continue;
 								}
 
 							}
@@ -605,88 +404,54 @@ public class Solver {
 						}
 
 					}
-
-//					if(moveMade) {
-//						attempts2.add(q.poll());
-//
-//					}
-
 				}
 
 			}
-
-			// lastpos.put(start, new Point(start.getX(),start.getY()));
-			System.out.println("lastq " + q);
-			System.out.println("lastempt" + attempt);
-			lastpos.put(start, new Point(start.getX(), start.getY()));
-			if (start instanceof Fox) {
-				foxTail.put(start, new Point(((Fox) start).getTailX(), ((Fox) start).getTailY()));
-			}
-//			if (parents.isEmpty()) {
-//				parents.addAll(children);
-//			}
-
-			System.out.println("moveMade? " + moveMade);
-			System.out.println("allchecked? " + allChecked);
-			System.out.println(attempts2);
+			
+			//if all children were checked (true for the first try by default)
 			if (allChecked) {
-				levelNumber++;
-				exceptions.clear();
 
-				if (attempts2.isEmpty()) {// if first try
+				if (attempts2.isEmpty() && !q.isEmpty()) {// if first try and queue is not empty
+					//remove attempt from queue and add to list attempts
 					attempts2.add(q.poll());
 				}
+				// reset all children checked
 				allChecked = false;
+				//for all the pieces in the board
 				for (Slot s : check.getPieces()) {
-
-					System.out.println(s);
-
+					//reset the board
 					check.reset();
-//						System.out.println("index " + index);
-//						System.out.println("parents " + parents);
+					//piece tries to make a move given the attempt in the head of the queue 
 					this.solve(check, s, q.peek());
 
-					// solution = this.solve(board, s, attempts.get(index + g));
-
 				}
+				//if all pieces checked
 				allChecked = true;
-				attempts2.add(q.poll());
-				levelNumber++;
-				exceptions.clear();
-
-				if (!q.isEmpty()) {
+				
+				//remove current attempt from queue and add to list of attempts
+				//and get next attempt from queue
+				if (q.size()>1) {
+					attempts2.add(q.poll());
 					current = q.peek();
 				}
+				
+				//setup the board given the current attempt
 				for (int z = 0; z < current.size(); z += 4) {
-//						System.out.println("moveanimal " + check.getBoard()[current.get(z)][current.get(z + 1)]);
-//						System.out.println("to " + check.getBoard()[current.get(z + 2)][current.get(z + 3)]);
+
 					check.move(current.get(z), current.get(z + 1), current.get(z + 2), current.get(z + 3), 1);
-//						System.out.println("setup ");
-//						System.out.println("move " + current.get(z) + " " + current.get(z + 1));
-//						System.out.println("to " + current.get(z + 2) + " " + current.get(z + 3));
 
 				}
-
+				
+				//clear attempt and add the current attempt then loop back
 				attempt.clear();
 				attempt.addAll(current);
-				System.out.println("at end curr " + current);
 
+			//if all children aren't checked break out of recursion	
 			} else {
 				break;
 			}
 
-			// allChecked =true;
-
-//				allChecked = true;
-//				parents.clear();
-//				parents.addAll(children);
-//				children.clear();
-
 		}
-//	 level++;
-//	 	System.out.println(level);
-//	 	allChecked=true;
-		// this.solve(check, start, attempts.get(attempts.size() - level));
 
 	}
 
