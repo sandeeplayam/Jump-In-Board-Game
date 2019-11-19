@@ -24,19 +24,21 @@ public class Board {
 	private ActionStorage moves;
 
 
-	//////////////////////////////////REMOVE BEFORE SUMBITTING///////////////////////////////
-//	public static void main(String args[]) {
-//
-//		Board test = new Board(2);
-//
-//		Solver s = new Solver(test);
+	////////////////////////////////REMOVE BEFORE SUMBITTING///////////////////////////////
+	public static void main(String args[]) {
+
+		Board test = new Board(1);
+		Solver s = new Solver(test);
+		System.out.println("Solution is " + s.findSolution());
+		
 //		Rabbit o = (Rabbit) test.rabbits.get(1);
 //		Fox f = (Fox) test.foxes.get(0);
 //		ArrayList<Integer> currentAttack = new ArrayList<Integer>();
 //		s.solve(test, f, currentAttack);
 //		System.out.println("Solution is "+s.getSol());
-//	}
-	////////////////////////////////////////////////////////////////////////////////////////////
+	
+	}
+	//////////////////////////////////////////////////////////////////////////////////////////
 	
 	/**
 	 * Constructor of the board, that initializes the array lists that will be
@@ -75,26 +77,8 @@ public class Board {
 			mushrooms.add(new Mushroom(1, 2));
 			mushrooms.add(new Mushroom(3, 2));
 			break;
-
-		case 2:
-			rabbits.add(new Rabbit(1, 3, Color.WHITE));
-			rabbits.add(new Rabbit(2, 4, Color.ORANGE));
-			rabbits.add(new Rabbit(4, 3, Color.GRAY));
-			foxes.add(new Fox(1, 1, 1, 0,Color.RED));
-			foxes.add(new Fox(3, 1, 2, 1,Color.BLACK));
-			holes.add(new Hole(0, 0));
-			holes.add(new Hole(0, 4));
-			holes.add(new Hole(2, 2));
-			holes.add(new Hole(4, 0));
-			holes.add(new Hole(4, 4));
-			mushrooms.add(new Mushroom(0, 4));
-			((Hole) holes.get(1)).addGamePiece(mushrooms.get(0));
-			mushrooms.add(new Mushroom(4, 0));
-			((Hole) holes.get(3)).addGamePiece(mushrooms.get(1));
-			mushrooms.add(new Mushroom(3, 2));
-			break;
 			
-		case 3:
+		case 2:
 			holes.add(new Hole(0, 0));
 			holes.add(new Hole(0, 4));
 			holes.add(new Hole(4, 0));
@@ -106,7 +90,7 @@ public class Board {
 			foxes.add(new Fox(3, 1, 4, 1,Color.BLACK));
 			break;
 			
-		case 4:
+		case 3:
 			rabbits.add(new Rabbit(0, 2, Color.WHITE));
 			rabbits.add(new Rabbit(2, 3, Color.orange));
 			holes.add(new Hole(0, 0));
@@ -119,7 +103,7 @@ public class Board {
 			foxes.add(new Fox(3, 1, 3, 2,Color.BLACK));
 			break;
 			
-		case 5:
+		case 4:
 			holes.add(new Hole(0, 0));
 			holes.add(new Hole(0, 4));
 			holes.add(new Hole(2, 2));

@@ -6,12 +6,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.EventQueue;
-import javax.swing.JFrame;
 import java.awt.Font;
 import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.Image;
 import java.awt.GridBagConstraints;
-
 
 /**
  * This class is what controls the View and controller portion of the MVC for
@@ -29,25 +28,11 @@ import java.awt.GridBagConstraints;
 public class View {
 
 	private JFrame frame;
-	private JMenuItem moveItem;
-	private JMenuItem undo;
-	private JMenuItem redo;
+	private JMenuItem moveItem, undoItem, redoItem, hintItem;
 	private Controller controller;
 
 	public JFrame getFrame() {
 		return this.frame;
-	}
-
-	public void displayMove(boolean display) {
-		moveItem.setVisible(display);
-	}
-
-	public void displayUndo(boolean display) {
-		undo.setVisible(display);
-	}
-
-	public void displayRedo(boolean display) {
-		redo.setVisible(display);
 	}
 
 	/**
@@ -86,12 +71,8 @@ public class View {
 		frame.setLocationRelativeTo(null);
 		frame.getContentPane().setLayout(null);
 
-//		BorderLayout border = new BorderLayout();
 		JPanel gamePanel = new JPanel(); // panel that stores the card layout
-		// gamePanel.setLayout(border);
 		frame.setContentPane(gamePanel);
-
-		startMenu(); // Calls method that creates a card displays that card on the frame
 
 		// Creates menu bar that houses options for rules, quit, and return to main menu
 		JMenuBar menuBar = new JMenuBar();
@@ -104,28 +85,37 @@ public class View {
 		optionMenu.add(rules);
 		optionMenu.add(quit);
 		optionMenu.add(returnMain);
-		// creates move button that is not visible until you
+
+		menuBar.add(Box.createHorizontalGlue());
+		// creates move button that is not visible until you see the board
+		hintItem = new JMenuItem("Hint");
+		frame.getJMenuBar().add(hintItem);
+		hintItem.addActionListener(controller);
+		hintItem.setVisible(false);
+		// creates move button that is not visible until you see the board
+		undoItem = new JMenuItem("Undo");
+//		frame.getJMenuBar().add(Box.createHorizontalGlue());
+		frame.getJMenuBar().add(undoItem);
+		undoItem.addActionListener(controller);
+		undoItem.setVisible(false);
+		// creates move button that is not visible until you see the board
+		redoItem = new JMenuItem("Redo");
+//		frame.getJMenuBar().add(Box.createHorizontalGlue());
+		frame.getJMenuBar().add(redoItem);
+		redoItem.addActionListener(controller);
+		redoItem.setVisible(false);
+		// creates move button that is not visible until you see the board
 		moveItem = new JMenuItem("Move");
-		frame.getJMenuBar().add(Box.createHorizontalGlue());
+//		frame.getJMenuBar().add(Box.createHorizontalGlue());
 		frame.getJMenuBar().add(moveItem);
 		moveItem.addActionListener(controller);
 		moveItem.setVisible(false);
-		// redo
-		redo = new JMenuItem("Redo");
-		frame.getJMenuBar().add(Box.createHorizontalGlue());
-		frame.getJMenuBar().add(redo);
-		redo.addActionListener(controller);
-		redo.setVisible(false);
-		// undo
-		undo = new JMenuItem("Undo");
-		frame.getJMenuBar().add(Box.createHorizontalGlue());
-		frame.getJMenuBar().add(undo);
-		undo.addActionListener(controller);
-		undo.setVisible(false);
 
 		rules.addActionListener(controller);
 		quit.addActionListener(controller);
 		returnMain.addActionListener(controller);
+
+		startMenu(); // Calls method that creates a card displays that card on the frame
 
 	}
 
@@ -134,13 +124,19 @@ public class View {
 	 * panels in card layout which can be cycled through
 	 */
 	public void startMenu() {
+
+		moveItem.setVisible(false);
+		redoItem.setVisible(false);
+		undoItem.setVisible(false);
+		hintItem.setVisible(false);
+
 		frame.getContentPane().removeAll();
-		JPanel startMenu = new JPanel( new BorderLayout() );
-		
+		JPanel startMenu = new JPanel(new BorderLayout());
+
 		// Shows the logo on the start screen
 		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
 		JLabel logo = new JLabel(logoImage);
-		logo.setPreferredSize( new Dimension(300, 350) );
+		logo.setPreferredSize(new Dimension(300, 300));
 		startMenu.add(logo, BorderLayout.NORTH);
 
 		// Create a button and adds it to the startmenu screen
@@ -149,7 +145,7 @@ public class View {
 		startMenu.add(newGame, BorderLayout.SOUTH);
 
 		newGame.addActionListener(controller);
-		
+
 		frame.add(startMenu);// Adds the start menu to the JFrame
 		frame.validate();
 		frame.repaint();
@@ -160,24 +156,34 @@ public class View {
 	 * list of panels in card layout which can be cycled through
 	 */
 	public void levelSelect() {
+
 		frame.getContentPane().removeAll();
-		JPanel levelSelect = new JPanel( new BorderLayout() );
+		JPanel levelSelect = new JPanel(new BorderLayout());
 		frame.getContentPane().add(levelSelect);
-		
+
 		// Shows the logo on the level select screen
 		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
 		JLabel logo = new JLabel(logoImage);
-		logo.setPreferredSize( new Dimension(300, 350) );
+		logo.setPreferredSize(new Dimension(300, 300));
 		levelSelect.add(logo, BorderLayout.NORTH);
 
-		// Creates 2 level buttons to be placed side by side
+		JPanel levelButtons = new JPanel(new GridLayout(2,2));
+
+		// Creates 5 level buttons to be placed side by side
 		JButton level1 = new JButton("Level 1");
 		level1.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		levelSelect.add(level1, BorderLayout.WEST);
-		
+		levelButtons.add(level1);
 		JButton level2 = new JButton("Level 2");
 		level2.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		levelSelect.add(level2, BorderLayout.EAST);
+		levelButtons.add(level2);
+		JButton level3 = new JButton("Level 3");
+		level3.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		levelButtons.add(level3);
+		JButton level4 = new JButton("Level 4");
+		level4.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		levelButtons.add(level4);
+
+		levelSelect.add(levelButtons, BorderLayout.CENTER);
 
 		// Creates a start button that is placed below the level buttons
 		JButton start = new JButton("Start");
@@ -186,6 +192,8 @@ public class View {
 
 		level1.addActionListener(controller);
 		level2.addActionListener(controller);
+		level3.addActionListener(controller);
+		level4.addActionListener(controller);
 		start.addActionListener(controller);
 
 		frame.validate();
@@ -199,9 +207,10 @@ public class View {
 	 */
 	public void startLevel(Board b) {
 
-		moveItem.setVisible(true); // move item is visible
-		redo.setVisible(true);
-		undo.setVisible(true);
+		moveItem.setVisible(true);
+		redoItem.setVisible(true);
+		undoItem.setVisible(true);
+		hintItem.setVisible(true);
 
 		JPanel startLevel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();

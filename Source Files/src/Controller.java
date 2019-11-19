@@ -1,3 +1,4 @@
+
 /**
  *The controller class acts as a middle man between the view and 
  *the model. This means that whenever there is a change in one of 
@@ -6,8 +7,10 @@
  *@author 
 
 */
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -22,10 +25,11 @@ public class Controller implements ActionListener {
 	private int yPos;
 	private int xPos2;
 	private int yPos2;
-	
-	
+
 	/**
-	 * Constructor of the controller that initializes the instance variables and takes an instance of the view
+	 * Constructor of the controller that initializes the instance variables and
+	 * takes an instance of the view
+	 * 
 	 * @param v: passes in an instance of the view
 	 */
 	public Controller(View v) {
@@ -45,7 +49,8 @@ public class Controller implements ActionListener {
 	 * themselves to the action listener is pressed. It does a different action
 	 * based on where the event was from
 	 * 
-	 * @param e: Event type (Example: event came came from button object/jmenu object)
+	 * @param e: Event type (Example: event came came from button object/jmenu
+	 *        object)
 	 */
 	public void actionPerformed(ActionEvent e) {
 		String text;
@@ -61,6 +66,12 @@ public class Controller implements ActionListener {
 				break;
 			case "Level 2":// if the button is the level 2 button
 				levelNumber = 2;
+				break;
+			case "Level 3":// if the button is the level 2 button
+				levelNumber = 3;
+				break;
+			case "Level 4":// if the button is the level 2 button
+				levelNumber = 4;
 				break;
 			case "Start":// if the button is the start button
 				if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
@@ -118,10 +129,6 @@ public class Controller implements ActionListener {
 						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 				if (optionReturn == 0) { // if they select yes
 					// change the panel to the starting screen
-					view.displayMove(false);
-					view.displayRedo(false);
-					view.displayUndo(false);
-
 					levelNumber = 0;
 
 					xPos = -1;
@@ -153,9 +160,6 @@ public class Controller implements ActionListener {
 								JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
 								new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 						if (optionWin == 0) { // if player selects yes
-							view.displayMove(false);
-							view.displayRedo(false);
-							view.displayUndo(false);
 
 							levelNumber = 0;//
 							view.getFrame().getContentPane().removeAll();
@@ -195,14 +199,33 @@ public class Controller implements ActionListener {
 
 			case "Redo":
 				if (!board.canRedo()) {
-					JOptionPane.showMessageDialog(view.getFrame(), "Cannot Redo: No 'Undos' made to undo", "Can't Redo",
+					JOptionPane.showMessageDialog(view.getFrame(), "Cannot Redo: No 'Undos' made to redo", "Can't Redo",
 							JOptionPane.ERROR_MESSAGE);
 					break;
 				}
 
 				board.redo();
 				view.startLevel(board);
+				break;
+			case "Hint":
+				Solver s = new Solver(board);
+				ArrayList<Integer> moves = s.findSolution();
+				if (!moves.isEmpty()) {
 
+					JOptionPane.showMessageDialog(view.getFrame(),
+							"To solve the level move the piece from coordinate " + moves.get(0) + ", " + moves.get(1)
+									+ " to coordinate " + moves.get(2) + ", " + moves.get(3),
+							"Hints", JOptionPane.INFORMATION_MESSAGE);
+					for (int i = 0; i < moves.size()/4; i ++) {
+						board.undo();
+					}
+					
+				} else {
+					JOptionPane.showMessageDialog(view.getFrame(),
+							"This level is unsolvable. Try Undoing or returning to main menu and picking another level.",
+							"Hints", JOptionPane.INFORMATION_MESSAGE);
+				}
+				break;
 			}
 
 		}
