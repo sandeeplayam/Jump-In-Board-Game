@@ -1,4 +1,11 @@
+/**
+ *The controller class acts as a middle man between the view and 
+ *the model. This means that whenever there is a change in one of 
+ *them the controller updates the other one. 
+ *
+ *@author 
 
+*/
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -15,7 +22,12 @@ public class Controller implements ActionListener {
 	private int yPos;
 	private int xPos2;
 	private int yPos2;
-
+	
+	
+	/**
+	 * Constructor of the controller that initializes the instance variables and takes an instance of the view
+	 * @param v: passes in an instance of the view
+	 */
 	public Controller(View v) {
 
 		this.view = v;
@@ -32,6 +44,8 @@ public class Controller implements ActionListener {
 	 * called whenever an action from a Jmenu or Jbutton object that added
 	 * themselves to the action listener is pressed. It does a different action
 	 * based on where the event was from
+	 * 
+	 * @param e: Event type (Example: event came came from button object/jmenu object)
 	 */
 	public void actionPerformed(ActionEvent e) {
 		String text;
@@ -160,8 +174,10 @@ public class Controller implements ActionListener {
 
 				// change pos to new coordinates so highlighting code checks new position not
 				// old
-				xPos = xPos2;
-				yPos = yPos2;
+				xPos = -1;
+				yPos = -1;
+				xPos2 = -1;
+				yPos2 = -1;
 
 				break;
 			case "Undo":

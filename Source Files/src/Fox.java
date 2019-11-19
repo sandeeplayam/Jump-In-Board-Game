@@ -298,15 +298,27 @@ public class Fox extends Slot {
 
 		return true;
 	}
-
+	
+	/**
+	 * getColor method retrieves the color of the fox
+	 * @return color of the fox
+	 */
 	public Color getColor() {
 		return color;
 	}
-
+	
+	/**
+	 * setColor method sets the color of the fox
+	 * @param color is the color one would like the fox to be set to
+	 */
 	public void setColor(Color color) {
 		this.color = color;
 	}
-
+	
+	/**
+	 * redo method performs the redo operation on foxes 
+	 * @param b 2d array of slots
+	 */
 	public void redo(Slot[][] b) {
 		int index = moves.getRedoy().size() - 1;
 
@@ -315,7 +327,12 @@ public class Fox extends Slot {
 		}
 		
 	}
-
+	
+	/**
+	 * undo method performs the undo operation on foxes
+	 * @param b 2d array of slots
+	 * @return true or false based on if the undo operation was performed
+	 */
 	public boolean undo(Slot[][] b) {
 		int numMoves = moves.getNumMoves();
 		boolean success = false;
@@ -350,7 +367,11 @@ public class Fox extends Slot {
 		return success;
 
 	}
-
+	
+	/**
+	 * canUndo method checks if a undo operation can be performed
+	 * @return true or false depending on if an undo operation can be performed
+	 */
 	public boolean canUndo() {
 		return (moves.getNumMoves() != -1);
 	}
