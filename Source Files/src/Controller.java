@@ -174,8 +174,10 @@ public class Controller implements ActionListener {
 
 				// change pos to new coordinates so highlighting code checks new position not
 				// old
-				xPos = xPos2;
-				yPos = yPos2;
+				xPos = -1;
+				yPos = -1;
+				xPos2 = -1;
+				yPos2 = -1;
 
 				break;
 			case "Undo":
