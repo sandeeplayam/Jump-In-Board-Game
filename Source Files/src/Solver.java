@@ -458,4 +458,29 @@ public class Solver {
 	public ArrayList<Integer> getSol() {
 		return this.solution;
 	}
+
+	public ArrayList<Integer> findSolution() {
+		
+		for (Slot piece : check.getPieces()) {
+			
+			
+			if (piece instanceof Rabbit && !((Rabbit) piece).possibleMoves(check).isEmpty()) {
+				
+				this.solve(check, piece, new ArrayList<Integer>());
+				
+			} else if (piece instanceof Fox && !((Fox) piece).possibleMoves(check).isEmpty()) {
+				
+				this.solve(check, piece, new ArrayList<Integer>());
+				
+			} else if (piece instanceof Hole && ((Hole) piece).hasRabbit()
+					
+					&& !((Rabbit) ((Hole) piece).getGamePiece()).possibleMoves(check).isEmpty()) {
+				
+				this.solve(check, piece, new ArrayList<Integer>());
+			}
+		}
+		
+		
+		return this.getSol();
+	}
 }
