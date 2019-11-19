@@ -143,8 +143,8 @@ public class ActionStorage {
 	 * Allows you to set the value of the moveX stack
 	 * @param moveX the list of moves
 	 */
-	public void setMoveX(Stack<Integer> moveX) {
-		this.moveX = moveX;
+	public void setMoveX(int num) {
+		this.moveX.push(num);
 	}
 	
 	/**
@@ -159,8 +159,8 @@ public class ActionStorage {
 	 * Allows you to set the value of the moveY stack
 	 * @param moveY the list of moves
 	 */
-	public void setMoveY(Stack<Integer> moveY) {
-		this.moveY = moveY;
+	public void setMoveY(int num) {
+		this.moveY.push(num);
 	}
 	
 	/**
@@ -175,8 +175,8 @@ public class ActionStorage {
 	 * Allows you to set the value of the redoX stack
 	 * @param redoX the list of moves
 	 */
-	public void setRedoX(Stack<Integer> redoX) {
-		this.redoX = redoX;
+	public void setRedoX(int num) {
+		this.redoX.push(num);
 	}
 	
 	/**
@@ -191,8 +191,8 @@ public class ActionStorage {
 	 * Allows you to set the value of the redoY stack
 	 * @param redoY the list of moves
 	 */
-	public void setRedoY(Stack<Integer> redoY) {
-		this.redoY = redoY;
+	public void setRedoY(int num) {
+		this.redoY.push(num);
 	}
 	
 	/**
