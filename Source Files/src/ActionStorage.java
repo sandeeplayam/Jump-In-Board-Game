@@ -7,24 +7,25 @@ import java.util.Stack;
  * @author Omar Elberougy
  * @author David Ou
  * @author Sudarsana Sandeep
+ * @author Tharsan Sivathasan
  */
 public class ActionStorage {
 	
-	Stack<Integer> movex;
-	Stack<Integer> redox;
-	Stack<Integer> movey;
-	Stack<Integer> redoy;
-	int currentMove; 
+	private Stack<Integer> moveX;
+	private Stack<Integer> redoX;
+	private Stack<Integer> moveY;
+	private Stack<Integer> redoY;
+	private int currentMove; 
 	
 	/**
 	 * Constructor of the ActionStorage class which initializes all the stacks being used in the class and initializes 
 	 * currentMove to -1 to indicate no moves have been made yet.
 	 */
 	public ActionStorage() {
-		movex = new Stack<Integer>();
-		redox = new Stack<Integer>();
-		movey = new Stack<Integer>();
-		redoy = new Stack<Integer>();
+		moveX = new Stack<Integer>();
+		redoX = new Stack<Integer>();
+		moveY = new Stack<Integer>();
+		redoY = new Stack<Integer>();
 		currentMove = -1;
 	}
 	
@@ -38,10 +39,10 @@ public class ActionStorage {
 	 */
 	public void addMove(int x, int y, int x2, int y2,int normalMove) {
 		
-		movex.push(x);
-		movey.push(y);
-		movex.push(x2);
-		movey.push(y2);
+		moveX.push(x);
+		moveY.push(y);
+		moveX.push(x2);
+		moveY.push(y2);
 		currentMove++;
 		currentMove++;
 		
@@ -56,13 +57,13 @@ public class ActionStorage {
 	 */
 	public void addUndoMove() {
 		
-		int temp = movex.pop();
-		redox.push(movex.pop());
-		redox.push(temp);
+		int temp = moveX.pop();
+		redoX.push(moveX.pop());
+		redoX.push(temp);
 		
-		temp = movey.pop();
-		redoy.push(movey.pop());
-		redoy.push(temp);
+		temp = moveY.pop();
+		redoY.push(moveY.pop());
+		redoY.push(temp);
 		
 		currentMove--;
 		currentMove--;
@@ -73,10 +74,10 @@ public class ActionStorage {
 	 * removeUndo method removes one undo move
 	 */
 	public void removeUndo(){
-		redoy.pop();
-		redoy.pop();
-		redox.pop();
-		redox.pop();
+		redoY.pop();
+		redoY.pop();
+		redoX.pop();
+		redoX.pop();
 	}
 	
 	/**
@@ -85,7 +86,7 @@ public class ActionStorage {
 	 * @return the x coordinate of a game piece from stack movex
 	 */
 	public int getX(int i) {
-		return movex.get(i);
+		return moveX.get(i);
 	}
 	
 	/**
@@ -94,7 +95,7 @@ public class ActionStorage {
 	 * @return the y coordinate of a game piece from stack movey
 	 */
 	public int getY(int i) {
-		return movey.get(i);
+		return moveY.get(i);
 	}
 	
 	/**
@@ -103,7 +104,7 @@ public class ActionStorage {
 	 * @return the x coordinate of a game piece from stack redox
 	 */
 	public int getundoX(int i) {
-		return redox.get(i);
+		return redoX.get(i);
 	}
 	
 	/**
@@ -112,7 +113,7 @@ public class ActionStorage {
 	 * @return the y coordinate of a game piece from stack redoy
 	 */
 	public int getundoY(int i) {
-		return redoy.get(i);
+		return redoY.get(i);
 	}
 	
 	/**
@@ -124,11 +125,26 @@ public class ActionStorage {
 	}
 	
 	/**
+	 * setNumMoves method allows to set the number of moves that have occurred
+	 */
+	public void setNumMoves(int currentMove) {
+		this.currentMove = currentMove;
+	}
+	
+	/**
 	 * getMovex method gives the contents of the stack movex
 	 * @return stack movex
 	 */
 	public Stack<Integer> getMovex(){
-		return movex;
+		return moveX;
+	}
+	
+	/**
+	 * Allows you to set the value of the moveX stack
+	 * @param moveX the list of moves
+	 */
+	public void setMoveX(int num) {
+		this.moveX.push(num);
 	}
 	
 	/**
@@ -136,7 +152,15 @@ public class ActionStorage {
 	 * @return stack movey
 	 */
 	public Stack<Integer> getMovey(){
-		return movey;
+		return moveY;
+	}
+	
+	/**
+	 * Allows you to set the value of the moveY stack
+	 * @param moveY the list of moves
+	 */
+	public void setMoveY(int num) {
+		this.moveY.push(num);
 	}
 	
 	/**
@@ -144,7 +168,15 @@ public class ActionStorage {
 	 * @return stack redox
 	 */
 	public Stack<Integer> getRedox(){
-		return redox;
+		return redoX;
+	}
+	
+	/**
+	 * Allows you to set the value of the redoX stack
+	 * @param redoX the list of moves
+	 */
+	public void setRedoX(int num) {
+		this.redoX.push(num);
 	}
 	
 	/**
@@ -152,15 +184,23 @@ public class ActionStorage {
 	 * @return stack redoy
 	 */
 	public Stack<Integer> getRedoy(){
-		return redoy;
+		return redoY;
+	}
+	
+	/**
+	 * Allows you to set the value of the redoY stack
+	 * @param redoY the list of moves
+	 */
+	public void setRedoY(int num) {
+		this.redoY.push(num);
 	}
 	
 	/**
 	 * clearUndos method clears stacks redox and redoy
 	 */
 	public void clearUndos() {
-		redoy.clear();
-		redox.clear();
+		redoY.clear();
+		redoX.clear();
 	}
 	
 }

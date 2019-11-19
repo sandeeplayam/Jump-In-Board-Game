@@ -22,19 +22,22 @@ public class Board {
 	private ArrayList<Slot> mushrooms;
 	private ArrayList<Slot> holes;
 	private ActionStorage moves;
-	public int levelNum;
 
-	public static void main(String args[]) {
 
-		Board test = new Board(2);
-
-		Solver s = new Solver(test);
-		Fox f = (Fox) test.foxes.get(0);
-		ArrayList<Integer> currentAttack = new ArrayList<Integer>();
-		s.solve(test, f, currentAttack);
-		System.out.println("Solution is "+s.getSol());
-	}
-
+	//////////////////////////////////REMOVE BEFORE SUMBITTING///////////////////////////////
+//	public static void main(String args[]) {
+//
+//		Board test = new Board(2);
+//
+//		Solver s = new Solver(test);
+//		Rabbit o = (Rabbit) test.rabbits.get(1);
+//		Fox f = (Fox) test.foxes.get(0);
+//		ArrayList<Integer> currentAttack = new ArrayList<Integer>();
+//		s.solve(test, f, currentAttack);
+//		System.out.println("Solution is "+s.getSol());
+//	}
+	////////////////////////////////////////////////////////////////////////////////////////////
+	
 	/**
 	 * Constructor of the board, that initializes the array lists that will be
 	 * filled with slot objects, and initializes the board initial layout with the
@@ -50,7 +53,6 @@ public class Board {
 		rabbits = new ArrayList<Slot>();
 		mushrooms = new ArrayList<Slot>();
 		foxes = new ArrayList<Slot>();
-		levelNum = challengeNum;
 		// Initialize the 2d array 'board' with slot objects
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
@@ -92,6 +94,18 @@ public class Board {
 			mushrooms.add(new Mushroom(3, 2));
 			break;
 			
+		case 3:
+			holes.add(new Hole(0, 0));
+			holes.add(new Hole(0, 4));
+			holes.add(new Hole(4, 0));
+			holes.add(new Hole(4, 4));
+			rabbits.add(new Rabbit(0, 1, Color.WHITE));
+			mushrooms.add(new Mushroom(2, 2));
+			mushrooms.add(new Mushroom(2, 0));
+			mushrooms.add(new Mushroom(3, 2));
+			foxes.add(new Fox(3, 1, 4, 1,Color.BLACK));
+			break;
+			
 		case 4:
 			rabbits.add(new Rabbit(0, 2, Color.WHITE));
 			rabbits.add(new Rabbit(2, 3, Color.orange));
@@ -103,11 +117,9 @@ public class Board {
 			mushrooms.add(new Mushroom(1, 2));
 			mushrooms.add(new Mushroom(4, 3));
 			foxes.add(new Fox(3, 1, 3, 2,Color.BLACK));
-
 			break;
 			
-		case 5: 
-			
+		case 5:
 			holes.add(new Hole(0, 0));
 			holes.add(new Hole(0, 4));
 			holes.add(new Hole(2, 2));
@@ -119,28 +131,15 @@ public class Board {
 			mushrooms.add(new Mushroom(2, 1));
 			mushrooms.add(new Mushroom(3, 2));
 			foxes.add(new Fox(1, 3, 0, 3,Color.BLACK));
-			
-			break;
-		
-		case 3:
-		
-			
-			holes.add(new Hole(0, 0));
-			holes.add(new Hole(0, 4));
-			holes.add(new Hole(4, 0));
-			holes.add(new Hole(4, 4));
-			rabbits.add(new Rabbit(0, 1, Color.WHITE));
-			mushrooms.add(new Mushroom(2, 2));
-			mushrooms.add(new Mushroom(2, 0));
-			mushrooms.add(new Mushroom(3, 2));
-			foxes.add(new Fox(3, 1, 4, 1,Color.BLACK));
-			
-			break;
-	
+			break;	
 		}
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
 	}
 
+	/**
+	 * Returns a Arraylist of all the rabbit and foxes
+	 * @return Arraylist of rabbit and fox objects
+	 */
 	public ArrayList<Slot> getPieces() {
 		ArrayList<Slot> al = new ArrayList<Slot>();
 		al.addAll(rabbits);
