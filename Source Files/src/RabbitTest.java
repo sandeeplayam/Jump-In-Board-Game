@@ -44,7 +44,8 @@ public class RabbitTest {
 	public void testMove() {
 		
 		//Checks if move can be made (YES)        
-		assertTrue(rabbit.move(board,3,2,1));
+		rabbit.move(board,3,2,1);
+		assertTrue(board[3][2].getClass() == Rabbit.class);  //true if rabbit at [3][2]
 		
 		//Checks if move can be made (NO-out of bounds)
 		assertFalse(rabbit.move(board,5,5,1));
