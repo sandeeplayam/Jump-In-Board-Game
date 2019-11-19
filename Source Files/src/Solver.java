@@ -156,6 +156,7 @@ public class Solver {
 
 				// if moves are possible
 				if (!rabMoves.isEmpty()) {
+
 					// add current position to current attempt
 					attempt.add(start.getX());
 					attempt.add(start.getY());
@@ -435,10 +436,11 @@ public class Solver {
 
 				// remove current attempt from queue and add to list of attempts
 				// and get next attempt from queue
-				if (q.size() > 1) {
-					attempts2.add(q.poll());
-					current = q.peek();
-				}
+
+				attempts2.add(q.poll());
+				current = q.peek();
+
+				check.reset();
 
 				// setup the board given the current attempt
 				for (int z = 0; z < current.size(); z += 4) {
@@ -470,6 +472,7 @@ public class Solver {
 
 		for (Slot piece : check.getPieces()) {
 
+			check.reset();
 			if (piece instanceof Rabbit && !((Rabbit) piece).possibleMoves(check).isEmpty()) {
 
 				this.solve(check, piece, new ArrayList<Integer>());
@@ -490,6 +493,7 @@ public class Solver {
 			} else if (this.getSol().size() < answer.size()) {
 				answer = this.getSol();
 			}
+			attempts2.clear();
 		}
 
 		return this.getSol();
