@@ -58,7 +58,8 @@ public class FoxTest {
 	@Test 
 	public void testMove() {
 		
-		assertTrue (fox.move(board, 2, 4, 1));  //moved fox to new coordinates
+		fox.move(board, 2, 4, 1);  //moved fox to new coordinates
+		assertTrue (board[2][4].getClass() == Fox.class);  //true if fox at [2][4]
 
 		assertFalse(fox.move(board, 2, 5, 1));  //move not valid (out of bounds)
 		
