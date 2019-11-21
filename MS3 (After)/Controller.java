@@ -215,8 +215,12 @@ public class Controller implements ActionListener {
 			case "Hint":
 				Board tempBoard = new Board(board,this.levelNumber);
 				
-				Solver s = new Solver(tempBoard);
-				ArrayList<Integer> moves = s.findSolution();
+				//Solver s = new Solver(tempBoard);
+				//ArrayList<Integer> moves = s.findSolution();
+				
+				tempSolver ts = new tempSolver(tempBoard);
+				ArrayList<Integer> moves = ts.findSolution();
+				
 				if (!moves.isEmpty()) {
 
 					JOptionPane.showMessageDialog(view.getFrame(),
@@ -224,11 +228,6 @@ public class Controller implements ActionListener {
 									+ " to coordinate " + moves.get(2) + ", " + moves.get(3),
 							"Hints", JOptionPane.INFORMATION_MESSAGE);
 					
-//					System.out.println(moves);
-//					System.out.println(moves.size()/4);
-//					for (int i = 0; i < moves.size()/4; i++) {
-//						tempBoard.undo();
-//					}
 					
 				} else {
 					JOptionPane.showMessageDialog(view.getFrame(),

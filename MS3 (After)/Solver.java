@@ -119,8 +119,10 @@ public class Solver {
 							(MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)]).getGamePiece(),
 							false);
 
+					lastPiece = ((MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)]).getGamePiece()).getColor();
 				} else {
 					exceptions.put((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)], false);
+					lastPiece = ((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)]).getColor();
 				}
 
 				// check if any objects used as obstacles
@@ -136,7 +138,7 @@ public class Solver {
 
 				}
 
-				lastPiece = ((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)]).getColor();
+				
 
 				b.move(current.get(z), current.get(z + 1), current.get(z + 2), current.get(z + 3), 1);
 
@@ -200,29 +202,24 @@ public class Solver {
 							int gox = start.getX();
 							int goy = start.getY();
 
-							Rabbit temp = new Rabbit(0, 0, Color.white);
+						
 
 							// set temporary rabbit
-							if (start.getClass() == Rabbit.class) {
+							if(start.getClass() == Hole.class) {
 
-								temp = (Rabbit) start;
-
-							// set temporary rabbit from hole
-							} else {
-
-								temp = ((Rabbit) ((Hole) start).getGamePiece());
+								start = ((Rabbit) ((Hole) start).getGamePiece());
 
 							}
 
 							// if rabbit can undo and undo was successful (boolean undo, undos then returns
 							// if the undo was successful)
-							if (temp.canUndo() && temp.undo(b.getBoard())) {
+							if (((MovingPiece) start).canUndo() && ((MovingPiece) start).undo(b.getBoard())) {
 
 								// record position of rabbit after undo
-								int tempx = temp.getX();
-								int tempy = temp.getY();
+								int tempx = start.getX();
+								int tempy = start.getY();
 								// redo to current state
-								temp.redo(b.getBoard());
+								((MovingPiece) start).redo(b.getBoard());
 
 								// if coordinates of undo are the same as the coordinates of the current move
 								// then rabbit is trying to backtrack
@@ -280,7 +277,7 @@ public class Solver {
 			} else if (start.getClass() == Fox.class && !lastPiece.equals(((Fox) start).getColor())) {
 
 				// set lastFox color to current fox's color
-				lastPiece = ((Fox) start).getColor();
+				//lastPiece = ((Fox) start).getColor();
 				// get list of possible moves
 				ArrayList<Integer> foxMoves = ((Fox) start).possibleMoves(b);
 
@@ -377,7 +374,7 @@ public class Solver {
 
 				if (!q.isEmpty()) {
 					// for all the pieces in the board
-					for (MovingPiece s : b.getPieces()) {
+					for (MovingPiece s : b.getGamePieces()) {
 
 						exceptions.put(s, false);
 						// reset the board
@@ -407,10 +404,12 @@ public class Solver {
 									exceptions
 											.put((MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)])
 													.getGamePiece(), false);
+									lastPiece = ((MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)]).getGamePiece()).getColor();
 
 								} else {
 									exceptions.put((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)],
 											false);
+									lastPiece = ((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)]).getColor();
 								}
 
 								// check if any objects used as obstacles
@@ -426,7 +425,7 @@ public class Solver {
 
 								}
 
-								lastPiece = ((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)]).getColor();
+								
 
 								b.move(current.get(z), current.get(z + 1), current.get(z + 2), current.get(z + 3), 1);
 
@@ -456,7 +455,7 @@ public class Solver {
 
 		ArrayList<Integer> answer = new ArrayList<Integer>();
 
-		for (MovingPiece piece : check.getPieces()) {
+		for (MovingPiece piece : check.getGamePieces()) {
 
 			exceptions.put(piece, false);
 			this.solution.clear();

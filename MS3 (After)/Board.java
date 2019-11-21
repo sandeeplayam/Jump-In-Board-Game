@@ -22,17 +22,28 @@ public class Board {
 	private ArrayList<Slot> mushrooms;
 	private ArrayList<Slot> holes;
 	private ActionStorage moves;
+	private ArrayList<MovingPiece> gamePieces;
 
 	
 	public static void main(String args[]) {
-		Board test = new Board(1);
+		Board test = new Board(2);
 
+		
 		Solver s = new Solver(test);
-
+	
+		tempSolver ts = new tempSolver(test);
+		
 		ArrayList<Integer> sol = s.findSolution();
+
+		ArrayList<Integer> tsol = ts.findSolution();
+		
 		System.out.println("Solution is " + sol);
 		System.out.println(sol.size()/4);
+		
+		System.out.println("tempSolution is " + tsol);
+		System.out.println(tsol.size()/4);
 	}
+	
 	
 	public void clearMoves() {
 		moves.clearMoves();
@@ -70,6 +81,7 @@ public class Board {
 		rabbits = new ArrayList<Slot>();
 		mushrooms = new ArrayList<Slot>();
 		foxes = new ArrayList<Slot>();
+		setGamePieces(new ArrayList<MovingPiece>());
 		
 		// Initialize the 2d array 'board' with slot objects
 		for (int i = 0; i < 5; i++) {
@@ -163,21 +175,30 @@ public class Board {
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
 	}
 
+	
+
+
+	public void setGamePieces(ArrayList<MovingPiece> gamePieces) {
+		this.gamePieces = gamePieces;
+	}
+
+
 	/**
-	 * Returns a Arraylist of all the rabbit and foxes
+	 * Returns an Arraylist of all the rabbit and foxes
 	 * 
 	 * @return Arraylist of rabbit and fox objects
 	 */
-	public ArrayList<MovingPiece> getPieces() {
+	public ArrayList<MovingPiece> getGamePieces() {
 		ArrayList<MovingPiece> al = new ArrayList<MovingPiece>();
 		for(Slot r : rabbits) {
 			al.add((MovingPiece) r);
+			
 		}
 		
 		for(Slot f : foxes) {
 			al.add((MovingPiece) f);
 		}
-		
+
 		return al;
 	}
 

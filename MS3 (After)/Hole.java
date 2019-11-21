@@ -1,5 +1,6 @@
-import java.awt.Color;
+
 import java.util.ArrayList;
+
 
 /**
  * The Hole class of java game based on the children's game "JumpIn". This class
@@ -13,7 +14,7 @@ import java.util.ArrayList;
  * @author Tharsan Sivathasan
  *
  */
-public class Hole extends Slot implements MovingPiece {
+public class Hole extends Slot {
 
 	private ArrayList<Slot> gamePieceList;
 
@@ -88,15 +89,33 @@ public class Hole extends Slot implements MovingPiece {
 	
 	
 
-	@Override
-	public Color getColor() {
-		return ((Rabbit)this.getGamePiece()).getColor();
-		
-	}
-
-	@Override
-	public ArrayList<Integer> possibleMoves(Board board) {
-		
-		return ((Rabbit)this.getGamePiece()).possibleMoves(board);
-	}
+//	@Override
+//	public Color getColor() {
+//		return ((Rabbit)this.getGamePiece()).getColor();
+//		
+//	}
+//
+//	@Override
+//	public ArrayList<Integer> possibleMoves(Board board) {
+//		
+//		return ((Rabbit)this.getGamePiece()).possibleMoves(board);
+//	}
+//
+//	@Override
+//	public boolean canUndo() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public void redo(Slot[][] b) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public boolean undo(Slot[][] b) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 }

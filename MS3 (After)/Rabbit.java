@@ -43,6 +43,7 @@ public class Rabbit extends Slot implements MovingPiece{
 	}
 	
 	
+	
 	public ArrayList<Integer> possibleMoves(Board board) {
 		
 		int dir = 1;
