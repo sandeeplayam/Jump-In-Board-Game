@@ -26,7 +26,7 @@ public class Board {
 
 	
 	public static void main(String args[]) {
-		Board test = new Board(2);
+		Board test = new Board(3);
 
 		
 		Solver s = new Solver(test);
@@ -47,6 +47,9 @@ public class Board {
 	
 	public void clearMoves() {
 		moves.clearMoves();
+		for(MovingPiece piece : this.getGamePieces()) {
+			piece.clearMoves();
+		}
 
 	}
 
@@ -119,18 +122,18 @@ public class Board {
 			break;
 
 		case 3:
-			Rabbit r = new Rabbit(2, 2, Color.WHITE);
+			Rabbit r = new Rabbit(0, 2, Color.WHITE);
 			rabbits.add(r);	
 			rabbits.add(new Rabbit(2, 1, Color.orange));
 			holes.add(new Hole(0, 0));
 			holes.add(new Hole(0, 4));
 			holes.add(new Hole(2, 2));
-			((Hole) holes.get(2)).addGamePiece(r);
+		//	((Hole) holes.get(2)).addGamePiece(r);
 			holes.add(new Hole(4, 0));
 			holes.add(new Hole(4, 4));
 			mushrooms.add(new Mushroom(1, 2));
 			mushrooms.add(new Mushroom(4, 3));
-			foxes.add(new Fox(3, 1, 3, 2, Color.BLACK));
+			foxes.add(new Fox(3, 3, 3, 4, Color.BLACK));
 			break;
 
 		case 4:
@@ -199,6 +202,7 @@ public class Board {
 			al.add((MovingPiece) f);
 		}
 
+		this.gamePieces = al;
 		return al;
 	}
 

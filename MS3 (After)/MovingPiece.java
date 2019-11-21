@@ -11,5 +11,7 @@ public interface MovingPiece {
 	public boolean canUndo();
 	public void redo(Slot[][] b) ;
 	public boolean undo(Slot[][] b);
+
+	public void clearMoves();
 	
 }

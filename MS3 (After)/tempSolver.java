@@ -8,7 +8,7 @@ import java.util.Queue;
 
 public class tempSolver {
 
-	private ArrayList<ArrayList<Integer>> attempts2;
+//	private ArrayList<ArrayList<Integer>> attempts2;
 	private ArrayList<Integer> solution;
 	private Queue<ArrayList<Integer>> q;
 	private Color lastPiece;
@@ -20,7 +20,7 @@ public class tempSolver {
 		allChecked = false;
 		q = new LinkedList<ArrayList<Integer>>();
 		solution = new ArrayList<Integer>();
-		attempts2 = new ArrayList<ArrayList<Integer>>();
+	//	attempts2 = new ArrayList<ArrayList<Integer>>();
 		this.check = b;
 		lastPiece = Color.PINK;
 		exceptions = new HashMap<MovingPiece, Boolean>();
@@ -150,7 +150,7 @@ public class tempSolver {
 	public void solve(Board b, Slot start, ArrayList<Integer> current) {
 
 		// if first try
-		if (attempts2.isEmpty()) {
+		if (q.isEmpty()) {
 			allChecked = true;
 		}
 
@@ -174,7 +174,7 @@ public class tempSolver {
 		// found
 		while (solution.isEmpty() && !q.isEmpty()) {
 			
-			//System.out.println(attempt);
+//			System.out.println(attempt);
 
 			if (start.getClass() == Fox.class && lastPiece.equals(((Fox) start).getColor())) {
 				// skip
@@ -312,9 +312,9 @@ public class tempSolver {
 				// if all children were checked (true for the first try by default)
 				if (allChecked) {
 
-					if (attempts2.isEmpty() && !q.isEmpty()) {// if first try and queue is not empty
+					if (!q.isEmpty() && q.peek().isEmpty()) {// if first try and queue is not empty
 						// remove attempt from queue and add to list attempts
-						attempts2.add(q.poll());
+						q.poll();
 					}
 					// reset all children checked
 					allChecked = false;
@@ -336,7 +336,7 @@ public class tempSolver {
 						if (q.size() > 0) {
 							// remove current attempt from queue and add to list of attempts
 							// and get next attempt from queue
-							attempts2.add(q.poll());
+							q.poll();
 							if (!q.isEmpty()) {
 								current = q.peek();
 
@@ -394,8 +394,10 @@ public class tempSolver {
 			} else if (!this.getSol().isEmpty() && this.getSol().size() < answer.size()) {
 				answer = new ArrayList<Integer>(this.getSol());
 			}
-			attempts2.clear();
+		//	attempts2.clear();
 			q.clear();
+			exceptions.clear();
+			lastPiece = Color.PINK;
 		}
 
 		return answer;

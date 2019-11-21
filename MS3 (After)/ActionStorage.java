@@ -208,6 +208,7 @@ public class ActionStorage {
 		moveY.clear();
 		moveX.clear();
 		this.currentMove = -1;
+		this.clearUndos();
 	}
 	
 }

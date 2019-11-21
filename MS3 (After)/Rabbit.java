@@ -214,6 +214,12 @@ public class Rabbit extends Slot implements MovingPiece{
 	public boolean canUndo() {
 		return (!moves.getMovex().isEmpty());
 	}
+
+	@Override
+	public void clearMoves() {
+		this.moves.clearMoves();
+		
+	}
 	
 	
 

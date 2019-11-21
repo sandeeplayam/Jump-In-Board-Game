@@ -388,7 +388,12 @@ public class Fox extends Slot implements MovingPiece {
 
 			dir++;
 		}
-		
+
 		return foxMoves;
+	}
+
+	@Override
+	public void clearMoves() {
+		this.moves.clearMoves();
 	}
 }
