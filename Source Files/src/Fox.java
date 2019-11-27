@@ -14,7 +14,7 @@ import java.util.ArrayList;
  * @author Omar Elberougy
  *
  */
-public class Fox extends Slot {
+public class Fox extends Slot implements MovingPiece {
 
 	private int xPos2; // stores the coordinate of the tail x position
 	private int yPos2;// stores the coordinate of the tail y position
@@ -300,6 +300,7 @@ public class Fox extends Slot {
 		return true;
 	}
 
+	@Override
 	public Color getColor() {
 		return color;
 	}
@@ -353,7 +354,7 @@ public class Fox extends Slot {
 	}
 
 	public boolean canUndo() {
-		return (moves.getNumMoves() != -1);
+		return (!moves.getMovex().isEmpty());
 	}
 
 	public ArrayList<Integer> possibleMoves(Board board) {
@@ -387,7 +388,12 @@ public class Fox extends Slot {
 
 			dir++;
 		}
-		
+
 		return foxMoves;
+	}
+
+	@Override
+	public void clearMoves() {
+		this.moves.clearMoves();
 	}
 }

@@ -22,24 +22,53 @@ public class Board {
 	private ArrayList<Slot> mushrooms;
 	private ArrayList<Slot> holes;
 	private ActionStorage moves;
+	private ArrayList<MovingPiece> gamePieces;
 
-
-	////////////////////////////////REMOVE BEFORE SUMBITTING///////////////////////////////
+	
 	public static void main(String args[]) {
+		Board test = new Board(3);
 
-		Board test = new Board(1);
-		Solver s = new Solver(test);
-		System.out.println("Solution is " + s.findSolution());
 		
-//		Rabbit o = (Rabbit) test.rabbits.get(1);
-//		Fox f = (Fox) test.foxes.get(0);
-//		ArrayList<Integer> currentAttack = new ArrayList<Integer>();
-//		s.solve(test, f, currentAttack);
-//		System.out.println("Solution is "+s.getSol());
+		Solver s = new Solver(test);
 	
+		tempSolver ts = new tempSolver(test);
+		
+		ArrayList<Integer> sol = s.findSolution();
+
+		ArrayList<Integer> tsol = ts.findSolution();
+		
+		System.out.println("Solution is " + sol);
+		System.out.println(sol.size()/4);
+		
+		System.out.println("tempSolution is " + tsol);
+		System.out.println(tsol.size()/4);
 	}
-	//////////////////////////////////////////////////////////////////////////////////////////
 	
+	
+	public void clearMoves() {
+		moves.clearMoves();
+		for(MovingPiece piece : this.getGamePieces()) {
+			piece.clearMoves();
+		}
+
+	}
+
+	public ActionStorage getMoves() {
+		return moves;
+	}
+
+	public Board(Board copy, int chalNum) {
+		this(chalNum);
+
+		ActionStorage possMoves = copy.getMoves();
+		for (int i = 0; i < possMoves.getNumMoves(); i++) {
+
+			this.move(possMoves.getX(i), possMoves.getY(i), possMoves.getX(i + 1), possMoves.getY(i + 1), 1);
+
+		}
+		this.clearMoves();
+	}
+
 	/**
 	 * Constructor of the board, that initializes the array lists that will be
 	 * filled with slot objects, and initializes the board initial layout with the
@@ -55,6 +84,8 @@ public class Board {
 		rabbits = new ArrayList<Slot>();
 		mushrooms = new ArrayList<Slot>();
 		foxes = new ArrayList<Slot>();
+		setGamePieces(new ArrayList<MovingPiece>());
+		
 		// Initialize the 2d array 'board' with slot objects
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
@@ -77,7 +108,7 @@ public class Board {
 			mushrooms.add(new Mushroom(1, 2));
 			mushrooms.add(new Mushroom(3, 2));
 			break;
-			
+
 		case 2:
 			holes.add(new Hole(0, 0));
 			holes.add(new Hole(0, 4));
@@ -87,22 +118,24 @@ public class Board {
 			mushrooms.add(new Mushroom(2, 2));
 			mushrooms.add(new Mushroom(2, 0));
 			mushrooms.add(new Mushroom(3, 2));
-			foxes.add(new Fox(3, 1, 4, 1,Color.BLACK));
+			foxes.add(new Fox(3, 1, 4, 1, Color.BLACK));
 			break;
-			
+
 		case 3:
-			rabbits.add(new Rabbit(0, 2, Color.WHITE));
-			rabbits.add(new Rabbit(2, 3, Color.orange));
+			Rabbit r = new Rabbit(0, 2, Color.WHITE);
+			rabbits.add(r);	
+			rabbits.add(new Rabbit(2, 1, Color.orange));
 			holes.add(new Hole(0, 0));
 			holes.add(new Hole(0, 4));
 			holes.add(new Hole(2, 2));
+		//	((Hole) holes.get(2)).addGamePiece(r);
 			holes.add(new Hole(4, 0));
 			holes.add(new Hole(4, 4));
 			mushrooms.add(new Mushroom(1, 2));
 			mushrooms.add(new Mushroom(4, 3));
-			foxes.add(new Fox(3, 1, 3, 2,Color.BLACK));
+			foxes.add(new Fox(3, 3, 3, 4, Color.BLACK));
 			break;
-			
+
 		case 4:
 			holes.add(new Hole(0, 0));
 			holes.add(new Hole(0, 4));
@@ -114,45 +147,78 @@ public class Board {
 			mushrooms.add(new Mushroom(1, 0));
 			mushrooms.add(new Mushroom(2, 1));
 			mushrooms.add(new Mushroom(3, 2));
-			foxes.add(new Fox(1, 3, 0, 3,Color.BLACK));
-			break;	
+			foxes.add(new Fox(1, 3, 0, 3, Color.BLACK));
+			break;
+
+		case 5:
+			rabbits.add(new Rabbit(1, 3, Color.WHITE));
+			rabbits.add(new Rabbit(2, 4, Color.ORANGE));
+			rabbits.add(new Rabbit(4, 3, Color.GRAY));
+			foxes.add(new Fox(1, 1, 1, 0, Color.RED));
+			foxes.add(new Fox(3, 1, 2, 1, Color.BLACK));
+			holes.add(new Hole(0, 0));
+			holes.add(new Hole(0, 4));
+			holes.add(new Hole(2, 2));
+			holes.add(new Hole(4, 0));
+			holes.add(new Hole(4, 4));
+			mushrooms.add(new Mushroom(0, 4));
+			((Hole) holes.get(1)).addGamePiece(mushrooms.get(0));
+			mushrooms.add(new Mushroom(4, 0));
+			((Hole) holes.get(3)).addGamePiece(mushrooms.get(1));
+			mushrooms.add(new Mushroom(3, 2));
+
+			break;
+			
+		case 6:
+			rabbits.add(new Rabbit(4, 2, Color.WHITE));
+			holes.add(new Hole(2, 2));
+			mushrooms.add(new Mushroom(3, 2));
+			break;
 		}
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
 	}
 
-	/**
-	 * Returns a Arraylist of all the rabbit and foxes
-	 * @return Arraylist of rabbit and fox objects
-	 */
-	public ArrayList<Slot> getPieces() {
-		ArrayList<Slot> al = new ArrayList<Slot>();
-		al.addAll(rabbits);
-		al.addAll(foxes);
-		return al;
+	
+
+
+	public void setGamePieces(ArrayList<MovingPiece> gamePieces) {
+		this.gamePieces = gamePieces;
 	}
 
+
 	/**
-	 * Getter for the 2D array holding all the Slots
+	 * Returns an Arraylist of all the rabbit and foxes
 	 * 
-	 * @return Slot[][] of all slots created in board
+	 * @return Arraylist of rabbit and fox objects
 	 */
-	public Slot[][] getBoard() {
-		return board;
+	public ArrayList<MovingPiece> getGamePieces() {
+		ArrayList<MovingPiece> al = new ArrayList<MovingPiece>();
+		for(Slot r : rabbits) {
+			al.add((MovingPiece) r);
+			
+		}
+		
+		for(Slot f : foxes) {
+			al.add((MovingPiece) f);
+		}
+
+		this.gamePieces = al;
+		return al;
 	}
 
 	/**
 	 * Adds all the pieces in the array lists to the board
 	 */
-	private void addPiecesToBoard() {
+	protected void addPiecesToBoard() {
 
 		Slot temp;
-		Iterator<Slot> iter = holes.iterator();
+		Iterator<Slot> iter = rabbits.iterator();
 		while (iter.hasNext()) {
 			temp = iter.next();
 			board[temp.getX()][temp.getY()] = temp;
 		}
 
-		iter = rabbits.iterator();
+		iter = holes.iterator();
 		while (iter.hasNext()) {
 			temp = iter.next();
 			board[temp.getX()][temp.getY()] = temp;
@@ -209,49 +275,48 @@ public class Board {
 	 */
 	public boolean move(int x1, int y1, int x2, int y2, int undo) {
 		boolean success = false;
-		
-		
-		
+
 		if (board[x1][y1].getClass() == Rabbit.class) { // if is a rabbit
-			success = ((Rabbit) board[x1][y1]).move(board, x2, y2,1); // call move method for that rabbit
+			success = ((Rabbit) board[x1][y1]).move(board, x2, y2, 1); // call move method for that rabbit
 		} // if is a hole with a rabbit inside
 		else if ((board[x1][y1].getClass() == Hole.class && ((Hole) board[x1][y1]).hasRabbit())) {
 			// call move method for that rabbit inside the hole
-			success = ((Rabbit) ((Hole) board[x1][y1]).getGamePiece()).move(board, x2, y2,1);
+			success = ((Rabbit) ((Hole) board[x1][y1]).getGamePiece()).move(board, x2, y2, 1);
 		} else if (board[x1][y1].getClass() == Fox.class) { // if it is a fox
-			success = ((Fox) board[x1][y1]).move(board, x2, y2,1); // call move method for that fox
+			success = ((Fox) board[x1][y1]).move(board, x2, y2, 1); // call move method for that fox
 		}
 
 		if (success && undo > 0) {
 			moves.addMove(x1, y1, x2, y2, undo);
 		}
-		
+
 		return success;
 
 	}
-	
+
 	/**
-	 * undo method checks if the undo is on a fox or rabbit and then delegates the undo itself to 
-	 * either the rabbit or fox class
+	 * undo method checks if the undo is on a fox or rabbit and then delegates the
+	 * undo itself to either the rabbit or fox class
 	 */
 	public void undo() {
 		int numMoves = moves.getNumMoves();
 
 		if ((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Fox.class) {
-			
-			((Fox)board[moves.getX(numMoves)][moves.getY(numMoves)]).undo(board);
 
-		} else if((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Rabbit.class) {
+			((Fox) board[moves.getX(numMoves)][moves.getY(numMoves)]).undo(board);
 
-			((Rabbit)board[moves.getX(numMoves)][moves.getY(numMoves)]).undo(board);
+		} else if ((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Rabbit.class) {
 
-		} else if((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Hole.class && ((Hole)(board[moves.getX(numMoves)][moves.getY(numMoves)])).hasRabbit()) {
-			
-			((Rabbit)(((Hole)board[moves.getX(numMoves)][moves.getY(numMoves)]).getGamePiece())).undo(board);
+			((Rabbit) board[moves.getX(numMoves)][moves.getY(numMoves)]).undo(board);
+
+		} else if ((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Hole.class
+				&& ((Hole) (board[moves.getX(numMoves)][moves.getY(numMoves)])).hasRabbit()) {
+
+			((Rabbit) (((Hole) board[moves.getX(numMoves)][moves.getY(numMoves)]).getGamePiece())).undo(board);
 		}
 		moves.addUndoMove();
 	}
-	
+
 	/**
 	 * redo method redo's a move that was undone
 	 */
@@ -259,32 +324,65 @@ public class Board {
 		int index = moves.getRedoy().size() - 1;
 		this.move(moves.getundoX(index - 1), moves.getundoY(index - 1), moves.getundoX(index), moves.getundoY(index),
 				2);
-				moves.removeUndo();
+		moves.removeUndo();
 	}
-	
+
 	/**
 	 * canUndo method checks if a undo operation can be performed
+	 * 
 	 * @return true if moves were made, false if no moves were made
 	 */
 	public boolean canUndo() {
-		return (moves.getNumMoves() != -1);
+		return (!moves.getMovex().isEmpty());
 	}
-	
+
 	/**
 	 * canRedo method checks if a redo operation can be performed
+	 * 
 	 * @return false if no moves to redo and true if there are moves to redo
 	 */
 	public boolean canRedo() {
 		return (!moves.getRedox().isEmpty());
 	}
-	
+
 	/**
-	 * reset method resets the board to the original state, basically keeps undo'ing till the board is
-	 * back to its original state
+	 * reset method resets the board to the original state, basically keeps undo'ing
+	 * till the board is back to its original state
 	 */
 	public void reset() {
-		while( this.canUndo()) {
+		while (this.canUndo()) {
 			this.undo();
 		}
 	}
+	
+	/**
+	 * Getter for the 2D array holding all the Slots
+	 * 
+	 * @return Slot[][] of all slots created in board
+	 */
+	public Slot[][] getBoard() {
+		return board;
+	}
+
+
+	public ArrayList<Slot> getRabbits() {
+		return rabbits;
+	}
+
+
+	public ArrayList<Slot> getFoxes() {
+		return foxes;
+	}
+
+
+	public ArrayList<Slot> getMushrooms() {
+		return mushrooms;
+	}
+
+
+	public ArrayList<Slot> getHoles() {
+		return holes;
+	}
+	
+	
 }

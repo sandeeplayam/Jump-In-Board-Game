@@ -1,4 +1,6 @@
+
 import java.util.ArrayList;
+
 
 /**
  * The Hole class of java game based on the children's game "JumpIn". This class
@@ -76,6 +78,7 @@ public class Hole extends Slot {
 		return gamePieceList.get(0);
 
 	}
+	
 
 	/**
 	 * Method removes a game piece from inside the hole
@@ -83,4 +86,36 @@ public class Hole extends Slot {
 	public void removeGamePiece() {
 		this.gamePieceList.remove(0); // removes a game piece from the ArrayList
 	}
+	
+	
+
+//	@Override
+//	public Color getColor() {
+//		return ((Rabbit)this.getGamePiece()).getColor();
+//		
+//	}
+//
+//	@Override
+//	public ArrayList<Integer> possibleMoves(Board board) {
+//		
+//		return ((Rabbit)this.getGamePiece()).possibleMoves(board);
+//	}
+//
+//	@Override
+//	public boolean canUndo() {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
+//
+//	@Override
+//	public void redo(Slot[][] b) {
+//		// TODO Auto-generated method stub
+//		
+//	}
+//
+//	@Override
+//	public boolean undo(Slot[][] b) {
+//		// TODO Auto-generated method stub
+//		return false;
+//	}
 }

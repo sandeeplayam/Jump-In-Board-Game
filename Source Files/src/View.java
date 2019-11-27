@@ -28,7 +28,7 @@ import java.awt.GridBagConstraints;
 public class View {
 
 	private JFrame frame;
-	private JMenuItem moveItem, undoItem, redoItem, hintItem;
+	private JMenuItem moveItem, undoItem, redoItem, hintItem, saveItem;
 	private Controller controller;
 
 	public JFrame getFrame() {
@@ -110,6 +110,10 @@ public class View {
 		frame.getJMenuBar().add(moveItem);
 		moveItem.addActionListener(controller);
 		moveItem.setVisible(false);
+		saveItem = new JMenuItem("Save");
+		frame.getJMenuBar().add(saveItem);
+		saveItem.addActionListener(controller);
+		saveItem.setVisible(false);
 
 		rules.addActionListener(controller);
 		quit.addActionListener(controller);
@@ -129,22 +133,36 @@ public class View {
 		redoItem.setVisible(false);
 		undoItem.setVisible(false);
 		hintItem.setVisible(false);
+		saveItem.setVisible(false);
 
 		frame.getContentPane().removeAll();
 		JPanel startMenu = new JPanel(new BorderLayout());
-
+		
+		JPanel startSubMenu = new JPanel(new BorderLayout());
+		startMenu.add(startSubMenu, BorderLayout.SOUTH);
+		
 		// Shows the logo on the start screen
 		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
 		JLabel logo = new JLabel(logoImage);
 		logo.setPreferredSize(new Dimension(300, 300));
 		startMenu.add(logo, BorderLayout.NORTH);
-
+		
+		
 		// Create a button and adds it to the startmenu screen
 		JButton newGame = new JButton("New Game");
 		newGame.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		startMenu.add(newGame, BorderLayout.SOUTH);
-
+		startSubMenu.add(newGame, BorderLayout.NORTH);
 		newGame.addActionListener(controller);
+		
+		JButton loadGame = new JButton("Load Game");
+		loadGame.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		startSubMenu.add(loadGame, BorderLayout.CENTER);
+		loadGame.addActionListener(controller);
+		
+		JButton buildLevel = new JButton("Build Level");
+		buildLevel.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		startSubMenu.add(buildLevel, BorderLayout.SOUTH);
+		buildLevel.addActionListener(controller);
 
 		frame.add(startMenu);// Adds the start menu to the JFrame
 		frame.validate();
@@ -211,6 +229,7 @@ public class View {
 		redoItem.setVisible(true);
 		undoItem.setVisible(true);
 		hintItem.setVisible(true);
+		saveItem.setVisible(true);
 
 		JPanel startLevel = new JPanel();
 		GridBagConstraints gbc = new GridBagConstraints();

@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Tharsan Sivathasan
  *
  */
-public class Rabbit extends Slot {
+public class Rabbit extends Slot implements MovingPiece{
 
 	private Color color; // Stores the color of the rabbit instance
 	private ActionStorage moves;
@@ -37,9 +37,12 @@ public class Rabbit extends Slot {
 	 * 
 	 * @return Color object from java.awt
 	 */
+	@Override
 	public Color getColor() {
 		return color;
 	}
+	
+	
 	
 	public ArrayList<Integer> possibleMoves(Board board) {
 		
@@ -55,7 +58,7 @@ public class Rabbit extends Slot {
 				rabMoves.add(dir);
 				rabMoves.add(spaces);
 			}
-
+			
 			dir++;
 		}
 		
@@ -209,7 +212,15 @@ public class Rabbit extends Slot {
 	}
 
 	public boolean canUndo() {
-		return (moves.getNumMoves() != -1);
+		return (!moves.getMovex().isEmpty());
 	}
+
+	@Override
+	public void clearMoves() {
+		this.moves.clearMoves();
+		
+	}
+	
+	
 
 }

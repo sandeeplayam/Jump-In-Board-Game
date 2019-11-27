@@ -61,6 +61,13 @@ public class Controller implements ActionListener {
 			case "New Game":// if the button is the new game button
 				view.levelSelect();
 				break;
+			case "Load Game":// if the button is the load game button
+				GameLoader gameLoader = new GameLoader();
+				board = gameLoader.loadFromFile();
+				view.startLevel(board);
+				break;
+			case "Build Level":// if the button is the build level button
+				break;
 			case "Level 1":// if the button is the level 1 button
 				levelNumber = 1;
 				break;
@@ -71,7 +78,7 @@ public class Controller implements ActionListener {
 				levelNumber = 3;
 				break;
 			case "Level 4":// if the button is the level 2 button
-				levelNumber = 4;
+				levelNumber = 5;
 				break;
 			case "Start":// if the button is the start button
 				if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
@@ -82,8 +89,13 @@ public class Controller implements ActionListener {
 			default: // if a button from the board gui is pressed
 
 				int y = ((JButton) e.getSource()).getX() / 100, x = ((JButton) e.getSource()).getY() / 100;
+				
+				
 
 				Slot[][] gameBoard = board.getBoard(); // get the current 2d array layout and save it to gameboard
+				
+				
+				//System.out.println(gameBoard[x][y].getClass());
 				// if its a object that can be moved
 				if (gameBoard[x][y].getClass() == Fox.class || gameBoard[x][y].getClass() == Rabbit.class
 						|| (gameBoard[x][y].getClass() == Hole.class) && ((Hole) gameBoard[x][y]).hasRabbit()) {
@@ -208,22 +220,43 @@ public class Controller implements ActionListener {
 				view.startLevel(board);
 				break;
 			case "Hint":
-				Solver s = new Solver(board);
-				ArrayList<Integer> moves = s.findSolution();
+				Board tempBoard = new Board(board,this.levelNumber);
+				
+				//Solver s = new Solver(tempBoard);
+				//ArrayList<Integer> moves = s.findSolution();
+				
+				tempSolver ts = new tempSolver(tempBoard);
+				ArrayList<Integer> moves = ts.findSolution();
+				
 				if (!moves.isEmpty()) {
 
 					JOptionPane.showMessageDialog(view.getFrame(),
 							"To solve the level move the piece from coordinate " + moves.get(0) + ", " + moves.get(1)
 									+ " to coordinate " + moves.get(2) + ", " + moves.get(3),
 							"Hints", JOptionPane.INFORMATION_MESSAGE);
-					for (int i = 0; i < moves.size()/4; i ++) {
-						board.undo();
-					}
+					
 					
 				} else {
 					JOptionPane.showMessageDialog(view.getFrame(),
 							"This level is unsolvable. Try Undoing or returning to main menu and picking another level.",
 							"Hints", JOptionPane.INFORMATION_MESSAGE);
+				}
+				break;
+			case "Save":
+				GameSaver gameSaver = new GameSaver();
+				try {
+					int optionSave = JOptionPane.showConfirmDialog(null,
+							"Are you sure you want save the game? Any previously saved progress will be overwritten.\nAny undo and redo information will not be saved.", "Save Game",
+							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+							new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+					if(optionSave == 0) {
+						gameSaver.saveToFile(board);
+						JOptionPane.showMessageDialog(view.getFrame(), "Game saved!", "Game Saved", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+					}
+					
+				} catch(Exception exception) {
+					System.out.println(exception);
+					JOptionPane.showMessageDialog(view.getFrame(), "Game was unable to be saved due to: " + exception, "Game Save Error", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 				}
 				break;
 			}

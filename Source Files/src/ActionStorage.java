@@ -121,6 +121,7 @@ public class ActionStorage {
 	 * @return the value of currentMove
 	 */
 	public int getNumMoves() {
+		
 		return currentMove;
 	}
 	
@@ -201,6 +202,13 @@ public class ActionStorage {
 	public void clearUndos() {
 		redoY.clear();
 		redoX.clear();
+	}
+	
+	public void clearMoves() {
+		moveY.clear();
+		moveX.clear();
+		this.currentMove = -1;
+		this.clearUndos();
 	}
 	
 }
