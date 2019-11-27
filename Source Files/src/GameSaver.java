@@ -131,7 +131,7 @@ public class GameSaver {
 		SaveFile saveFile = new SaveFile(stringBoard);
 		printStringBoard(stringBoard);//debug
 		//saverHelper.marshal(saveFile, System.out);
-		saverHelper.marshal(saveFile, new FileOutputStream("src/saveFile.xml"));
+		saverHelper.marshal(saveFile, new FileOutputStream("saveFile.xml"));
 	}
 	
 	private void printStringBoard(String[][] pieces) { //for debug

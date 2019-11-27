@@ -14,7 +14,7 @@ public class GameLoader {
 	public Board loadFromFile() {
 		Board board = new Board(0); //filler board
 		try {
-			File file = new File("src/saveFile.xml");
+			File file = new File("saveFile.xml");
 			JAXBContext loader = JAXBContext.newInstance(SaveFile.class);
 			Unmarshaller loaderHelper = loader.createUnmarshaller();
 			SaveFile saveFile = (SaveFile) loaderHelper.unmarshal(file);
