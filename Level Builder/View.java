@@ -30,6 +30,8 @@ public class View {
 	private JFrame frame;
 	private JMenuItem moveItem, undoItem, redoItem, hintItem;
 	private Controller controller;
+	JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit, northFox,
+			eastFox, southFox, westFox;
 
 	public JFrame getFrame() {
 		return this.frame;
@@ -94,19 +96,16 @@ public class View {
 		hintItem.setVisible(false);
 		// creates move button that is not visible until you see the board
 		undoItem = new JMenuItem("Undo");
-//		frame.getJMenuBar().add(Box.createHorizontalGlue());
 		frame.getJMenuBar().add(undoItem);
 		undoItem.addActionListener(controller);
 		undoItem.setVisible(false);
 		// creates move button that is not visible until you see the board
 		redoItem = new JMenuItem("Redo");
-//		frame.getJMenuBar().add(Box.createHorizontalGlue());
 		frame.getJMenuBar().add(redoItem);
 		redoItem.addActionListener(controller);
 		redoItem.setVisible(false);
 		// creates move button that is not visible until you see the board
 		moveItem = new JMenuItem("Move");
-//		frame.getJMenuBar().add(Box.createHorizontalGlue());
 		frame.getJMenuBar().add(moveItem);
 		moveItem.addActionListener(controller);
 		moveItem.setVisible(false);
@@ -167,7 +166,7 @@ public class View {
 		logo.setPreferredSize(new Dimension(300, 300));
 		levelSelect.add(logo, BorderLayout.NORTH);
 
-		JPanel levelButtons = new JPanel(new GridLayout(2,2));
+		JPanel levelButtons = new JPanel(new GridLayout(2, 3));
 
 		// Creates 5 level buttons to be placed side by side
 		JButton level1 = new JButton("Level 1");
@@ -182,6 +181,12 @@ public class View {
 		JButton level4 = new JButton("Level 4");
 		level4.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		levelButtons.add(level4);
+		JButton level5 = new JButton("Level 5");
+		level5.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		levelButtons.add(level5);
+		JButton levelBuilder = new JButton("Create Level");
+		levelBuilder.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		levelButtons.add(levelBuilder);
 
 		levelSelect.add(levelButtons, BorderLayout.CENTER);
 
@@ -194,11 +199,114 @@ public class View {
 		level2.addActionListener(controller);
 		level3.addActionListener(controller);
 		level4.addActionListener(controller);
+		level5.addActionListener(controller);
+		levelBuilder.addActionListener(controller);
 		start.addActionListener(controller);
 
 		frame.validate();
 		frame.repaint();
 
+	}
+
+	public void levelBuilder() {
+
+		frame.getContentPane().removeAll();
+		JPanel levelBuilder = new JPanel(new BorderLayout());
+		JPanel board = new JPanel(new GridBagLayout());
+		frame.getContentPane().add(levelBuilder);
+
+		GridBagConstraints gbc = new GridBagConstraints();
+//		Slot[][] tempBoard = ;
+		Dimension square = new Dimension(80, 80); // size of each button in the grid (except fox)
+
+		// Iterates over the board's 2d array
+		for (int x = 0; x < 5; x++) {
+			for (int y = 0; y < 5; y++) {
+
+				JButton tempButton;
+				ImageIcon imageIcon;
+				Image image;
+
+				String fileName = "";
+
+				// set row, column and size of each square
+				gbc.gridx = y; // set row number to the row number of the 2d array
+				gbc.gridy = x; // set column number to the column number of the 2d array
+				gbc.gridheight = 1; // set height of the column to 1
+				gbc.gridwidth = 1; // set width of the column to 1
+				if (x == 0 && y == 0 || x == 0 && y == 4 || x == 2 && y == 2 || x == 4 && y == 0 || x == 4 && y == 4) {
+					fileName = "hole.png";
+				} else {
+					fileName = "empty slot.png";
+				}
+
+				// Initialize the button with the filename and location set when determining
+				// which instance of a class it was
+				tempButton = new JButton();
+				imageIcon = new ImageIcon(getClass().getResource(fileName));
+				image = imageIcon.getImage();
+				// set size of the image to 100 by 100 (same size as the button)
+				image = image.getScaledInstance(gbc.gridwidth * 80, gbc.gridheight * 80, Image.SCALE_SMOOTH);
+				imageIcon = new ImageIcon(image);
+
+				tempButton.setIcon(imageIcon); // set picture in icon to image
+				tempButton.setSize(square); // set dimensions of button
+				tempButton.setFocusPainted(false);
+				tempButton.addActionListener(controller);
+				tempButton.setBorder(BorderFactory.createEmptyBorder());
+
+				board.add(tempButton, gbc);
+			}
+		}
+
+		JPanel slotButtons = new JPanel(new GridLayout(1, 4));
+		rabbitButton = new JButton("Add Rabbit");
+		rabbitButton.addActionListener(controller);
+		slotButtons.add(rabbitButton);
+		foxButton = new JButton("Add Fox");
+		foxButton.addActionListener(controller);
+		slotButtons.add(foxButton);
+		mushroomButton = new JButton("Add Mushroom");
+		mushroomButton.addActionListener(controller);
+		slotButtons.add(mushroomButton);
+		removeButton = new JButton("Remove Piece");
+		removeButton.addActionListener(controller);
+		slotButtons.add(removeButton);
+
+		JPanel movingPieceOptions = new JPanel(new GridLayout(2, 4));
+		northFox = new JButton("North");
+		northFox.addActionListener(controller);
+		movingPieceOptions.add(northFox);
+		eastFox = new JButton("East");
+		eastFox.addActionListener(controller);
+		movingPieceOptions.add(eastFox);
+		southFox = new JButton("South");
+		southFox.addActionListener(controller);
+		movingPieceOptions.add(southFox);
+		westFox = new JButton("West");
+		westFox.addActionListener(controller);
+		movingPieceOptions.add(westFox);
+		grayRabbit = new JButton("Gray");
+		grayRabbit.addActionListener(controller);
+		movingPieceOptions.add(grayRabbit);
+		orangeRabbit = new JButton("Orange");
+		orangeRabbit.addActionListener(controller);
+		movingPieceOptions.add(orangeRabbit);
+		whiteRabbit = new JButton("White");
+		whiteRabbit.addActionListener(controller);
+		movingPieceOptions.add(whiteRabbit);
+		setPieceOptionsEnabled(0, false);
+		setRabbitOptionsEnabled(false);
+		setFoxOptionsEnabled(0, false);
+
+		levelBuilder.add(board, BorderLayout.NORTH);
+		levelBuilder.add(slotButtons, BorderLayout.CENTER);
+		levelBuilder.add(movingPieceOptions, BorderLayout.SOUTH);
+
+		frame.validate();
+		frame.repaint();
+
+		System.out.println(northFox.getHeight());
 	}
 
 	/**
@@ -217,8 +325,8 @@ public class View {
 		Slot[][] tempBoard = b.getBoard();
 		Dimension square = new Dimension(100, 100); // size of each button in the grid (except fox)
 
-		startLevel.setLayout(new GridBagLayout());
 		frame.getContentPane().removeAll();
+		startLevel.setLayout(new GridBagLayout());
 		frame.getContentPane().add(startLevel);
 
 		// Iterates over the board's 2d array
@@ -332,5 +440,62 @@ public class View {
 		frame.validate();
 		frame.repaint();
 
+	}
+
+	// 0 is enable all, 1 is all exceppremove, 2 is rabbit and mushroom, 3 is fox, 4 is remove
+	public void setPieceOptionsEnabled(int i, boolean b) {
+		switch (i) {
+		case 0:
+			rabbitButton.setEnabled(b);
+			mushroomButton.setEnabled(b);
+			foxButton.setEnabled(b);
+			removeButton.setEnabled(b);
+			break;
+		case 1:
+			rabbitButton.setEnabled(b);
+			mushroomButton.setEnabled(b);
+			foxButton.setEnabled(b);
+			break;
+		case 2:
+			rabbitButton.setEnabled(b);
+			mushroomButton.setEnabled(b);
+			break;
+		case 3:
+			foxButton.setEnabled(b);
+			break;
+		case 4:
+			removeButton.setEnabled(b);
+			break;
+		}
+	}
+
+	public void setRabbitOptionsEnabled(boolean b) {
+		grayRabbit.setEnabled(b);
+		orangeRabbit.setEnabled(b);
+		whiteRabbit.setEnabled(b);
+	}
+
+	// 0 is enable all, 1-4 is north, east, south, and west in that order
+	public void setFoxOptionsEnabled(int i, boolean b) {
+		switch (i) {
+		case 0:
+			northFox.setEnabled(b);
+			eastFox.setEnabled(b);
+			southFox.setEnabled(b);
+			westFox.setEnabled(b);
+			break;
+		case 1:
+			northFox.setEnabled(b);
+			break;
+		case 2:
+			eastFox.setEnabled(b);
+			break;
+		case 3:
+			southFox.setEnabled(b);
+			break;
+		case 4:
+			westFox.setEnabled(b);
+			break;
+		}
 	}
 }
