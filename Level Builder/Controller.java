@@ -9,13 +9,9 @@
 */
 
 import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.Image;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-
-import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JMenuItem;
@@ -49,7 +45,7 @@ public class Controller implements ActionListener {
 		xPos2 = -1;
 		yPos2 = -1;
 		screen = 0;
-		tempBoard = new Slot[5][5];
+//		tempBoard = new Slot[5][5];
 		button1 = new JButton("temp1");
 		button2 = new JButton("temp2");
 	}
@@ -122,7 +118,24 @@ public class Controller implements ActionListener {
 				yPos = -1;
 				xPos2 = -1;
 				yPos2 = -1;
-				view.levelBuilder();
+
+				tempBoard = new Slot[5][5];
+				if (button1.getText().equals("temp1")) {
+					for (int i = 0; i < 5; i++) {
+						for (int j = 0; j < 5; j++) {
+							tempBoard[i][j] = new Slot(i, j);
+						}
+					}
+					tempBoard[0][0] = new Hole(0, 0);
+					tempBoard[0][4] = new Hole(0, 4);
+					tempBoard[2][2] = new Hole(2, 2);
+					tempBoard[4][0] = new Hole(4, 0);
+					tempBoard[4][4] = new Hole(4, 4);
+				}
+				view.levelBuilder(true, tempBoard);
+				view.setPieceOptionsEnabled(0, false);
+				view.setRabbitOptionsEnabled(false);
+				view.setFoxOptionsEnabled(0, false);
 				screen = 2;
 				break;
 			case "Start":// if the button is the start button
@@ -141,151 +154,117 @@ public class Controller implements ActionListener {
 	}
 
 	private void levelBuilderPerformed(ActionEvent e) {
-//		int y = ((JButton) e.getSource()).getX() / 90, x = ((JButton) e.getSource()).getY() / 90;
-//		System.out.println(x);
-//		System.out.println(y);
-//		JButton button1, button2;
-
-		if (button1.getText().equals("temp1")) {
-			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 5; j++) {
-					tempBoard[i][j] = new Slot(i, j);
-				}
-			}
-			tempBoard[0][0] = new Hole(0, 0);
-			tempBoard[0][4] = new Hole(0, 4);
-			tempBoard[2][2] = new Hole(2, 2);
-			tempBoard[4][0] = new Hole(4, 0);
-			tempBoard[4][4] = new Hole(4, 4);
-		}
-
-//		JButton tempButton = (JButton) e.getSource();
-		ImageIcon imageIcon;
-		Image image;
-		String fileName = "";
-		GridBagConstraints gbc = new GridBagConstraints();
-
-		int gridHeight = 1; // set height of the column to 1
-		int gridWidth = 1; // set width of the column to 1
+		Slot tempSlot = new Slot(0, 0);
 
 		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
-			switch (((JButton) e.getSource()).getText()) {
+			String text = ((JButton) e.getSource()).getText();
+			switch (text) {
 			case "Add Rabbit":
 				view.setPieceOptionsEnabled(0, false);
 				view.setRabbitOptionsEnabled(true);
 				break;
 			case "Add Fox":
 				view.setPieceOptionsEnabled(0, false);
-				//only allow direction if tail is acceptable///////////////////////////////////
-				//////////////////////////////////////////////////////////////////////////////
-				if (xPos > 0) {
+				// only allow direction if tail is acceptable
+				if (xPos > 0 && tempBoard[xPos + 1][yPos].getClass() == Slot.class) {
 					view.setFoxOptionsEnabled(3, true);
 				}
-				if (xPos < 4) {
+				if (xPos < 4 && tempBoard[xPos - 1][yPos].getClass() == Slot.class) {
 					view.setFoxOptionsEnabled(1, true);
 				}
-				if (yPos > 0) {
+				if (yPos > 0 && tempBoard[xPos][yPos + 1].getClass() == Slot.class) {
 					view.setFoxOptionsEnabled(2, true);
 				}
-				if (yPos < 4) {
+				if (yPos < 4 && tempBoard[xPos][yPos - 1].getClass() == Slot.class) {
 					view.setFoxOptionsEnabled(4, true);
 				}
 				break;
 			case "Add Mushroom":
-				fileName = "mushroom image.png";
-				tempBoard[xPos][yPos] = new Mushroom(xPos, yPos);
-				view.setPieceOptionsEnabled(0, false);
+				tempSlot = new Mushroom(xPos, yPos);
 				break;
 			case "Remove Piece":
-				fileName = "empty slot.png";
-				if (tempBoard[xPos][yPos].getClass() == Fox.class){
+				if (tempBoard[xPos][yPos].getClass() == Fox.class) {
 					tempBoard[xPos][yPos] = new Slot(xPos, yPos);
 					Fox tempFox = (Fox) tempBoard[xPos][yPos];
 					tempBoard[tempFox.getTailX()][tempFox.getTailY()] = new Slot(xPos, yPos);
+				} else if (tempBoard[xPos][yPos].getClass() == Hole.class) {
+					((Hole) tempBoard[xPos][yPos]).removeGamePiece();
 				} else {
 					tempBoard[xPos][yPos] = new Slot(xPos, yPos);
 				}
 				view.setPieceOptionsEnabled(0, false);
 				break;
 			case "Gray":
-				fileName = "Grabbit.png"; // change to grey rabbit image file
-				tempBoard[xPos][yPos] = new Rabbit(xPos, yPos, Color.GRAY);
-				view.setRabbitOptionsEnabled(false);
+				tempSlot = new Rabbit(xPos, yPos, Color.GRAY);
 				break;
 			case "Orange":
-				fileName = "Orabbit.png"; // change to grey rabbit image file
-				tempBoard[xPos][yPos] = new Rabbit(xPos, yPos, Color.ORANGE);
-				view.setRabbitOptionsEnabled(false);
+				tempSlot = new Rabbit(xPos, yPos, Color.ORANGE);
 				break;
 			case "White":
-				fileName = "Wrabbit.png"; // change to grey rabbit image file
-				tempBoard[xPos][yPos] = new Rabbit(xPos, yPos, Color.WHITE);
-				view.setRabbitOptionsEnabled(false);
+				tempSlot = new Rabbit(xPos, yPos, Color.WHITE);
 				break;
 			case "North":
-				fileName = "Fox Hup.png"; // change to vertical head up fox file
-				
-//				button1.getParent().add(comp, gbc);;
-				view.setFoxOptionsEnabled(0, false);
+				tempSlot = new Fox(xPos - 1, yPos, xPos, yPos, Color.BLACK);
+				tempBoard[xPos - 1][yPos] = tempSlot;
 				break;
 			case "East":
-				fileName = "Fox Hright.png"; // change to horizontal head left fox file
-				view.setFoxOptionsEnabled(0, false);
+				tempSlot = new Fox(xPos, yPos + 1, xPos, yPos, Color.BLACK);
+				tempBoard[xPos][yPos + 1] = tempSlot;
 				break;
 			case "South":
-				fileName = "Fox Hdown.png"; // change to vertical head down fox file
-				view.setFoxOptionsEnabled(0, false);
+				tempSlot = new Fox(xPos + 1, yPos, xPos, yPos, Color.BLACK);
+				tempBoard[xPos + 1][yPos] = tempSlot;
 				break;
 			case "West":
-				fileName = "Fox Hleft.png"; // change to horizontal head right fox file
-				view.setFoxOptionsEnabled(0, false);
+				tempSlot = new Fox(xPos, yPos - 1, xPos, yPos, Color.BLACK);
+				tempBoard[xPos][yPos - 1] = tempSlot;
 				break;
 			default:
 				int y = ((JButton) e.getSource()).getX() / 80, x = ((JButton) e.getSource()).getY() / 80;
-//				// set end coordinates
-//				xPos2 = xPos;
-//				yPos2 = yPos;
-//				// set beginning coordinates
+				// set button coordinates
 				xPos = x;
 				yPos = y;
-//				System.out.println(xPos + ", " + yPos + ": " + xPos2 + ", " + yPos2);
 				
-				gbc.gridx = x; // set row number to the row number of the 2d array
-				gbc.gridy = y; // set column number to the column number of the 2d array
-				gbc.gridheight = 1; // set height of the column to 1
-				gbc.gridwidth = 1; // set width of the column to 1
-
 				System.out.println(x + ", " + y + " " + tempBoard[x][y].getClass());
-
-//				button2 = button1;
-				button1 = (JButton) e.getSource();
 
 				if (tempBoard[x][y].getClass() == Rabbit.class
 						|| (tempBoard[x][y].getClass() == Hole.class && ((Hole) tempBoard[x][y]).hasGamePiece())
 						|| tempBoard[x][y].getClass() == Mushroom.class || tempBoard[x][y].getClass() == Fox.class) {
 					view.setPieceOptionsEnabled(4, true);
 				} else {
-					view.setPieceOptionsEnabled(2, true);
-					if (tempBoard[x][y].getClass() == Fox.class){
-						//only allow direction if tail is acceptable///////////////////////////
-						//////////////////////////////////////////////////////////////////////
-						view.setPieceOptionsEnabled(3, true);
+					if (tempBoard[x][y].getClass() == Hole.class && !((Hole) tempBoard[x][y]).hasGamePiece()) {
+						view.setPieceOptionsEnabled(2, true);
+					} else if (tempBoard[x][y].getClass() == Slot.class) {
+						view.setPieceOptionsEnabled(2, true);
+						// if fox can be added there in atleast 1 direction
+						if (x > 0 && tempBoard[x - 1][y].getClass() == Slot.class
+								|| x < 4 && tempBoard[x + 1][y].getClass() == Slot.class
+								|| y > 0 && tempBoard[x][y - 1].getClass() == Slot.class
+								|| y < 4 && tempBoard[x][y + 1].getClass() == Slot.class) {
+							view.setPieceOptionsEnabled(3, true);
+						}
 					}
 				}
 				break;
 			}
 
-			if (!fileName.equals("")) {
-				imageIcon = new ImageIcon(getClass().getResource(fileName));
-				image = imageIcon.getImage();
-				// set size of the image to 100 by 100 (same size as the button)
-				image = image.getScaledInstance(gridWidth * 80, gridHeight * 80, Image.SCALE_SMOOTH);
-				imageIcon = new ImageIcon(image);
-				button1.setIcon(imageIcon); // set picture in icon to image
-
-				fileName = "";
+			if (text.equals("Gray") || text.equals("Orange") || text.equals("White") || text.equals("Add Mushroom")) {
+				if (text.equals("Add Mushroom")) {
+					view.setPieceOptionsEnabled(0, false);
+				} else {
+					view.setRabbitOptionsEnabled(false);
+				}
+				if (tempBoard[xPos][yPos].getClass() == Hole.class && !((Hole) tempBoard[xPos][yPos]).hasGamePiece()) {
+					((Hole) tempBoard[xPos][yPos]).addGamePiece(tempSlot);
+				} else {
+					tempBoard[xPos][yPos] = tempSlot;
+				}
+			} else if (text.equals("North") || text.equals("East") || text.equals("South") || text.equals("West")) {
+				view.setFoxOptionsEnabled(0, false);
+				tempBoard[xPos][yPos] = tempSlot;
 			}
-			System.out.println(((JButton) e.getSource()).getWidth() + " " + ((JButton) e.getSource()).getHeight());
+
+			view.levelBuilder(false, tempBoard);
 		}
 
 	}
@@ -296,7 +275,7 @@ public class Controller implements ActionListener {
 
 			Slot[][] gameBoard = board.getBoard(); // get the current 2d array layout and save it to gameboard
 
-			 System.out.println(gameBoard[x][y].getClass());
+//			System.out.println(gameBoard[x][y].getClass());
 			// if its a object that can be moved
 			if (gameBoard[x][y].getClass() == Fox.class || gameBoard[x][y].getClass() == Rabbit.class
 					|| (gameBoard[x][y].getClass() == Hole.class) && ((Hole) gameBoard[x][y]).hasRabbit()) {
