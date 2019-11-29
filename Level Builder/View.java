@@ -10,6 +10,7 @@ import java.awt.Font;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.Image;
+import java.awt.event.ActionListener;
 import java.awt.GridBagConstraints;
 
 /**
@@ -30,8 +31,8 @@ public class View {
 	private JFrame frame;
 	private JMenuItem moveItem, undoItem, redoItem, hintItem, resetItem, solveItem, loadItem, saveItem;
 	private Controller controller;
-	private JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit,
-			northFox, eastFox, southFox, westFox;
+//	private JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit,
+//			northFox, eastFox, southFox, westFox;
 
 
 	/**
@@ -225,62 +226,16 @@ public class View {
 
 	}
 
-	public void levelBuilder(boolean firstRun, Slot[][] gameBoard) {
+	public void levelBuilder(LevelBuilder levelBuilder) {
 		loadItem.setVisible(false);
 		resetItem.setVisible(true);
 		solveItem.setVisible(true);
 		saveItem.setVisible(true);
 		
 		frame.getContentPane().removeAll();
-		JPanel levelBuilder = new JPanel(new BorderLayout());
+		levelBuilder.updateBoard();
 		frame.getContentPane().add(levelBuilder);
-		JPanel board = boardToPanel(gameBoard, 85, 85);
-
-		JPanel slotButtons = new JPanel(new GridLayout(1, 4));
-		JPanel movingPieceOptions = new JPanel(new GridLayout(2, 4));
-
-		if (firstRun) {
-			rabbitButton = new JButton("Add Rabbit");
-			rabbitButton.addActionListener(controller);
-			foxButton = new JButton("Add Fox");
-			foxButton.addActionListener(controller);
-			mushroomButton = new JButton("Add Mushroom");
-			mushroomButton.addActionListener(controller);
-			removeButton = new JButton("Remove Piece");
-			removeButton.addActionListener(controller);
-
-			northFox = new JButton("North");
-			northFox.addActionListener(controller);
-			eastFox = new JButton("East");
-			eastFox.addActionListener(controller);
-			southFox = new JButton("South");
-			southFox.addActionListener(controller);
-			westFox = new JButton("West");
-			westFox.addActionListener(controller);
-			grayRabbit = new JButton("Gray");
-			grayRabbit.addActionListener(controller);
-			orangeRabbit = new JButton("Orange");
-			orangeRabbit.addActionListener(controller);
-			whiteRabbit = new JButton("White");
-			whiteRabbit.addActionListener(controller);
-		}
-
-		slotButtons.add(rabbitButton);
-		slotButtons.add(foxButton);
-		slotButtons.add(mushroomButton);
-		slotButtons.add(removeButton);
-		movingPieceOptions.add(northFox);
-		movingPieceOptions.add(eastFox);
-		movingPieceOptions.add(southFox);
-		movingPieceOptions.add(westFox);
-		movingPieceOptions.add(grayRabbit);
-		movingPieceOptions.add(orangeRabbit);
-		movingPieceOptions.add(whiteRabbit);
-
-		levelBuilder.add(board, BorderLayout.NORTH);
-		levelBuilder.add(slotButtons, BorderLayout.CENTER);
-		levelBuilder.add(movingPieceOptions, BorderLayout.SOUTH);
-
+		
 		frame.validate();
 		frame.repaint();
 	}
@@ -298,7 +253,7 @@ public class View {
 		hintItem.setVisible(true);
 
 		frame.getContentPane().removeAll();
-		JPanel startLevel = boardToPanel(b.getBoard(), 100, 100);
+		JPanel startLevel = boardToPanel(b.getBoard(), 100, 100, controller);
 		frame.getContentPane().add(startLevel);
 
 		frame.validate();
@@ -306,7 +261,7 @@ public class View {
 
 	}
 
-	public JPanel boardToPanel(Slot[][] gameBoard, int squareHeight, int squareWidth) {
+	public JPanel boardToPanel(Slot[][] gameBoard, int squareHeight, int squareWidth, ActionListener c) {
 		JPanel board = new JPanel(new GridBagLayout());
 		GridBagConstraints gbc = new GridBagConstraints();
 		Dimension square = new Dimension(squareHeight, squareHeight); // size of each button in the grid (except fox)
@@ -405,7 +360,7 @@ public class View {
 				tempButton.setIcon(imageIcon); // set picture in icon to image
 				tempButton.setSize(square); // set dimensions of button
 				tempButton.setFocusPainted(false);
-				tempButton.addActionListener(controller);
+				tempButton.addActionListener(c);
 				tempButton.setBorder(BorderFactory.createEmptyBorder());
 
 				board.add(tempButton, gbc);
@@ -418,61 +373,61 @@ public class View {
 		return this.frame;
 	}
 
-	// 0 is enable all, 1 is all except remove, 2 is rabbit and mushroom, 3 is fox,
-	// 4 is remove
-	public void setPieceOptionsEnabled(int i, boolean b) {
-		switch (i) {
-		case 0:
-			rabbitButton.setEnabled(b);
-			mushroomButton.setEnabled(b);
-			foxButton.setEnabled(b);
-			removeButton.setEnabled(b);
-			break;
-		case 1:
-			rabbitButton.setEnabled(b);
-			mushroomButton.setEnabled(b);
-			foxButton.setEnabled(b);
-			break;
-		case 2:
-			rabbitButton.setEnabled(b);
-			mushroomButton.setEnabled(b);
-			break;
-		case 3:
-			foxButton.setEnabled(b);
-			break;
-		case 4:
-			removeButton.setEnabled(b);
-			break;
-		}
-	}
-
-	public void setRabbitOptionsEnabled(boolean b) {
-		grayRabbit.setEnabled(b);
-		orangeRabbit.setEnabled(b);
-		whiteRabbit.setEnabled(b);
-	}
-
-	// 0 is enable all, 1-4 is north, east, south, and west in that order
-	public void setFoxOptionsEnabled(int i, boolean b) {
-		switch (i) {
-		case 0:
-			northFox.setEnabled(b);
-			eastFox.setEnabled(b);
-			southFox.setEnabled(b);
-			westFox.setEnabled(b);
-			break;
-		case 1:
-			northFox.setEnabled(b);
-			break;
-		case 2:
-			eastFox.setEnabled(b);
-			break;
-		case 3:
-			southFox.setEnabled(b);
-			break;
-		case 4:
-			westFox.setEnabled(b);
-			break;
-		}
-	}
+//	// 0 is enable all, 1 is all except remove, 2 is rabbit and mushroom, 3 is fox,
+//	// 4 is remove
+//	public void setPieceOptionsEnabled(int i, boolean b) {
+//		switch (i) {
+//		case 0:
+//			rabbitButton.setEnabled(b);
+//			mushroomButton.setEnabled(b);
+//			foxButton.setEnabled(b);
+//			removeButton.setEnabled(b);
+//			break;
+//		case 1:
+//			rabbitButton.setEnabled(b);
+//			mushroomButton.setEnabled(b);
+//			foxButton.setEnabled(b);
+//			break;
+//		case 2:
+//			rabbitButton.setEnabled(b);
+//			mushroomButton.setEnabled(b);
+//			break;
+//		case 3:
+//			foxButton.setEnabled(b);
+//			break;
+//		case 4:
+//			removeButton.setEnabled(b);
+//			break;
+//		}
+//	}
+//
+//	public void setRabbitOptionsEnabled(boolean b) {
+//		grayRabbit.setEnabled(b);
+//		orangeRabbit.setEnabled(b);
+//		whiteRabbit.setEnabled(b);
+//	}
+//
+//	// 0 is enable all, 1-4 is north, east, south, and west in that order
+//	public void setFoxOptionsEnabled(int i, boolean b) {
+//		switch (i) {
+//		case 0:
+//			northFox.setEnabled(b);
+//			eastFox.setEnabled(b);
+//			southFox.setEnabled(b);
+//			westFox.setEnabled(b);
+//			break;
+//		case 1:
+//			northFox.setEnabled(b);
+//			break;
+//		case 2:
+//			eastFox.setEnabled(b);
+//			break;
+//		case 3:
+//			southFox.setEnabled(b);
+//			break;
+//		case 4:
+//			westFox.setEnabled(b);
+//			break;
+//		}
+//	}
 }

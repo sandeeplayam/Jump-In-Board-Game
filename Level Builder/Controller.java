@@ -8,7 +8,6 @@
 
 */
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
@@ -26,8 +25,6 @@ public class Controller implements ActionListener {
 	private int xPos2;
 	private int yPos2;
 	private int screen;
-	Slot[][] tempBoard;
-	JButton button1, button2;
 
 	/**
 	 * Constructor of the controller that initializes the instance variables and
@@ -45,9 +42,6 @@ public class Controller implements ActionListener {
 		xPos2 = -1;
 		yPos2 = -1;
 		screen = 0;
-//		tempBoard = new Slot[5][5];
-		button1 = new JButton("temp1");
-		button2 = new JButton("temp2");
 	}
 
 	/**
@@ -68,10 +62,7 @@ public class Controller implements ActionListener {
 		case 1:// level select screen
 			levelSelectPerformed(e);
 			break;
-		case 2:// level builder screen
-			levelBuilderPerformed(e);
-			break;
-		case 3:// start level screen
+		case 2:// start level screen
 			startLevelPerformed(e);
 			break;
 		}
@@ -114,29 +105,7 @@ public class Controller implements ActionListener {
 				levelNumber = 5;
 				break;
 			case "Create Level":
-				xPos = -1;
-				yPos = -1;
-				xPos2 = -1;
-				yPos2 = -1;
-
-				tempBoard = new Slot[5][5];
-				if (button1.getText().equals("temp1")) {
-					for (int i = 0; i < 5; i++) {
-						for (int j = 0; j < 5; j++) {
-							tempBoard[i][j] = new Slot(i, j);
-						}
-					}
-					tempBoard[0][0] = new Hole(0, 0);
-					tempBoard[0][4] = new Hole(0, 4);
-					tempBoard[2][2] = new Hole(2, 2);
-					tempBoard[4][0] = new Hole(4, 0);
-					tempBoard[4][4] = new Hole(4, 4);
-				}
-				view.levelBuilder(true, tempBoard);
-				view.setPieceOptionsEnabled(0, false);
-				view.setRabbitOptionsEnabled(false);
-				view.setFoxOptionsEnabled(0, false);
-				screen = 2;
+				view.levelBuilder(new LevelBuilder(view));
 				break;
 			case "Start":// if the button is the start button
 				if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
@@ -146,129 +115,12 @@ public class Controller implements ActionListener {
 					xPos2 = -1;
 					yPos2 = -1;
 					view.startLevel(board); // initialize the panel that holds the board gui
-					screen = 3;
+					screen = 2;
 				}
 				break;
 			}
 		}
 	}
-
-	private void levelBuilderPerformed(ActionEvent e) {
-		Slot tempSlot = new Slot(0, 0);
-
-		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
-			String text = ((JButton) e.getSource()).getText();
-			switch (text) {
-			case "Add Rabbit":
-				view.setPieceOptionsEnabled(0, false);
-				view.setRabbitOptionsEnabled(true);
-				break;
-			case "Add Fox":
-				view.setPieceOptionsEnabled(0, false);
-				// only allow direction if tail is acceptable
-				if (xPos > 0 && tempBoard[xPos + 1][yPos].getClass() == Slot.class) {
-					view.setFoxOptionsEnabled(3, true);
-				}
-				if (xPos < 4 && tempBoard[xPos - 1][yPos].getClass() == Slot.class) {
-					view.setFoxOptionsEnabled(1, true);
-				}
-				if (yPos > 0 && tempBoard[xPos][yPos + 1].getClass() == Slot.class) {
-					view.setFoxOptionsEnabled(2, true);
-				}
-				if (yPos < 4 && tempBoard[xPos][yPos - 1].getClass() == Slot.class) {
-					view.setFoxOptionsEnabled(4, true);
-				}
-				break;
-			case "Add Mushroom":
-				tempSlot = new Mushroom(xPos, yPos);
-				break;
-			case "Remove Piece":
-				if (tempBoard[xPos][yPos].getClass() == Fox.class) {
-					tempBoard[xPos][yPos] = new Slot(xPos, yPos);
-					Fox tempFox = (Fox) tempBoard[xPos][yPos];
-					tempBoard[tempFox.getTailX()][tempFox.getTailY()] = new Slot(xPos, yPos);
-				} else if (tempBoard[xPos][yPos].getClass() == Hole.class) {
-					((Hole) tempBoard[xPos][yPos]).removeGamePiece();
-				} else {
-					tempBoard[xPos][yPos] = new Slot(xPos, yPos);
-				}
-				view.setPieceOptionsEnabled(0, false);
-				break;
-			case "Gray":
-				tempSlot = new Rabbit(xPos, yPos, Color.GRAY);
-				break;
-			case "Orange":
-				tempSlot = new Rabbit(xPos, yPos, Color.ORANGE);
-				break;
-			case "White":
-				tempSlot = new Rabbit(xPos, yPos, Color.WHITE);
-				break;
-			case "North":
-				tempSlot = new Fox(xPos - 1, yPos, xPos, yPos, Color.BLACK);
-				tempBoard[xPos - 1][yPos] = tempSlot;
-				break;
-			case "East":
-				tempSlot = new Fox(xPos, yPos + 1, xPos, yPos, Color.BLACK);
-				tempBoard[xPos][yPos + 1] = tempSlot;
-				break;
-			case "South":
-				tempSlot = new Fox(xPos + 1, yPos, xPos, yPos, Color.BLACK);
-				tempBoard[xPos + 1][yPos] = tempSlot;
-				break;
-			case "West":
-				tempSlot = new Fox(xPos, yPos - 1, xPos, yPos, Color.BLACK);
-				tempBoard[xPos][yPos - 1] = tempSlot;
-				break;
-			default:
-				int y = ((JButton) e.getSource()).getX() / 80, x = ((JButton) e.getSource()).getY() / 80;
-				// set button coordinates
-				xPos = x;
-				yPos = y;
-				
-				System.out.println(x + ", " + y + " " + tempBoard[x][y].getClass());
-
-				if (tempBoard[x][y].getClass() == Rabbit.class
-						|| (tempBoard[x][y].getClass() == Hole.class && ((Hole) tempBoard[x][y]).hasGamePiece())
-						|| tempBoard[x][y].getClass() == Mushroom.class || tempBoard[x][y].getClass() == Fox.class) {
-					view.setPieceOptionsEnabled(4, true);
-				} else {
-					if (tempBoard[x][y].getClass() == Hole.class && !((Hole) tempBoard[x][y]).hasGamePiece()) {
-						view.setPieceOptionsEnabled(2, true);
-					} else if (tempBoard[x][y].getClass() == Slot.class) {
-						view.setPieceOptionsEnabled(2, true);
-						// if fox can be added there in atleast 1 direction
-						if (x > 0 && tempBoard[x - 1][y].getClass() == Slot.class
-								|| x < 4 && tempBoard[x + 1][y].getClass() == Slot.class
-								|| y > 0 && tempBoard[x][y - 1].getClass() == Slot.class
-								|| y < 4 && tempBoard[x][y + 1].getClass() == Slot.class) {
-							view.setPieceOptionsEnabled(3, true);
-						}
-					}
-				}
-				break;
-			}
-
-			if (text.equals("Gray") || text.equals("Orange") || text.equals("White") || text.equals("Add Mushroom")) {
-				if (text.equals("Add Mushroom")) {
-					view.setPieceOptionsEnabled(0, false);
-				} else {
-					view.setRabbitOptionsEnabled(false);
-				}
-				if (tempBoard[xPos][yPos].getClass() == Hole.class && !((Hole) tempBoard[xPos][yPos]).hasGamePiece()) {
-					((Hole) tempBoard[xPos][yPos]).addGamePiece(tempSlot);
-				} else {
-					tempBoard[xPos][yPos] = tempSlot;
-				}
-			} else if (text.equals("North") || text.equals("East") || text.equals("South") || text.equals("West")) {
-				view.setFoxOptionsEnabled(0, false);
-				tempBoard[xPos][yPos] = tempSlot;
-			}
-
-			view.levelBuilder(false, tempBoard);
-		}
-
-	}
-
 	private void startLevelPerformed(ActionEvent e) {
 		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
 			int y = ((JButton) e.getSource()).getX() / 100, x = ((JButton) e.getSource()).getY() / 100;
@@ -423,11 +275,5 @@ public class Controller implements ActionListener {
 			break;
 		}
 	}
-
-	public void resetCoordinates() {
-		xPos = -1;
-		yPos = -1;
-		xPos2 = -1;
-		yPos2 = -1;
-	}
+	
 }
