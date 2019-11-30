@@ -25,6 +25,7 @@ public class Controller implements ActionListener {
 	private int xPos2;
 	private int yPos2;
 	private int screen;
+	private LevelBuilder levelBuilder;
 
 	/**
 	 * Constructor of the controller that initializes the instance variables and
@@ -79,6 +80,10 @@ public class Controller implements ActionListener {
 			if (text.equals("New Game")) {// if the button is the new game button
 				view.levelSelect();
 				screen = 1;
+			} else if (text.equals("Load Game")) {// if the button is the load game button
+				GameLoader gameLoader = new GameLoader();
+				board = gameLoader.loadFromFile();
+				view.startLevel(board);
 			}
 		}
 	}
@@ -105,7 +110,8 @@ public class Controller implements ActionListener {
 				levelNumber = 5;
 				break;
 			case "Create Level":
-				view.levelBuilder(new LevelBuilder(view));
+				levelBuilder = new LevelBuilder(view);
+				view.levelBuilder(levelBuilder);
 				break;
 			case "Start":// if the button is the start button
 				if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
@@ -121,6 +127,7 @@ public class Controller implements ActionListener {
 			}
 		}
 	}
+
 	private void startLevelPerformed(ActionEvent e) {
 		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
 			int y = ((JButton) e.getSource()).getX() / 100, x = ((JButton) e.getSource()).getY() / 100;
@@ -257,11 +264,10 @@ public class Controller implements ActionListener {
 			// Solver s = new Solver(tempBoard);
 			// ArrayList<Integer> moves = s.findSolution();
 
-			tempSolver ts = new tempSolver(tempBoard);
+			Solver ts = new Solver(tempBoard);
 			ArrayList<Integer> moves = ts.findSolution();
 
 			if (!moves.isEmpty()) {
-
 				JOptionPane.showMessageDialog(view.getFrame(),
 						"To solve the level move the piece from coordinate " + moves.get(0) + ", " + moves.get(1)
 								+ " to coordinate " + moves.get(2) + ", " + moves.get(3),
@@ -273,7 +279,40 @@ public class Controller implements ActionListener {
 						"Hints", JOptionPane.INFORMATION_MESSAGE);
 			}
 			break;
+		case "Save Board":
+			if (screen == 2) {//if save button pressed from startlevel
+			GameSaver gameSaver = new GameSaver();
+			try {
+				int optionSave = JOptionPane.showConfirmDialog(view.getFrame(),
+						"Are you sure you want save the game? Any previously saved progress will be overwritten.\nAny undo and redo information will not be saved.",
+						"Save Game", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+				if (optionSave == 0) {
+					gameSaver.saveToFile(board);
+					JOptionPane.showMessageDialog(view.getFrame(), "Game saved!", "Game Saved",
+							JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+				}
+
+			} catch (Exception exception) {
+				System.out.println(exception);
+				JOptionPane.showMessageDialog(view.getFrame(), "Game was unable to be saved due to: " + exception,
+						"Game Save Error", JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+			}
+			} else { //if save came from level builder
+				levelBuilder.actionPerformed(e);
+			}
+			break;
 		}
 	}
-	
+
+	public void setScreen(int screen) {
+		this.screen = screen;
+		if (screen == 2) {
+			xPos = -1;
+			yPos = -1;
+			xPos2 = -1;
+			yPos2 = -1;
+		}
+	}
 }

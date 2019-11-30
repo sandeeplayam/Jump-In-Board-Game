@@ -34,7 +34,6 @@ public class View {
 //	private JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit,
 //			northFox, eastFox, southFox, westFox;
 
-
 	/**
 	 * Creates instance of the view class allowing the GUI to be shown
 	 * 
@@ -112,17 +111,16 @@ public class View {
 		// creates reset button that is not visible until you see the board
 		resetItem = new JMenuItem("Reset board");
 		frame.getJMenuBar().add(resetItem);
-		resetItem.addActionListener(controller);
 
 		// creates solve button that is not visible until you see the board
-		solveItem = new JMenuItem("Test solve board");
+		solveItem = new JMenuItem("Test Solveable");
 		frame.getJMenuBar().add(solveItem);
-		solveItem.addActionListener(controller);
+		
 		// creates save button that is not visible until you see the board
 		saveItem = new JMenuItem("Save Board");
 		frame.getJMenuBar().add(saveItem);
 		saveItem.addActionListener(controller);
-		
+
 		rules.addActionListener(controller);
 		quit.addActionListener(controller);
 		returnMain.addActionListener(controller);
@@ -149,6 +147,9 @@ public class View {
 		frame.getContentPane().removeAll();
 		JPanel startMenu = new JPanel(new BorderLayout());
 
+		JPanel startSubMenu = new JPanel(new BorderLayout());
+		startMenu.add(startSubMenu, BorderLayout.SOUTH);
+
 		// Shows the logo on the start screen
 		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
 		JLabel logo = new JLabel(logoImage);
@@ -158,9 +159,13 @@ public class View {
 		// Create a button and adds it to the startmenu screen
 		JButton newGame = new JButton("New Game");
 		newGame.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		startMenu.add(newGame, BorderLayout.SOUTH);
-
+		startSubMenu.add(newGame, BorderLayout.NORTH);
 		newGame.addActionListener(controller);
+
+		JButton loadGame = new JButton("Load Game");
+		loadGame.setFont(new Font("Tahoma", Font.PLAIN, 20));
+		startSubMenu.add(loadGame, BorderLayout.CENTER);
+		loadGame.addActionListener(controller);
 
 		frame.add(startMenu);// Adds the start menu to the JFrame
 		frame.validate();
@@ -231,11 +236,13 @@ public class View {
 		resetItem.setVisible(true);
 		solveItem.setVisible(true);
 		saveItem.setVisible(true);
-		
+		resetItem.addActionListener(levelBuilder);
+		solveItem.addActionListener(levelBuilder);
+
 		frame.getContentPane().removeAll();
 		levelBuilder.updateBoard();
 		frame.getContentPane().add(levelBuilder);
-		
+
 		frame.validate();
 		frame.repaint();
 	}
@@ -247,10 +254,14 @@ public class View {
 	public void startLevel(Board b) {
 
 		loadItem.setVisible(false);
+		resetItem.setVisible(false);
+		solveItem.setVisible(false);
 		moveItem.setVisible(true);
 		redoItem.setVisible(true);
 		undoItem.setVisible(true);
 		hintItem.setVisible(true);
+		saveItem.setVisible(true);
+		
 
 		frame.getContentPane().removeAll();
 		JPanel startLevel = boardToPanel(b.getBoard(), 100, 100, controller);
@@ -368,66 +379,13 @@ public class View {
 		}
 		return board;
 	}
-	
+
 	public JFrame getFrame() {
 		return this.frame;
 	}
+	
+	public ActionListener getController() {
+		return controller;
+	}
 
-//	// 0 is enable all, 1 is all except remove, 2 is rabbit and mushroom, 3 is fox,
-//	// 4 is remove
-//	public void setPieceOptionsEnabled(int i, boolean b) {
-//		switch (i) {
-//		case 0:
-//			rabbitButton.setEnabled(b);
-//			mushroomButton.setEnabled(b);
-//			foxButton.setEnabled(b);
-//			removeButton.setEnabled(b);
-//			break;
-//		case 1:
-//			rabbitButton.setEnabled(b);
-//			mushroomButton.setEnabled(b);
-//			foxButton.setEnabled(b);
-//			break;
-//		case 2:
-//			rabbitButton.setEnabled(b);
-//			mushroomButton.setEnabled(b);
-//			break;
-//		case 3:
-//			foxButton.setEnabled(b);
-//			break;
-//		case 4:
-//			removeButton.setEnabled(b);
-//			break;
-//		}
-//	}
-//
-//	public void setRabbitOptionsEnabled(boolean b) {
-//		grayRabbit.setEnabled(b);
-//		orangeRabbit.setEnabled(b);
-//		whiteRabbit.setEnabled(b);
-//	}
-//
-//	// 0 is enable all, 1-4 is north, east, south, and west in that order
-//	public void setFoxOptionsEnabled(int i, boolean b) {
-//		switch (i) {
-//		case 0:
-//			northFox.setEnabled(b);
-//			eastFox.setEnabled(b);
-//			southFox.setEnabled(b);
-//			westFox.setEnabled(b);
-//			break;
-//		case 1:
-//			northFox.setEnabled(b);
-//			break;
-//		case 2:
-//			eastFox.setEnabled(b);
-//			break;
-//		case 3:
-//			southFox.setEnabled(b);
-//			break;
-//		case 4:
-//			westFox.setEnabled(b);
-//			break;
-//		}
-//	}
 }

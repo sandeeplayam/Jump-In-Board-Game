@@ -3,42 +3,34 @@ import java.awt.Color;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
-
+@SuppressWarnings("serial")
 public class LevelBuilder extends JPanel implements ActionListener {
-	
+
 	private View view;
 	private int xPos, yPos;
 	private JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit,
-	northFox, eastFox, southFox, westFox;
+			northFox, eastFox, southFox, westFox;
 	private Slot[][] gameBoard;
 	JButton button1;
-	
+
 	public LevelBuilder(View v) {
 		this.setLayout(new BorderLayout());
 		this.view = v;
 		button1 = new JButton("temp1");
-		
+
 		xPos = -1;
 		yPos = -1;
-		
-		gameBoard = new Slot[5][5];
-		if (button1.getText().equals("temp1")) {
-			for (int i = 0; i < 5; i++) {
-				for (int j = 0; j < 5; j++) {
-					gameBoard[i][j] = new Slot(i, j);
-				}
-			}
-			gameBoard[0][0] = new Hole(0, 0);
-			gameBoard[0][4] = new Hole(0, 4);
-			gameBoard[2][2] = new Hole(2, 2);
-			gameBoard[4][0] = new Hole(4, 0);
-			gameBoard[4][4] = new Hole(4, 4);
-		}
-		
+
+		resetBoard();
+
 		rabbitButton = new JButton("Add Rabbit");
 		rabbitButton.addActionListener(this);
 		foxButton = new JButton("Add Fox");
@@ -62,7 +54,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 		orangeRabbit.addActionListener(this);
 		whiteRabbit = new JButton("White");
 		whiteRabbit.addActionListener(this);
-		
+
 		setPieceOptionsEnabled(0, false);
 		setRabbitOptionsEnabled(false);
 		setFoxOptionsEnabled(0, false);
@@ -75,7 +67,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 		JPanel movingPieceOptions = new JPanel(new GridLayout(2, 4));
 
 		this.removeAll();
-		
+
 		slotButtons.add(rabbitButton);
 		slotButtons.add(foxButton);
 		slotButtons.add(mushroomButton);
@@ -88,19 +80,16 @@ public class LevelBuilder extends JPanel implements ActionListener {
 		movingPieceOptions.add(orangeRabbit);
 		movingPieceOptions.add(whiteRabbit);
 
-		
 		this.add(board, BorderLayout.NORTH);
 		this.add(slotButtons, BorderLayout.CENTER);
 		this.add(movingPieceOptions, BorderLayout.SOUTH);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		Slot tempSlot = new Slot(0, 0);
-		System.out.println("hi");
 		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
 			String text = ((JButton) e.getSource()).getText();
-			System.out.println(text);
 			switch (text) {
 			case "Add Rabbit":
 				setPieceOptionsEnabled(0, false);
@@ -127,9 +116,9 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				break;
 			case "Remove Piece":
 				if (gameBoard[xPos][yPos].getClass() == Fox.class) {
-					gameBoard[xPos][yPos] = new Slot(xPos, yPos);
 					Fox tempFox = (Fox) gameBoard[xPos][yPos];
 					gameBoard[tempFox.getTailX()][tempFox.getTailY()] = new Slot(xPos, yPos);
+					gameBoard[tempFox.getX()][tempFox.getY()] = new Slot(xPos, yPos);
 				} else if (gameBoard[xPos][yPos].getClass() == Hole.class) {
 					((Hole) gameBoard[xPos][yPos]).removeGamePiece();
 				} else {
@@ -167,7 +156,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				// set button coordinates
 				xPos = x;
 				yPos = y;
-				
+
 				System.out.println(x + ", " + y + " " + gameBoard[x][y].getClass());
 
 				if (gameBoard[x][y].getClass() == Rabbit.class
@@ -208,66 +197,129 @@ public class LevelBuilder extends JPanel implements ActionListener {
 			}
 
 			view.levelBuilder(this);
+		} else if (e.getSource().getClass() == JMenuItem.class) {
+			String text = ((JMenuItem) e.getSource()).getText();
+			switch (text) {
+			case "Save Board":
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//AYE DAVID DO THIS
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+				break;
+			case "Test Solveable":
+				Solver solver = new Solver(new Board(getPieces()));
+				solver.findSolution();
+//				updateBoard();
+				if (!solver.getSol().isEmpty()) {
+					int optionSave = JOptionPane.showConfirmDialog(view.getFrame(),
+							"The game is solvable! Would you like to play it now?", "Start Game?",
+							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+							new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+					if (optionSave == 0) {
+						((Controller)view.getController()).setScreen(2);
+						view.startLevel(new Board(getPieces())); // initialize the panel that holds the
+																				// board gui
+					}
+				} else {
+					JOptionPane.showMessageDialog(view.getFrame(),
+							"This game is not solvable, refer to the rules and add pieces so that it is and press hint again.",
+							"Unsolvable Game Error", JOptionPane.INFORMATION_MESSAGE,
+							new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+					break;
+				}
+				break;
+			case "Reset board":
+				resetBoard();
+				break;
+			}
 		}
-		
+
 	}
-	
+
+	public ArrayList<Slot> getPieces() {
+		ArrayList<Slot> pieces = new ArrayList<Slot>();
+		for (int i = 0; i < gameBoard.length; i++) {
+			for (int j = 0; j < gameBoard.length; j++) {
+				if (gameBoard[i][j].getClass() == Rabbit.class || gameBoard[i][j].getClass() == Fox.class
+						|| gameBoard[i][j].getClass() == Mushroom.class || gameBoard[i][j].getClass() == Hole.class) {
+					pieces.add(gameBoard[i][j]);
+				}
+			}
+		}
+		return pieces;
+	}
+
+	public void resetBoard() {
+		gameBoard = new Slot[5][5];
+		for (int i = 0; i < 5; i++) {
+			for (int j = 0; j < 5; j++) {
+				gameBoard[i][j] = new Slot(i, j);
+			}
+		}
+		gameBoard[0][0] = new Hole(0, 0);
+		gameBoard[0][4] = new Hole(0, 4);
+		gameBoard[2][2] = new Hole(2, 2);
+		gameBoard[4][0] = new Hole(4, 0);
+		gameBoard[4][4] = new Hole(4, 4);
+	}
+
 	// 0 is enable all, 1 is all except remove, 2 is rabbit and mushroom, 3 is fox,
-		// 4 is remove
-		public void setPieceOptionsEnabled(int i, boolean b) {
-			switch (i) {
-			case 0:
-				rabbitButton.setEnabled(b);
-				mushroomButton.setEnabled(b);
-				foxButton.setEnabled(b);
-				removeButton.setEnabled(b);
-				break;
-			case 1:
-				rabbitButton.setEnabled(b);
-				mushroomButton.setEnabled(b);
-				foxButton.setEnabled(b);
-				break;
-			case 2:
-				rabbitButton.setEnabled(b);
-				mushroomButton.setEnabled(b);
-				break;
-			case 3:
-				foxButton.setEnabled(b);
-				break;
-			case 4:
-				removeButton.setEnabled(b);
-				break;
-			}
+	// 4 is remove
+	public void setPieceOptionsEnabled(int i, boolean b) {
+		switch (i) {
+		case 0:
+			rabbitButton.setEnabled(b);
+			mushroomButton.setEnabled(b);
+			foxButton.setEnabled(b);
+			removeButton.setEnabled(b);
+			break;
+		case 1:
+			rabbitButton.setEnabled(b);
+			mushroomButton.setEnabled(b);
+			foxButton.setEnabled(b);
+			break;
+		case 2:
+			rabbitButton.setEnabled(b);
+			mushroomButton.setEnabled(b);
+			break;
+		case 3:
+			foxButton.setEnabled(b);
+			break;
+		case 4:
+			removeButton.setEnabled(b);
+			break;
 		}
+	}
 
-		public void setRabbitOptionsEnabled(boolean b) {
-			grayRabbit.setEnabled(b);
-			orangeRabbit.setEnabled(b);
-			whiteRabbit.setEnabled(b);
-		}
+	public void setRabbitOptionsEnabled(boolean b) {
+		grayRabbit.setEnabled(b);
+		orangeRabbit.setEnabled(b);
+		whiteRabbit.setEnabled(b);
+	}
 
-		// 0 is enable all, 1-4 is north, east, south, and west in that order
-		public void setFoxOptionsEnabled(int i, boolean b) {
-			switch (i) {
-			case 0:
-				northFox.setEnabled(b);
-				eastFox.setEnabled(b);
-				southFox.setEnabled(b);
-				westFox.setEnabled(b);
-				break;
-			case 1:
-				northFox.setEnabled(b);
-				break;
-			case 2:
-				eastFox.setEnabled(b);
-				break;
-			case 3:
-				southFox.setEnabled(b);
-				break;
-			case 4:
-				westFox.setEnabled(b);
-				break;
-			}
+	// 0 is enable all, 1-4 is north, east, south, and west in that order
+	public void setFoxOptionsEnabled(int i, boolean b) {
+		switch (i) {
+		case 0:
+			northFox.setEnabled(b);
+			eastFox.setEnabled(b);
+			southFox.setEnabled(b);
+			westFox.setEnabled(b);
+			break;
+		case 1:
+			northFox.setEnabled(b);
+			break;
+		case 2:
+			eastFox.setEnabled(b);
+			break;
+		case 3:
+			southFox.setEnabled(b);
+			break;
+		case 4:
+			westFox.setEnabled(b);
+			break;
 		}
+	}
 
 }
