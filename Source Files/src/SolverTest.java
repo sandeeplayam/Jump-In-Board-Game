@@ -12,7 +12,8 @@ public class SolverTest {
 		
 		Board b = new Board(1);
 		Solver solver = new Solver(b);
-		solver.solve(b,b.getPieces().get(1),new ArrayList<Integer>());
+//		solver.solve(b,b.getGamePieces().get(1),new ArrayList<Integer>());
+		solver.findSolution();
 		b.reset();
 		for (int z = 0; z < solver.getSol().size(); z += 4) {
 			b.move((int) solver.getSol().get(z), (int) solver.getSol().get(z + 1), (int) solver.getSol().get(z + 2),
@@ -24,7 +25,8 @@ public class SolverTest {
 		
 		 b = new Board(3);
 		 Solver s2 = new Solver(b);
-		s2.solve(b,b.getPieces().get(1),new ArrayList<Integer>());
+//		s2.solve(b,b.getGamePieces().get(1),new ArrayList<Integer>());
+		 s2.findSolution();
 		b.reset();
 		for (int z = 0; z < s2.getSol().size(); z += 4) {
 			b.move((int) s2.getSol().get(z), (int) s2.getSol().get(z + 1), (int) s2.getSol().get(z + 2),
@@ -40,7 +42,8 @@ public class SolverTest {
 		
 		Board b = new Board(1);
 		Solver solver = new Solver(b);
-		ArrayList<Integer> solution = solver.findSolution();
+		solver.findSolution();
+		ArrayList<Integer> solution = solver.getSol();
 		ArrayList<Integer> test = new ArrayList<Integer>();
 		test.add(4);
 		test.add(2);
