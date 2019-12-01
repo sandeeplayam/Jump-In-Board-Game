@@ -69,7 +69,7 @@ public class Hole extends Slot {
 	}
 
 	/**
-	 * Method adds a game piece to the hole
+	 * Method gets a game piece to the hole
 	 * 
 	 * @return Slot object that was inside the hole
 	 */

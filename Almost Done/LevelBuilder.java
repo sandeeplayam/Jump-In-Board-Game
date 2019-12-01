@@ -26,11 +26,15 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	private JMenuItem resetItem, testSolveItem;
 	private JMenu saveCustomBoard;
 	private JPanel boardPanel;
+	private boolean greyExists, orangeExists, whiteExists;
 //	JButton button1;
 
 	public LevelBuilder(View v) {
 		this.setLayout(new BorderLayout());
 		this.view = v;
+		greyExists = false;
+		orangeExists = false;
+		whiteExists = false;
 //		button1 = new JButton("temp1");
 
 //		xPos = -1;
@@ -165,20 +169,49 @@ public class LevelBuilder extends JPanel implements ActionListener {
 					gameBoard[tempFox.getTailX()][tempFox.getTailY()] = new Slot(xPos, yPos);
 					gameBoard[tempFox.getX()][tempFox.getY()] = new Slot(xPos, yPos);
 				} else if (gameBoard[xPos][yPos].getClass() == Hole.class) {
+					Slot piece = ((Hole) gameBoard[xPos][yPos]).getGamePiece();
+					if(piece.getClass() == Rabbit.class){
+						Color rabbitColour = ((Rabbit) piece).getColor();
+						if(rabbitColour == Color.GRAY) {
+							greyExists = false;
+						}
+						else if(rabbitColour == Color.ORANGE) {
+							orangeExists = false;
+						}
+						else {
+							whiteExists = false;
+						}
+					}
 					((Hole) gameBoard[xPos][yPos]).removeGamePiece();
 				} else {
+					Slot piece = gameBoard[xPos][yPos];
+					if(piece.getClass() == Rabbit.class){
+						Color rabbitColour = ((Rabbit) piece).getColor();
+						if(rabbitColour == Color.GRAY) {
+							greyExists = false;
+						}
+						else if(rabbitColour == Color.ORANGE) {
+							orangeExists = false;
+						}
+						else {
+							whiteExists = false;
+						}
+					}
 					gameBoard[xPos][yPos] = new Slot(xPos, yPos);
 				}
 				setPieceOptionsEnabled(0, false);
 				break;
 			case "Gray":
 				tempSlot = new Rabbit(xPos, yPos, Color.GRAY);
+				greyExists = true;
 				break;
 			case "Orange":
 				tempSlot = new Rabbit(xPos, yPos, Color.ORANGE);
+				orangeExists = true;
 				break;
 			case "White":
 				tempSlot = new Rabbit(xPos, yPos, Color.WHITE);
+				whiteExists = true;
 				break;
 			case "North":
 				if(xPos == 0) {
@@ -186,6 +219,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				}
 				tempSlot = new Fox(xPos - 1, yPos, xPos, yPos, Color.BLACK);
 				gameBoard[xPos - 1][yPos] = tempSlot;
+				gameBoard[xPos][yPos] = tempSlot;
 				break;
 			case "East":
 				if(yPos == 4) {
@@ -193,6 +227,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				}
 				tempSlot = new Fox(xPos, yPos + 1, xPos, yPos, Color.BLACK);
 				gameBoard[xPos][yPos + 1] = tempSlot;
+				gameBoard[xPos][yPos] = tempSlot;
 				break;
 			case "South":
 				if(xPos == 4) {
@@ -200,6 +235,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				}
 				tempSlot = new Fox(xPos + 1, yPos, xPos, yPos, Color.BLACK);
 				gameBoard[xPos + 1][yPos] = tempSlot;
+				gameBoard[xPos][yPos] = tempSlot;
 				break;
 			case "West":
 				if(yPos == 0) {
@@ -207,6 +243,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				}
 				tempSlot = new Fox(xPos, yPos - 1, xPos, yPos, Color.BLACK);
 				gameBoard[xPos][yPos - 1] = tempSlot;
+				gameBoard[xPos][yPos] = tempSlot;
 				break;
 			default:
 				int y = ((JButton) e.getSource()).getX() / 80, x = ((JButton) e.getSource()).getY() / 80;
@@ -298,7 +335,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				solver.findSolution();
 				disableAllButtons();
 //				updateBoard();
-				if (!solver.getSol().isEmpty()) {
+				if (!solver.getSol().isEmpty() && (greyExists || orangeExists || whiteExists)) {
 					testSolveItem.setText("Start");
 					saveCustomBoard.setVisible(true);
 					for(Component boardButton : boardPanel.getComponents()) {
@@ -374,6 +411,10 @@ public class LevelBuilder extends JPanel implements ActionListener {
 		gameBoard[2][2] = new Hole(2, 2);
 		gameBoard[4][0] = new Hole(4, 0);
 		gameBoard[4][4] = new Hole(4, 4);
+		
+		greyExists = false;
+		orangeExists = false;
+		whiteExists = false;
 
 		testSolveItem.setText("Test Solvable");
 		saveCustomBoard.setVisible(false);
@@ -410,9 +451,22 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	}
 
 	public void setRabbitOptionsEnabled(boolean b) {
-		grayRabbit.setEnabled(b);
-		orangeRabbit.setEnabled(b);
-		whiteRabbit.setEnabled(b);
+		if(b) {
+			if(!greyExists) {
+				grayRabbit.setEnabled(b);
+			}
+			if(!orangeExists) {
+				orangeRabbit.setEnabled(b);
+			}
+			if(!whiteExists) {
+				whiteRabbit.setEnabled(b);
+			}
+		}
+		else {
+			grayRabbit.setEnabled(b);
+			orangeRabbit.setEnabled(b);
+			whiteRabbit.setEnabled(b);
+		}
 	}
 
 	// 0 is enable all, 1-4 is north, east, south, and west in that order
