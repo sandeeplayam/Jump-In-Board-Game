@@ -285,6 +285,7 @@ public class Controller implements ActionListener {
 						levelNumber = 0;//
 						view.getFrame().getContentPane().removeAll();
 						view.startMenu();// initialize the panel that holds the board gui
+						screen = 0;
 
 					} else { // if player doesnt want to play again
 						System.exit(0); // exit program
