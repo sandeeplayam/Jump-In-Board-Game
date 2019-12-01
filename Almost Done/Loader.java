@@ -79,7 +79,6 @@ public class Loader {
 		ArrayList<Slot> mushrooms = board.getMushrooms();
 		ArrayList<Slot> holes = board.getHoles();
 		//board.addPiecesToBoard();
-		printStringBoard(stringBoard);//debug
 		
 		for(int i = 0; i < 5; i++) {
 			for(int j = 0; j < 5; j++) {

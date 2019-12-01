@@ -336,13 +336,14 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				disableAllButtons();
 //				updateBoard();
 				if (!solver.getSol().isEmpty() && (greyExists || orangeExists || whiteExists)) {
-					testSolveItem.setText("Start");
+					testSolveItem.setVisible(false);
+//					testSolveItem.setText("Main Menu");
 					saveCustomBoard.setVisible(true);
-					for(Component boardButton : boardPanel.getComponents()) {
+					for(Component boardButton : boardPanel.getComponents()) { //disable buttons to prevent further edits
 						((JButton) boardButton).removeActionListener(this);
 					}
 					JOptionPane.showMessageDialog(view.getFrame(),
-							"The game is solvable!\nPress Start to start the game.\nSave the board for future games by pressing Save Board and selecting a save slot",
+							"The game is solvable!\nSave the board for future games by pressing Save Board and selecting a save slot",
 							"Solvable Game", JOptionPane.INFORMATION_MESSAGE,
 							new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 //					System.out.println("showing good message");//debug
@@ -371,17 +372,25 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				resetBoard();
 //				updateBoard();
 				break;
-			case "Start":
+//			case "Main Menu":
+//				JMenuBar menuBar = view.getFrame().getJMenuBar();
+//				menuBar.remove(resetItem);
+//				menuBar.remove(testSolveItem);
+//				menuBar.remove(saveCustomBoard);
+//				((Controller)view.getController()).setScreen(0);
+////				((Controller)view.getController()).setScreen(2);
+////				view.startLevel(new Board(getPieces())); // initialize the panel that holds the board gui
+//				view.startMenu();
+//				break;
+			case "Return to Main Menu":
 				JMenuBar menuBar = view.getFrame().getJMenuBar();
+				JMenuItem returnMain = (JMenuItem) e.getSource();
 				menuBar.remove(resetItem);
 				menuBar.remove(testSolveItem);
 				menuBar.remove(saveCustomBoard);
-				((Controller)view.getController()).setScreen(2);
-				view.startLevel(new Board(getPieces())); // initialize the panel that holds the board gui
-				break;
+				returnMain.removeActionListener(this);
 			}
 		}
-
 	}
 
 	public ArrayList<Slot> getPieces() {
@@ -416,7 +425,8 @@ public class LevelBuilder extends JPanel implements ActionListener {
 		orangeExists = false;
 		whiteExists = false;
 
-		testSolveItem.setText("Test Solvable");
+		testSolveItem.setVisible(true);
+//		testSolveItem.setText("Test Solvable");
 		saveCustomBoard.setVisible(false);
 		disableAllButtons();
 		updateBoard();

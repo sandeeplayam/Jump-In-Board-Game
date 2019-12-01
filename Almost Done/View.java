@@ -27,7 +27,7 @@ import java.awt.GridBagConstraints;
 public class View {
 
 	private JFrame frame;
-	private JMenuItem moveItem, undoItem, redoItem, hintItem;//, save1Item, save2Item, save3Item;//loadItem, saveItem;
+	private JMenuItem moveItem, undoItem, redoItem, hintItem, returnMain;//, save1Item, save2Item, save3Item;//loadItem, saveItem;
 	private Controller controller;
 	private JMenu saveProgress;
 //	private JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit,
@@ -77,7 +77,7 @@ public class View {
 		JMenu optionMenu = new JMenu("Options");
 		JMenuItem rules = new JMenuItem("Rules");
 		JMenuItem quit = new JMenuItem("Quit");
-		JMenuItem returnMain = new JMenuItem("Return to Main Menu");
+		returnMain = new JMenuItem("Return to Main Menu");
 		frame.setJMenuBar(menuBar);
 		menuBar.add(optionMenu);
 		optionMenu.add(rules);
@@ -297,6 +297,8 @@ public class View {
 		frame.getContentPane().removeAll();
 		levelBuilder.updateBoard();
 		frame.getContentPane().add(levelBuilder);
+//		returnMain.removeActionListener(controller);
+		returnMain.addActionListener(levelBuilder);
 
 		frame.validate();
 		frame.repaint();

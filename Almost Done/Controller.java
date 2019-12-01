@@ -133,13 +133,13 @@ public class Controller implements ActionListener {
 //				levelBuilder = new LevelBuilder(view);
 //				view.levelBuilder(levelBuilder);
 //				break;
-			case "Custom Level 1":
+			case "Custom 1":
 				levelNumber = -1;
 				break;
-			case "Custom Level 2":
+			case "Custom 2":
 				levelNumber = -2;
 				break;
-			case "Custom Level 3":
+			case "Custom 3":
 				levelNumber = -3;
 				break;
 			case "Start":// if the button is the start button
@@ -153,6 +153,7 @@ public class Controller implements ActionListener {
 //					screen = 2;
 				}
 				else {
+					System.out.println(-levelNumber);
 					Loader gameLoader = new Loader(1);
 					board = gameLoader.parseToBoard(0 - levelNumber);
 				}
