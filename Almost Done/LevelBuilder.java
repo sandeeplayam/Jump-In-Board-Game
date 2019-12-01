@@ -332,10 +332,10 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				break;
 			case "Test Solvable":
 				Solver solver = new Solver(new Board(getPieces()));
-				solver.findSolution();
+//				solver.findSolution();
 				disableAllButtons();
 //				updateBoard();
-				if (!solver.getSol().isEmpty() && (greyExists || orangeExists || whiteExists)) {
+				if (!solver.findSolution().isEmpty() && (greyExists || orangeExists || whiteExists)) {
 					testSolveItem.setText("Start");
 					saveCustomBoard.setVisible(true);
 					for(Component boardButton : boardPanel.getComponents()) { //disable buttons to prevent further edits

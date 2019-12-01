@@ -146,10 +146,15 @@ public class Board {
 			mushrooms.add(new Mushroom(3, 2));
 			break;
 
-//		case 6:
+//		case 6: //for debug
 //			rabbits.add(new Rabbit(4, 2, Color.WHITE));
+//			holes.add(new Hole(0, 0));
+//			holes.add(new Hole(0, 4));
 //			holes.add(new Hole(2, 2));
-//			mushrooms.add(new Mushroom(3, 2));
+//			holes.add(new Hole(4, 0));
+//			holes.add(new Hole(4, 4));
+////			mushrooms.add(new Mushroom(3, 2));
+//			foxes.add(new Fox(4, 3, 3, 3, Color.BLACK));
 //			break;
 		}
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
