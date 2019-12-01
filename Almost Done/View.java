@@ -138,6 +138,7 @@ public class View {
 		undoItem.setVisible(false);
 		hintItem.setVisible(false);
 		saveProgress.setVisible(false);
+		returnMain.setVisible(false);
 //		saveCustomBoard.setVisible(false);
 //		save1Item.setVisible(false);
 //		save2Item.setVisible(false);
@@ -195,6 +196,7 @@ public class View {
 	 */
 	public void levelSelect() {
 //		loadItem.setVisible(true);
+		returnMain.setVisible(true);
 
 		frame.getContentPane().removeAll();
 		JPanel levelSelect = new JPanel(new BorderLayout());
@@ -287,6 +289,7 @@ public class View {
 	}
 
 	public void levelBuilder(LevelBuilder levelBuilder) {
+		returnMain.setVisible(true);
 //		loadItem.setVisible(false);
 //		save1Item.setVisible(true);
 //		save2Item.setVisible(true);
@@ -309,7 +312,7 @@ public class View {
 	 * gridbaglayout to add pieces on the board's 2d array
 	 */
 	public void startLevel(Board b) {
-
+		returnMain.setVisible(true);
 //		loadItem.setVisible(false);
 		moveItem.setVisible(true);
 		redoItem.setVisible(true);
@@ -331,6 +334,8 @@ public class View {
 	}
 	
 	public void loadGameScreen() {
+		returnMain.setVisible(true);
+		
 		frame.getContentPane().removeAll();
 		JPanel loadGameScreen = new JPanel(new BorderLayout());
 		frame.getContentPane().add(loadGameScreen);

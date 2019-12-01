@@ -336,8 +336,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				disableAllButtons();
 //				updateBoard();
 				if (!solver.getSol().isEmpty() && (greyExists || orangeExists || whiteExists)) {
-					testSolveItem.setVisible(false);
-//					testSolveItem.setText("Main Menu");
+					testSolveItem.setText("Start");
 					saveCustomBoard.setVisible(true);
 					for(Component boardButton : boardPanel.getComponents()) { //disable buttons to prevent further edits
 						((JButton) boardButton).removeActionListener(this);
@@ -372,18 +371,23 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				resetBoard();
 //				updateBoard();
 				break;
-//			case "Main Menu":
-//				JMenuBar menuBar = view.getFrame().getJMenuBar();
-//				menuBar.remove(resetItem);
-//				menuBar.remove(testSolveItem);
-//				menuBar.remove(saveCustomBoard);
-//				((Controller)view.getController()).setScreen(0);
-////				((Controller)view.getController()).setScreen(2);
-////				view.startLevel(new Board(getPieces())); // initialize the panel that holds the board gui
-//				view.startMenu();
-//				break;
+			case "Start":
+				Board board = new Board(getPieces());
+				((Controller) view.getController()).setBoard(board);
+				((Controller) view.getController()).setScreen(2);
+				view.startLevel(board); // initialize the panel that holds the board gui
 			case "Return to Main Menu":
 				JMenuBar menuBar = view.getFrame().getJMenuBar();
+				for(Component piece : menuBar.getComponents()) {
+					if(piece.getClass() == JMenu.class) {
+						for(Component menuItem : ((JMenu) piece).getComponents()) {
+							JMenuItem tempMenuItem = (JMenuItem) menuItem;
+							if(tempMenuItem.getText().equals("Return to Main Menu")) {
+								tempMenuItem.removeActionListener(this);
+							}
+						}
+					}
+				}
 				JMenuItem returnMain = (JMenuItem) e.getSource();
 				menuBar.remove(resetItem);
 				menuBar.remove(testSolveItem);
@@ -425,8 +429,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 		orangeExists = false;
 		whiteExists = false;
 
-		testSolveItem.setVisible(true);
-//		testSolveItem.setText("Test Solvable");
+		testSolveItem.setText("Test Solvable");
 		saveCustomBoard.setVisible(false);
 		disableAllButtons();
 		updateBoard();

@@ -407,4 +407,8 @@ public class Controller implements ActionListener {
 			yPos2 = -1;
 		}
 	}
+	
+	public void setBoard(Board board) {
+		this.board = board;
+	}
 }
