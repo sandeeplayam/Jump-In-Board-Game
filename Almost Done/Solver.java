@@ -167,7 +167,7 @@ public class Solver {
 		// found
 		while (solution.isEmpty() && !q.isEmpty()) {
 
-//			System.out.println(attempt);
+			System.out.println(attempt);
 
 			if (start.getClass() == Fox.class && lastPiece.equals(((Fox) start).getColor())) {
 				// skip
@@ -379,14 +379,12 @@ public class Solver {
 				}
 			}
 
-			// System.out.println(this.getSol());
-
 			if (answer.isEmpty()) {
 				answer = new ArrayList<Integer>(this.getSol());
 			} else if (!this.getSol().isEmpty() && this.getSol().size() < answer.size()) {
 				answer = new ArrayList<Integer>(this.getSol());
 			}
-			// attempts2.clear();
+
 			q.clear();
 			exceptions.clear();
 			lastPiece = Color.PINK;
