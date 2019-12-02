@@ -140,12 +140,24 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				setPieceOptionsEnabled(0, false);
 				// only allow direction if tail is acceptable
 				if(xPos % 2 == 1) {//east and west only
-					setFoxOptionsEnabled(2, true);
-					setFoxOptionsEnabled(4, true);
+					if(yPos == 0 || gameBoard[xPos][yPos - 1].getClass() == Slot.class) {
+						setFoxOptionsEnabled(2, true);//north
+					}
+					if(yPos == 4 || gameBoard[xPos][yPos + 1].getClass() == Slot.class) {
+						setFoxOptionsEnabled(4, true);//south
+					}
+//					setFoxOptionsEnabled(2, true);//east
+//					setFoxOptionsEnabled(4, true);//west
 				}
 				if(yPos % 2 == 1) { //north and south only
-					setFoxOptionsEnabled(1, true);
-					setFoxOptionsEnabled(3, true);
+					if(xPos == 0 || gameBoard[xPos - 1][yPos].getClass() == Slot.class) {
+						setFoxOptionsEnabled(1, true);//north
+					}
+					if(xPos == 4 || gameBoard[xPos + 1][yPos].getClass() == Slot.class) {
+						setFoxOptionsEnabled(3, true);//south
+					}
+//					setFoxOptionsEnabled(1, true);//north
+//					setFoxOptionsEnabled(3, true);//south
 				}
 //				if (xPos > 0 && gameBoard[xPos][yPos].getClass() == Slot.class) {
 //					setFoxOptionsEnabled(3, true);
