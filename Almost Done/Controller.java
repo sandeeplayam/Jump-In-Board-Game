@@ -128,19 +128,21 @@ public class Controller implements ActionListener {
 				levelNumber = -3;
 				break;
 			case "Start":// if the button is the start button
-				if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
-					board = new Board(levelNumber); // initialize the board object with the level number picked
-				} else {
-					System.out.println(-levelNumber);
-					Loader gameLoader = new Loader(1);
-					board = gameLoader.parseToBoard(0 - levelNumber);
+				if(levelNumber != 0) {
+					if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
+						board = new Board(levelNumber); // initialize the board object with the level number picked
+					} else {
+						System.out.println(-levelNumber);
+						Loader gameLoader = new Loader(1);
+						board = gameLoader.parseToBoard(0 - levelNumber);
+					}
+					xPos = -1;
+					yPos = -1;
+					xPos2 = -1;
+					yPos2 = -1;
+					view.startLevel(board);
+					screen = 2;
 				}
-				xPos = -1;
-				yPos = -1;
-				xPos2 = -1;
-				yPos2 = -1;
-				view.startLevel(board);
-				screen = 2;
 				break;
 			}
 		}
