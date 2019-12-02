@@ -13,7 +13,7 @@ import java.util.ArrayList;
  * @author Tharsan Sivathasan
  *
  */
-public class Rabbit extends Slot implements MovingPiece{
+public class Rabbit extends Slot implements MovingPiece {
 
 	private Color color; // Stores the color of the rabbit instance
 	private ActionStorage moves;
@@ -41,11 +41,9 @@ public class Rabbit extends Slot implements MovingPiece{
 	public Color getColor() {
 		return color;
 	}
-	
-	
-	
+
 	public ArrayList<Integer> possibleMoves(Board board) {
-		
+
 		int dir = 1;
 		ArrayList<Integer> rabMoves = new ArrayList<Integer>();
 
@@ -58,10 +56,10 @@ public class Rabbit extends Slot implements MovingPiece{
 				rabMoves.add(dir);
 				rabMoves.add(spaces);
 			}
-			
+
 			dir++;
 		}
-		
+
 		return rabMoves;
 	}
 
@@ -191,10 +189,11 @@ public class Rabbit extends Slot implements MovingPiece{
 
 	public boolean undo(Slot[][] b) {
 		int numMoves = moves.getNumMoves();
-	//	System.out.println("to-> " + moves.getX(numMoves - 1) + " " + moves.getY(numMoves - 1));
+		// System.out.println("to-> " + moves.getX(numMoves - 1) + " " +
+		// moves.getY(numMoves - 1));
 
 		if (this.move(b, moves.getX(numMoves - 1), moves.getY(numMoves - 1), 0)) {
-		//	System.out.println("goodundo");
+			// System.out.println("goodundo");
 			moves.addUndoMove();
 			return true;
 		}
@@ -204,7 +203,7 @@ public class Rabbit extends Slot implements MovingPiece{
 
 	public void redo(Slot[][] b) {
 		int index = moves.getRedoy().size() - 1;
-		//System.out.println(index);
+		// System.out.println(index);
 		if (this.move(b, moves.getundoX(index), moves.getundoY(index), 2)) {
 			moves.removeUndo();
 		}
@@ -218,9 +217,7 @@ public class Rabbit extends Slot implements MovingPiece{
 	@Override
 	public void clearMoves() {
 		this.moves.clearMoves();
-		
+
 	}
-	
-	
 
 }

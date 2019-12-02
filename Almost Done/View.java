@@ -27,11 +27,9 @@ import java.awt.GridBagConstraints;
 public class View {
 
 	private JFrame frame;
-	private JMenuItem moveItem, undoItem, redoItem, hintItem, returnMain;//, save1Item, save2Item, save3Item;//loadItem, saveItem;
+	private JMenuItem moveItem, undoItem, redoItem, hintItem, returnMain;
 	private Controller controller;
 	private JMenu saveProgress;
-//	private JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit,
-//			northFox, eastFox, southFox, westFox;
 
 	/**
 	 * Creates instance of the view class allowing the GUI to be shown
@@ -102,23 +100,22 @@ public class View {
 		frame.getJMenuBar().add(moveItem);
 		moveItem.addActionListener(controller);
 
-		
 		// setting up save game menu
 		saveProgress = new JMenu("Save Game");
 		menuBar.add(saveProgress);
-		
+
 		JMenuItem save1Item = new JMenuItem("Save 1");
 		saveProgress.add(save1Item);
 		save1Item.addActionListener(controller);
-		
+
 		JMenuItem save2Item = new JMenuItem("Save 2");
 		saveProgress.add(save2Item);
 		save2Item.addActionListener(controller);
-		
+
 		JMenuItem save3Item = new JMenuItem("Save 3");
 		saveProgress.add(save3Item);
 		save3Item.addActionListener(controller);
-		
+
 		rules.addActionListener(controller);
 		quit.addActionListener(controller);
 		returnMain.addActionListener(controller);
@@ -139,11 +136,6 @@ public class View {
 		hintItem.setVisible(false);
 		saveProgress.setVisible(false);
 		returnMain.setVisible(false);
-//		saveCustomBoard.setVisible(false);
-//		save1Item.setVisible(false);
-//		save2Item.setVisible(false);
-//		save3Item.setVisible(false);
-//		loadItem.setVisible(false);
 
 		frame.getContentPane().removeAll();
 		JPanel startMenu = new JPanel(new BorderLayout());
@@ -168,17 +160,16 @@ public class View {
 		loadGame.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		startSubMenu.add(loadGame, BorderLayout.CENTER);
 		loadGame.addActionListener(controller);
-		
-		//determines if the load button is disabled or not
-		//disabled if the save file does not exists
+
+		// determines if the load button is disabled or not
+		// disabled if the save file does not exists
 		File file = new File("saveFile.xml");
-		if(file.exists()) {
+		if (file.exists()) {
 			loadGame.setEnabled(true);
-		}
-		else {
+		} else {
 			loadGame.setEnabled(false);
 		}
-		
+
 		// Create a a button to build a level and adds it ot the startmenu screen
 		JButton buildLevel = new JButton("Build Level");
 		buildLevel.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -195,7 +186,6 @@ public class View {
 	 * list of panels in card layout which can be cycled through
 	 */
 	public void levelSelect() {
-//		loadItem.setVisible(true);
 		returnMain.setVisible(true);
 
 		frame.getContentPane().removeAll();
@@ -228,9 +218,6 @@ public class View {
 		JButton level5 = new JButton("Level 5");
 		level5.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		premadeLevels.add(level5);
-//		JButton levelBuilder = new JButton("Create Level");
-//		levelBuilder.setFont(new Font("Tahoma", Font.PLAIN, 20));
-//		levelButtons.add(levelBuilder);
 
 		// Creates 3 buttons for the three custom levels the user has made
 		JButton customLevel1 = new JButton("Custom 1");
@@ -242,27 +229,26 @@ public class View {
 		JButton customLevel3 = new JButton("Custom 3");
 		customLevel3.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		customLevels.add(customLevel3);
-		
-		//Checking if custom levels exists;
+
+		// Checking if custom levels exists;
 		File file = new File("customBoards.xml");
-		if(!file.exists()) {
+		if (!file.exists()) {
 			customLevel1.setEnabled(false);
 			customLevel2.setEnabled(false);
 			customLevel3.setEnabled(false);
-		}
-		else {
+		} else {
 			Loader gameLoader = new Loader(1);
-			if(!gameLoader.saveExists(1)) {
+			if (!gameLoader.saveExists(1)) {
 				customLevel1.setEnabled(false);
 			}
-			if(!gameLoader.saveExists(2)) {
+			if (!gameLoader.saveExists(2)) {
 				customLevel2.setEnabled(false);
 			}
-			if(!gameLoader.saveExists(3)) {
+			if (!gameLoader.saveExists(3)) {
 				customLevel3.setEnabled(false);
 			}
 		}
-		
+
 		levelSelectSub.add(premadeLevels, BorderLayout.NORTH);
 		levelSelectSub.add(customLevels, BorderLayout.SOUTH);
 		levelSelect.add(levelSelectSub, BorderLayout.CENTER);
@@ -280,7 +266,6 @@ public class View {
 		customLevel1.addActionListener(controller);
 		customLevel2.addActionListener(controller);
 		customLevel3.addActionListener(controller);
-//		levelBuilder.addActionListener(controller);
 		start.addActionListener(controller);
 
 		frame.validate();
@@ -290,17 +275,10 @@ public class View {
 
 	public void levelBuilder(LevelBuilder levelBuilder) {
 		returnMain.setVisible(true);
-//		loadItem.setVisible(false);
-//		save1Item.setVisible(true);
-//		save2Item.setVisible(true);
-//		save3Item.setVisible(true);
-
-		
 
 		frame.getContentPane().removeAll();
 		levelBuilder.updateBoard();
 		frame.getContentPane().add(levelBuilder);
-//		returnMain.removeActionListener(controller);
 		returnMain.addActionListener(levelBuilder);
 
 		frame.validate();
@@ -313,16 +291,11 @@ public class View {
 	 */
 	public void startLevel(Board b) {
 		returnMain.setVisible(true);
-//		loadItem.setVisible(false);
 		moveItem.setVisible(true);
 		redoItem.setVisible(true);
 		undoItem.setVisible(true);
 		hintItem.setVisible(true);
 		saveProgress.setVisible(true);
-//		save1Item.setVisible(true);
-//		save2Item.setVisible(true);
-//		save3Item.setVisible(true);
-		
 
 		frame.getContentPane().removeAll();
 		JPanel startLevel = boardToPanel(b.getBoard(), 100, 100, controller);
@@ -330,53 +303,51 @@ public class View {
 
 		frame.validate();
 		frame.repaint();
-
 	}
-	
+
 	public void loadGameScreen() {
 		returnMain.setVisible(true);
-		
+
 		frame.getContentPane().removeAll();
 		JPanel loadGameScreen = new JPanel(new BorderLayout());
 		frame.getContentPane().add(loadGameScreen);
-		
+
 		ImageIcon logoImage = new ImageIcon(getClass().getResource("Jump In Logo.jpg"));
 		JLabel logo = new JLabel(logoImage);
 		logo.setPreferredSize(new Dimension(300, 300));
 		loadGameScreen.add(logo, BorderLayout.NORTH);
-		
+
 		JButton save1 = new JButton("Save 1");
 		save1.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		loadGameScreen.add(save1, BorderLayout.WEST);
 		save1.addActionListener(controller);
-		
+
 		JButton save2 = new JButton("Save 2");
 		save2.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		loadGameScreen.add(save2, BorderLayout.CENTER);
 		save2.addActionListener(controller);
-		
+
 		JButton save3 = new JButton("Save 3");
 		save3.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		loadGameScreen.add(save3, BorderLayout.EAST);
 		save3.addActionListener(controller);
-		
+
 		JButton start = new JButton("Start");
 		start.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		loadGameScreen.add(start, BorderLayout.SOUTH);
 		start.addActionListener(controller);
-		
+
 		Loader gameLoader = new Loader(0);
-		if(!gameLoader.saveExists(1)) {
+		if (!gameLoader.saveExists(1)) {
 			save1.setEnabled(false);
 		}
-		if(!gameLoader.saveExists(2)) {
+		if (!gameLoader.saveExists(2)) {
 			save2.setEnabled(false);
 		}
-		if(!gameLoader.saveExists(3)) {
+		if (!gameLoader.saveExists(3)) {
 			save3.setEnabled(false);
 		}
-		
-//		frame.add(loadGameScreen);// Adds the start menu to the JFrame
+
 		frame.validate();
 		frame.repaint();
 	}
@@ -455,7 +426,6 @@ public class View {
 
 							} else if (((Rabbit) ((Hole) gameBoard[x][y]).getGamePiece()).getColor() == Color.GRAY) {
 								fileName = "Ghole.png";// set picture to a Gray rabbit in a hole
-
 							}
 						} else { // if the hole has a mushroom inside
 							fileName = "mushroom image.png"; // set picture to a mushroom
@@ -492,7 +462,7 @@ public class View {
 	public JFrame getFrame() {
 		return this.frame;
 	}
-	
+
 	public ActionListener getController() {
 		return controller;
 	}

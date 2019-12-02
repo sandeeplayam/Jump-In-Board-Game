@@ -8,7 +8,6 @@ import java.util.Queue;
 
 public class Solver {
 
-//	private ArrayList<ArrayList<Integer>> attempts2;
 	private ArrayList<Integer> solution;
 	private Queue<ArrayList<Integer>> q;
 	private Color lastPiece;
@@ -20,36 +19,31 @@ public class Solver {
 		allChecked = false;
 		q = new LinkedList<ArrayList<Integer>>();
 		solution = new ArrayList<Integer>();
-	//	attempts2 = new ArrayList<ArrayList<Integer>>();
 		this.check = b;
 		lastPiece = Color.PINK;
 		exceptions = new HashMap<MovingPiece, Boolean>();
 
 	}
-	
-	// setup the board given the current attempt, add exceptions, and check if piece used as obstacle
+
+	// setup the board given the current attempt, add exceptions, and check if piece
+	// used as obstacle
 	public void moveSetupCheck(Board b, ArrayList<Integer> current, Slot start) {
-		
-		
+
 		for (int z = 0; z < current.size(); z += 4) {
 
 			// piece moved so reset it being used as an obstacle
 			if (b.getBoard()[current.get(z)][current.get(z + 1)] instanceof Hole) {
 
-				exceptions.put(
-						(MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)])
-								.getGamePiece(),
+				exceptions.put((MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)]).getGamePiece(),
 						false);
 
-				lastPiece = ((MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)])
-						.getGamePiece()).getColor();
+				lastPiece = ((MovingPiece) ((Hole) b.getBoard()[current.get(z)][current.get(z + 1)]).getGamePiece())
+						.getColor();
 
 			} else {
-				exceptions.put((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)],
-						false);
+				exceptions.put((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)], false);
 
-				lastPiece = ((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)])
-						.getColor();
+				lastPiece = ((MovingPiece) b.getBoard()[current.get(z)][current.get(z + 1)]).getColor();
 			}
 
 			// check if any objects used as obstacles
@@ -65,12 +59,10 @@ public class Solver {
 
 			}
 
-
-			b.move(current.get(z), current.get(z + 1), current.get(z + 2), current.get(z + 3),
-					1);
+			b.move(current.get(z), current.get(z + 1), current.get(z + 2), current.get(z + 3), 1);
 
 		}
-		
+
 	}
 
 	public boolean checkIfMovesWin(ArrayList<Integer> moves, Board b) {
@@ -157,8 +149,9 @@ public class Solver {
 		ArrayList<Integer> attempt = new ArrayList<Integer>();
 
 		if (!current.isEmpty()) {// if not the first try
-			
-			// setup the board using list of given moves (current), and check exceptions/obstacles
+
+			// setup the board using list of given moves (current), and check
+			// exceptions/obstacles
 			this.moveSetupCheck(b, current, start);
 
 			// add current list of moves to attempt being made
@@ -173,12 +166,12 @@ public class Solver {
 		// keep searching until queue is empty(no more moves to check) or solution is
 		// found
 		while (solution.isEmpty() && !q.isEmpty()) {
-			
+
 //			System.out.println(attempt);
 
 			if (start.getClass() == Fox.class && lastPiece.equals(((Fox) start).getColor())) {
 				// skip
-				
+
 			} else {
 				// get list of possible moves
 				ArrayList<Integer> Moves = ((MovingPiece) start).possibleMoves(b);
@@ -309,55 +302,54 @@ public class Solver {
 				}
 			}
 
-				// if all children were checked (true for the first try by default)
-				if (allChecked) {
+			// if all children were checked (true for the first try by default)
+			if (allChecked) {
 
-					if (!q.isEmpty() && q.peek().isEmpty()) {// if first try and queue is not empty
-						// remove attempt from queue and add to list attempts
+				if (!q.isEmpty() && q.peek().isEmpty()) {// if first try and queue is not empty
+					// remove attempt from queue and add to list attempts
+					q.poll();
+				}
+				// reset all children checked
+				allChecked = false;
+
+				if (!q.isEmpty()) {
+					// for all the pieces in the board
+					for (MovingPiece s : b.getGamePieces()) {
+
+						exceptions.put(s, false);
+						// reset the board
+						b.reset();
+						// piece tries to make a move given the attempt in the head of the queue
+						this.solve(b, (Slot) s, q.peek());
+
+					}
+					// if all pieces checked
+					allChecked = true;
+
+					if (q.size() > 0) {
+						// remove current attempt from queue and add to list of attempts
+						// and get next attempt from queue
 						q.poll();
-					}
-					// reset all children checked
-					allChecked = false;
+						if (!q.isEmpty()) {
+							current = q.peek();
 
-					if (!q.isEmpty()) {
-						// for all the pieces in the board
-						for (MovingPiece s : b.getGamePieces()) {
-
-							exceptions.put(s, false);
-							// reset the board
 							b.reset();
-							// piece tries to make a move given the attempt in the head of the queue
-							this.solve(b, (Slot) s, q.peek());
 
-						}
-						// if all pieces checked
-						allChecked = true;
+							// setup the board given the current attempt
+							this.moveSetupCheck(b, current, start);
 
-						if (q.size() > 0) {
-							// remove current attempt from queue and add to list of attempts
-							// and get next attempt from queue
-							q.poll();
-							if (!q.isEmpty()) {
-								current = q.peek();
-
-								b.reset();
-
-								// setup the board given the current attempt
-								this.moveSetupCheck(b, current, start);
-
-								// clear attempt and add the current attempt then loop back
-								attempt.clear();
-								attempt.addAll(current);
-							}
+							// clear attempt and add the current attempt then loop back
+							attempt.clear();
+							attempt.addAll(current);
 						}
 					}
-
-					// if all children aren't checked break out of recursion
-				} else {
-					break;
 				}
 
-			
+				// if all children aren't checked break out of recursion
+			} else {
+				break;
+			}
+
 		}
 
 	}
@@ -387,14 +379,14 @@ public class Solver {
 				}
 			}
 
-		//	System.out.println(this.getSol());
+			// System.out.println(this.getSol());
 
 			if (answer.isEmpty()) {
 				answer = new ArrayList<Integer>(this.getSol());
 			} else if (!this.getSol().isEmpty() && this.getSol().size() < answer.size()) {
 				answer = new ArrayList<Integer>(this.getSol());
 			}
-		//	attempts2.clear();
+			// attempts2.clear();
 			q.clear();
 			exceptions.clear();
 			lastPiece = Color.PINK;

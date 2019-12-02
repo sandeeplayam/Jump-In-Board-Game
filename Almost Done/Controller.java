@@ -52,7 +52,7 @@ public class Controller implements ActionListener {
 	 * based on where the event was from
 	 * 
 	 * @param e: Event type (Example: event came came from button object/jmenu
-	 *        object)
+	 *           object)
 	 */
 	public void actionPerformed(ActionEvent e) {
 
@@ -80,7 +80,7 @@ public class Controller implements ActionListener {
 		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
 			JButton tempButton = (JButton) e.getSource();
 			text = tempButton.getText();
-			switch(text) {
+			switch (text) {
 			case "New Game":
 				view.levelSelect();
 				screen = 1;
@@ -88,23 +88,12 @@ public class Controller implements ActionListener {
 			case "Load Game":
 				view.loadGameScreen();
 				screen = 3;
-//				GameLoader gameLoader = new GameLoader();
-//				board = gameLoader.loadFromFile();
-//				view.startLevel(board);
 				break;
 			case "Build Level":
 				levelBuilder = new LevelBuilder(view);
 				view.levelBuilder(levelBuilder);
 				break;
 			}
-//			if (text.equals("New Game")) {// if the button is the new game button
-//				view.levelSelect();
-//				screen = 1;
-//			} else if (text.equals("Load Game")) {// if the button is the load game button
-//				GameLoader gameLoader = new GameLoader();
-//				board = gameLoader.loadFromFile();
-//				view.startLevel(board);
-//			}
 		}
 	}
 
@@ -129,10 +118,6 @@ public class Controller implements ActionListener {
 			case "Level 5":// if the button is the level 4 button
 				levelNumber = 5;
 				break;
-//			case "Create Level":
-//				levelBuilder = new LevelBuilder(view);
-//				view.levelBuilder(levelBuilder);
-//				break;
 			case "Custom 1":
 				levelNumber = -1;
 				break;
@@ -145,14 +130,7 @@ public class Controller implements ActionListener {
 			case "Start":// if the button is the start button
 				if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
 					board = new Board(levelNumber); // initialize the board object with the level number picked
-//					xPos = -1;
-//					yPos = -1;
-//					xPos2 = -1;
-//					yPos2 = -1;
-//					view.startLevel(board); // initialize the panel that holds the board gui
-//					screen = 2;
-				}
-				else {
+				} else {
 					System.out.println(-levelNumber);
 					Loader gameLoader = new Loader(1);
 					board = gameLoader.parseToBoard(0 - levelNumber);
@@ -168,14 +146,17 @@ public class Controller implements ActionListener {
 		}
 	}
 
+	/**
+	 * Actions for startLevel screen
+	 * 
+	 * @param e The ActionEvent
+	 */
 	private void startLevelPerformed(ActionEvent e) {
 		if (e.getSource().getClass() == JButton.class) { // if the event came from a button object
 			int y = ((JButton) e.getSource()).getX() / 100, x = ((JButton) e.getSource()).getY() / 100;
 
 			Slot[][] gameBoard = board.getBoard(); // get the current 2d array layout and save it to gameboard
 
-//			System.out.println(gameBoard[x][y].getClass());
-			// if its a object that can be moved
 			if (gameBoard[x][y].getClass() == Fox.class || gameBoard[x][y].getClass() == Rabbit.class
 					|| (gameBoard[x][y].getClass() == Hole.class) && ((Hole) gameBoard[x][y]).hasRabbit()) {
 				// set beginning coordinates
@@ -190,12 +171,12 @@ public class Controller implements ActionListener {
 			}
 		}
 	}
-	
+
 	private void loadGamePerformed(ActionEvent e) {
 		String text;
 		if (e.getSource().getClass() == JButton.class) {
 			text = ((JButton) e.getSource()).getText();
-			switch(text) {
+			switch (text) {
 			case "Save 1":
 				levelNumber = 1;
 				break;
@@ -219,7 +200,6 @@ public class Controller implements ActionListener {
 				break;
 			}
 		}
-//		System.out.println(levelNumber);
 	}
 
 	private void menuBarPerformed(ActionEvent e) {
@@ -277,7 +257,7 @@ public class Controller implements ActionListener {
 
 				if (board.checkWin()) { // if you win
 					// display dialog box saying you win and asking if they wasnt to play again
-					int optionWin = JOptionPane.showConfirmDialog(null,
+					int optionWin = JOptionPane.showConfirmDialog(view.getFrame(),
 							"Congratulations, you won! Would you like to play again?", "You Win",
 							JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
 							new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
@@ -333,9 +313,6 @@ public class Controller implements ActionListener {
 		case "Hint":
 			Board tempBoard = new Board(board, this.levelNumber);
 
-			// Solver s = new Solver(tempBoard);
-			// ArrayList<Integer> moves = s.findSolution();
-
 			Solver ts = new Solver(tempBoard);
 			ArrayList<Integer> moves = ts.findSolution();
 
@@ -355,46 +332,24 @@ public class Controller implements ActionListener {
 		case "Save 2":
 		case "Save 3":
 			try {
-				int optionSave = JOptionPane.showConfirmDialog(null,
-						"Are you sure you want save your progress?\nAny previously saved progress in this slot will be overwritten.\nAny undo and redo information will not be saved.", "Save Game",
-						JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
+				int optionSave = JOptionPane.showConfirmDialog(view.getFrame(),
+						"Are you sure you want save your progress?\nAny previously saved progress in this slot will be overwritten.\nAny undo and redo information will not be saved.",
+						"Save Game", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
 						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-				if(optionSave == 0 ) {
+				if (optionSave == 0) {
 					int saveSlot = Integer.parseInt(text.substring(text.length() - 1));
-//					System.out.println(saveSlot);//debug
 					Saver gameSaver = new Saver(0);
 					gameSaver.saveToFile(board, saveSlot);
-					JOptionPane.showMessageDialog(view.getFrame(), "Game saved!", "Game Saved", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+					JOptionPane.showMessageDialog(view.getFrame(), "Game saved!", "Game Saved",
+							JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 				}
-			} catch(Exception exception) {
-				JOptionPane.showMessageDialog(view.getFrame(), "Game was unable to be saved due to: " + exception, "Game Save Error", JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+			} catch (Exception exception) {
+				JOptionPane.showMessageDialog(view.getFrame(), "Game was unable to be saved due to: " + exception,
+						"Game Save Error", JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 			}
 
 			break;
-//		case "Save Board":
-//			if (screen == 2) {//if save button pressed from startlevel
-//			GameSaver gameSaver = new GameSaver();
-//			try {
-//				int optionSave = JOptionPane.showConfirmDialog(view.getFrame(),
-//						"Are you sure you want save the game? Any previously saved progress will be overwritten.\nAny undo and redo information will not be saved.",
-//						"Save Game", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
-//						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-//				if (optionSave == 0) {
-//					gameSaver.saveToFile(board);
-//					JOptionPane.showMessageDialog(view.getFrame(), "Game saved!", "Game Saved",
-//							JOptionPane.INFORMATION_MESSAGE, new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-//				}
-//
-//			} catch (Exception exception) {
-//				System.out.println(exception);
-//				JOptionPane.showMessageDialog(view.getFrame(), "Game was unable to be saved due to: " + exception,
-//						"Game Save Error", JOptionPane.INFORMATION_MESSAGE,
-//						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-//			}
-//			} else { //if save came from level builder
-//				levelBuilder.actionPerformed(e);
-//			}
-//			break;
 		}
 	}
 
@@ -407,7 +362,7 @@ public class Controller implements ActionListener {
 			yPos2 = -1;
 		}
 	}
-	
+
 	public void setBoard(Board board) {
 		this.board = board;
 	}
