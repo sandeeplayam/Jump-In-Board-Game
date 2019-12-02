@@ -141,10 +141,10 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				// only allow direction if tail is acceptable
 				if(xPos % 2 == 1) {//east and west only
 					if(yPos == 0 || gameBoard[xPos][yPos - 1].getClass() == Slot.class) {
-						setFoxOptionsEnabled(2, true);//north
+						setFoxOptionsEnabled(4, true);//east
 					}
 					if(yPos == 4 || gameBoard[xPos][yPos + 1].getClass() == Slot.class) {
-						setFoxOptionsEnabled(4, true);//south
+						setFoxOptionsEnabled(2, true);//west
 					}
 //					setFoxOptionsEnabled(2, true);//east
 //					setFoxOptionsEnabled(4, true);//west
