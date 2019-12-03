@@ -124,10 +124,20 @@ public class Board {
 		}
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
 	}
+	
+	public ArrayList<Slot> getAllPieces(){
+		
+		ArrayList<Slot> pieces = new ArrayList<Slot>(this.getFoxes());
+		pieces.addAll(this.getHoles());
+		pieces.addAll(this.getMushrooms());
+		pieces.addAll(this.getRabbits());
+		return pieces;
+	}
 
-	public Board(Board copy, int chalNum) {
-		this(chalNum);
-
+	public Board(Board copy) {
+		
+		this(copy.getAllPieces());
+		
 		ActionStorage possMoves = copy.getMoves();
 		for (int i = 0; i < possMoves.getNumMoves(); i++) {
 			this.move(possMoves.getX(i), possMoves.getY(i), possMoves.getX(i + 1), possMoves.getY(i + 1), 1);
@@ -151,13 +161,6 @@ public class Board {
 			} else if (i.getClass() == Hole.class) {
 				Hole temp = (Hole) i;
 				holes.add(new Hole(temp.getX(), temp.getY()));
-				if (((Hole) i).hasGamePiece() && ((Hole) i).hasRabbit()) {
-					Rabbit temp1 = (Rabbit) ((Hole) i).getGamePiece();
-					rabbits.add(new Rabbit(temp1.getX(), temp1.getY(), temp1.getColor()));
-				} else if (((Hole) i).hasGamePiece() && !((Hole) i).hasRabbit()) {
-					Mushroom temp1 = (Mushroom) ((Hole) i).getGamePiece();
-					mushrooms.add(new Mushroom(temp1.getX(), temp1.getY()));
-				}
 			}
 		}
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
@@ -227,6 +230,9 @@ public class Board {
 				occupiedHoles++;
 			}
 		}
+		
+		System.out.println(occupiedHoles + " " +rabbits.size());
+	
 		// If number of occupied holes is the same as number of rabbits on the board
 		if (occupiedHoles == rabbits.size()) {
 			return true;

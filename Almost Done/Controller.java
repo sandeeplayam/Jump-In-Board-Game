@@ -313,11 +313,9 @@ public class Controller implements ActionListener {
 			view.startLevel(board);
 			break;
 		case "Hint":
-			Board tempBoard = new Board(board, this.levelNumber);
-
+			Board tempBoard = new Board(board);
 			Solver ts = new Solver(tempBoard);
 			ArrayList<Integer> moves = ts.findSolution();
-
 			if (!moves.isEmpty()) {
 				JOptionPane.showMessageDialog(view.getFrame(),
 						"To solve the level move the piece from coordinate " + moves.get(0) + ", " + moves.get(1)
