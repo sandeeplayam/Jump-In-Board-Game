@@ -22,7 +22,8 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	private int xPos, yPos;
 	private JButton rabbitButton, foxButton, mushroomButton, removeButton, grayRabbit, orangeRabbit, whiteRabbit,
 			northFox, eastFox, southFox, westFox;
-	private Slot[][] gameBoard;
+//	private Slot[][] board.getBoard();
+	private Board board;
 	private JMenuItem resetItem, testSolveItem;
 	private JMenu saveCustomBoard;
 	private JPanel boardPanel;
@@ -90,7 +91,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	 */
 	public void updateBoard() {
 		JFrame frame = view.getFrame();
-		boardPanel = view.boardToPanel(gameBoard, 85, 85, this);
+		boardPanel = view.boardToPanel(board.getBoard(), 85, 85, this);
 		JPanel slotButtons = new JPanel(new GridLayout(1, 4));
 		JPanel movingPieceOptions = new JPanel(new GridLayout(2, 4));
 
@@ -126,18 +127,18 @@ public class LevelBuilder extends JPanel implements ActionListener {
 		setPieceOptionsEnabled(0, false);
 		// only allow direction if tail is acceptable
 		if (xPos % 2 == 1) {// east and west only
-			if (yPos == 0 || gameBoard[xPos][yPos - 1].getClass() == Slot.class) {
+			if (yPos == 0 || board.getBoard()[xPos][yPos - 1].getClass() == Slot.class) {
 				setFoxOptionsEnabled(4, true);// east
 			}
-			if (yPos == 4 || gameBoard[xPos][yPos + 1].getClass() == Slot.class) {
+			if (yPos == 4 || board.getBoard()[xPos][yPos + 1].getClass() == Slot.class) {
 				setFoxOptionsEnabled(2, true);// west
 			}
 		}
 		if (yPos % 2 == 1) { // north and south only
-			if (xPos == 0 || gameBoard[xPos - 1][yPos].getClass() == Slot.class) {
+			if (xPos == 0 || board.getBoard()[xPos - 1][yPos].getClass() == Slot.class) {
 				setFoxOptionsEnabled(1, true);// north
 			}
-			if (xPos == 4 || gameBoard[xPos + 1][yPos].getClass() == Slot.class) {
+			if (xPos == 4 || board.getBoard()[xPos + 1][yPos].getClass() == Slot.class) {
 				setFoxOptionsEnabled(3, true);// south
 			}
 		}
@@ -147,12 +148,13 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	 * Removes a piece located at xPos and yPos
 	 */
 	public void removePiece() {
-		if (gameBoard[xPos][yPos].getClass() == Fox.class) {
-			Fox tempFox = (Fox) gameBoard[xPos][yPos];
-			gameBoard[tempFox.getTailX()][tempFox.getTailY()] = new Slot(xPos, yPos);
-			gameBoard[tempFox.getX()][tempFox.getY()] = new Slot(xPos, yPos);
-		} else if (gameBoard[xPos][yPos].getClass() == Hole.class) {
-			Slot piece = ((Hole) gameBoard[xPos][yPos]).getGamePiece();
+		if (board.getBoard()[xPos][yPos].getClass() == Fox.class) {
+			Fox tempFox = (Fox) board.getBoard()[xPos][yPos];
+			board.getBoard()[tempFox.getTailX()][tempFox.getTailY()] = new Slot(xPos, yPos);
+			board.getBoard()[tempFox.getX()][tempFox.getY()] = new Slot(xPos, yPos);
+			board.getFoxes().remove(tempFox);
+		} else if (board.getBoard()[xPos][yPos].getClass() == Hole.class) {
+			Slot piece = ((Hole) board.getBoard()[xPos][yPos]).getGamePiece();
 			if (piece.getClass() == Rabbit.class) {
 				Color rabbitColour = ((Rabbit) piece).getColor();
 				if (rabbitColour == Color.GRAY) {
@@ -162,10 +164,11 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				} else {
 					whiteExists = false;
 				}
+				board.getRabbits().remove(piece);
 			}
-			((Hole) gameBoard[xPos][yPos]).removeGamePiece();
-		} else {
-			Slot piece = gameBoard[xPos][yPos];
+			((Hole) board.getBoard()[xPos][yPos]).removeGamePiece();
+		} else if(board.getBoard()[xPos][yPos].getClass() == Rabbit.class){
+			Slot piece = board.getBoard()[xPos][yPos];
 			if (piece.getClass() == Rabbit.class) {
 				Color rabbitColour = ((Rabbit) piece).getColor();
 				if (rabbitColour == Color.GRAY) {
@@ -175,10 +178,19 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				} else {
 					whiteExists = false;
 				}
+				board.getRabbits().remove(piece);
 			}
-			gameBoard[xPos][yPos] = new Slot(xPos, yPos);
+			board.getBoard()[xPos][yPos] = new Slot(xPos, yPos);
+		} else if(board.getBoard()[xPos][yPos].getClass() == Mushroom.class){
+			
+			Slot piece = board.getBoard()[xPos][yPos];
+
+			board.getBoard()[xPos][yPos] = new Slot(xPos, yPos);
+			board.getMushrooms().remove(piece);
 		}
 		setPieceOptionsEnabled(0, false);
+		
+		
 	}
 
 	/**
@@ -194,9 +206,9 @@ public class LevelBuilder extends JPanel implements ActionListener {
 
 		disableAllButtons();
 
-		if (gameBoard[x][y].getClass() == Rabbit.class
-				|| (gameBoard[x][y].getClass() == Hole.class && ((Hole) gameBoard[x][y]).hasGamePiece())
-				|| gameBoard[x][y].getClass() == Mushroom.class || gameBoard[x][y].getClass() == Fox.class) {
+		if (board.getBoard()[x][y].getClass() == Rabbit.class
+				|| (board.getBoard()[x][y].getClass() == Hole.class && ((Hole) board.getBoard()[x][y]).hasGamePiece())
+				|| board.getBoard()[x][y].getClass() == Mushroom.class || board.getBoard()[x][y].getClass() == Fox.class) {
 			setPieceOptionsEnabled(4, true);
 		} else {
 			if (xPos >= 0 && yPos >= 0) {
@@ -224,20 +236,24 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				break;
 			case "Add Mushroom":
 				tempSlot = new Mushroom(xPos, yPos);
+				board.getMushrooms().add(tempSlot);
 				break;
 			case "Remove Piece":
 				removePiece();
 				break;
 			case "Gray":
 				tempSlot = new Rabbit(xPos, yPos, Color.GRAY);
+				board.getRabbits().add(tempSlot);
 				greyExists = true;
 				break;
 			case "Orange":
 				tempSlot = new Rabbit(xPos, yPos, Color.ORANGE);
+				board.getRabbits().add(tempSlot);
 				orangeExists = true;
 				break;
 			case "White":
 				tempSlot = new Rabbit(xPos, yPos, Color.WHITE);
+				board.getRabbits().add(tempSlot);
 				whiteExists = true;
 				break;
 			case "North":
@@ -245,32 +261,37 @@ public class LevelBuilder extends JPanel implements ActionListener {
 					xPos += 1;
 				}
 				tempSlot = new Fox(xPos - 1, yPos, xPos, yPos, Color.BLACK);
-				gameBoard[xPos - 1][yPos] = tempSlot;
+				board.getFoxes().add(tempSlot);
+//				board.getBoard()[xPos - 1][yPos] = tempSlot;
 				break;
 			case "East":
 				if (yPos == 4) {
 					yPos -= 1;
 				}
 				tempSlot = new Fox(xPos, yPos + 1, xPos, yPos, Color.BLACK);
-				gameBoard[xPos][yPos + 1] = tempSlot;
+				board.getFoxes().add(tempSlot);
+//				board.getBoard()[xPos][yPos + 1] = tempSlot;
 				break;
 			case "South":
 				if (xPos == 4) {
 					xPos -= 1;
 				}
 				tempSlot = new Fox(xPos + 1, yPos, xPos, yPos, Color.BLACK);
-				gameBoard[xPos + 1][yPos] = tempSlot;
+				board.getFoxes().add(tempSlot);
+//				board.getBoard()[xPos + 1][yPos] = tempSlot;
 				break;
 			case "West":
 				if (yPos == 0) {
 					yPos += 1;
 				}
 				tempSlot = new Fox(xPos, yPos - 1, xPos, yPos, Color.BLACK);
-				gameBoard[xPos][yPos - 1] = tempSlot;
+				board.getFoxes().add(tempSlot);
+//				board.getBoard()[xPos][yPos - 1] = tempSlot;
 				break;
 			default:
 				onBoardClick(e);
 			}
+			board.addPiecesToBoard();
 
 			if (text.equals("Gray") || text.equals("Orange") || text.equals("White") || text.equals("Add Mushroom")) {
 				if (text.equals("Add Mushroom")) {
@@ -278,14 +299,14 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				} else {
 					setRabbitOptionsEnabled(false);
 				}
-				if (gameBoard[xPos][yPos].getClass() == Hole.class && !((Hole) gameBoard[xPos][yPos]).hasGamePiece()) {
-					((Hole) gameBoard[xPos][yPos]).addGamePiece(tempSlot);
+				if (board.getBoard()[xPos][yPos].getClass() == Hole.class && !((Hole) board.getBoard()[xPos][yPos]).hasGamePiece()) {
+					((Hole) board.getBoard()[xPos][yPos]).addGamePiece(tempSlot);
 				} else {
-					gameBoard[xPos][yPos] = tempSlot;
+					board.getBoard()[xPos][yPos] = tempSlot;
 				}
 			} else if (text.equals("North") || text.equals("East") || text.equals("South") || text.equals("West")) {
 				setFoxOptionsEnabled(0, false);
-				gameBoard[xPos][yPos] = tempSlot;
+				board.getBoard()[xPos][yPos] = tempSlot;
 			}
 
 			view.levelBuilder(this);
@@ -304,7 +325,7 @@ public class LevelBuilder extends JPanel implements ActionListener {
 				resetBoard();
 				break;
 			case "Start":
-				Board board = new Board(getPieces());
+//				Board board = new Board(getPieces());
 				((Controller) view.getController()).setBoard(board);
 				((Controller) view.getController()).setScreen(2);
 				view.startLevel(board); // initialize the panel that holds the board gui
@@ -321,15 +342,15 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	 */
 	public void saveCustomBoard(String text) {
 		try {
+			board.reset();
 			int optionSave = JOptionPane.showConfirmDialog(null,
 					"Are you sure you want save the board?\nAny previously saved board setups in this save slot will be overwritten.\n",
 					"Save Board", JOptionPane.YES_NO_OPTION, JOptionPane.INFORMATION_MESSAGE,
 					new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 			if (optionSave == 0) {
 				int saveSlot = Integer.parseInt(text.substring(text.length() - 1));
-				System.out.println(saveSlot);
 				Saver boardSaver = new Saver(1);
-				boardSaver.saveToFile(new Board(getPieces()), saveSlot);
+				boardSaver.saveToFile(board, saveSlot);
 				JOptionPane.showMessageDialog(view.getFrame(), "Board saved!\nPress Start to begin playing.",
 						"Board Saved", JOptionPane.INFORMATION_MESSAGE,
 						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
@@ -346,24 +367,33 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	 * the game and save the custom board will be available.
 	 */
 	public void testSolvable() {
-		Solver solver = new Solver(new Board(getPieces()));
-		disableAllButtons();
-		if (!solver.findSolution().isEmpty() && (greyExists || orangeExists || whiteExists)) {
-			testSolveItem.setText("Start");
-			saveCustomBoard.setVisible(true);
-			for (Component boardButton : boardPanel.getComponents()) { // disable buttons to prevent further
-																		// edits
-				((JButton) boardButton).removeActionListener(this);
+		int maxSteps;
+		try {
+			maxSteps = Integer.parseInt(JOptionPane.showInputDialog(view.getFrame(), "Please insert the maximum amount of moves", "Max Moves", JOptionPane.INFORMATION_MESSAGE));
+			Solver solver = new Solver(board, maxSteps);
+			disableAllButtons();
+			if (!solver.findSolution().isEmpty() && (greyExists || orangeExists || whiteExists)) {
+				testSolveItem.setText("Start");
+				saveCustomBoard.setVisible(true);
+				for (Component boardButton : boardPanel.getComponents()) { // disable buttons to prevent further
+																			// edits
+					((JButton) boardButton).removeActionListener(this);
+				}
+				JOptionPane.showMessageDialog(view.getFrame(),
+						"The game is solvable!\nSave the board for future games by pressing Save Board and selecting a save slot",
+						"Solvable Game", JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+			} else {
+				JOptionPane.showMessageDialog(view.getFrame(),
+						"This game is not solvable, refer to the rules and add pieces so that it is and press hint again.",
+						"Unsolvable Game Error", JOptionPane.INFORMATION_MESSAGE,
+						new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
 			}
-			JOptionPane.showMessageDialog(view.getFrame(),
-					"The game is solvable!\nSave the board for future games by pressing Save Board and selecting a save slot",
-					"Solvable Game", JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
-		} else {
-			JOptionPane.showMessageDialog(view.getFrame(),
-					"This game is not solvable, refer to the rules and add pieces so that it is and press hint again.",
-					"Unsolvable Game Error", JOptionPane.INFORMATION_MESSAGE,
-					new ImageIcon(getClass().getResource("Jump In Logo.jpg")));
+			board.reset();
+		} catch(Exception e){
+			JOptionPane.showMessageDialog(view.getFrame(), "Invalid input. Input numbers only.", "Invalid input", JOptionPane.WARNING_MESSAGE);
+			System.out.println(e);
+			
 		}
 	}
 
@@ -395,16 +425,26 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	 */
 	public ArrayList<Slot> getPieces() {
 		ArrayList<Slot> pieces = new ArrayList<Slot>();
-		for (int i = 0; i < gameBoard.length; i++) {
-			for (int j = 0; j < gameBoard.length; j++) {
-				if (gameBoard[i][j].getClass() == Rabbit.class || gameBoard[i][j].getClass() == Fox.class
-						|| gameBoard[i][j].getClass() == Mushroom.class || gameBoard[i][j].getClass() == Hole.class) {
-					pieces.add(gameBoard[i][j]);
+		for (int i = 0; i < board.getBoard().length; i++) {
+			for (int j = 0; j < board.getBoard().length; j++) {
+				if (board.getBoard()[i][j].getClass() == Rabbit.class || board.getBoard()[i][j].getClass() == Fox.class
+						|| board.getBoard()[i][j].getClass() == Mushroom.class || board.getBoard()[i][j].getClass() == Hole.class) {
+					pieces.add(board.getBoard()[i][j]);
+					if(board.getBoard()[i][j].getClass() == Hole.class) {
+						Hole hole = (Hole) board.getBoard()[i][j];
+						if(hole.hasGamePiece()) {
+							pieces.add(hole.getGamePiece());
+						}
+					}
 				}
 			}
 		}
 		return pieces;
 	}
+	
+//	public Slot[][] getPieces(){
+//		return this.board.getBoard();
+//	}
 
 	/**
 	 * Resets the interactable board
@@ -412,18 +452,26 @@ public class LevelBuilder extends JPanel implements ActionListener {
 	public void resetBoard() {
 		xPos = -1;
 		yPos = -1;
-		gameBoard = new Slot[5][5];
+//		board.getBoard() = new Slot[5][5];
+		board =  new Board();
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j++) {
-				gameBoard[i][j] = new Slot(i, j);
+				board.getBoard()[i][j] = new Slot(i, j);
 			}
 		}
-		gameBoard[0][0] = new Hole(0, 0);
-		gameBoard[0][4] = new Hole(0, 4);
-		gameBoard[2][2] = new Hole(2, 2);
-		gameBoard[4][0] = new Hole(4, 0);
-		gameBoard[4][4] = new Hole(4, 4);
-
+//		board.getBoard()[0][0] = new Hole(0, 0);
+//		board.getBoard()[0][4] = new Hole(0, 4);
+//		board.getBoard()[2][2] = new Hole(2, 2);
+//		board.getBoard()[4][0] = new Hole(4, 0);
+//		board.getBoard()[4][4] = new Hole(4, 4);
+		ArrayList<Slot> holeList = board.getHoles();
+		holeList.add(new Hole(0, 0));
+		holeList.add(new Hole(0, 4));
+		holeList.add(new Hole(2, 2));
+		holeList.add(new Hole(4, 0));
+		holeList.add(new Hole(4, 4));
+		board.addPiecesToBoard();
+		
 		greyExists = false;
 		orangeExists = false;
 		whiteExists = false;

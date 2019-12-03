@@ -313,19 +313,27 @@ public class Controller implements ActionListener {
 			view.startLevel(board);
 			break;
 		case "Hint":
-			Board tempBoard = new Board(board);
-			Solver ts = new Solver(tempBoard);
-			ArrayList<Integer> moves = ts.findSolution();
-			if (!moves.isEmpty()) {
-				JOptionPane.showMessageDialog(view.getFrame(),
-						"To solve the level move the piece from coordinate " + moves.get(0) + ", " + moves.get(1)
-								+ " to coordinate " + moves.get(2) + ", " + moves.get(3),
-						"Hints", JOptionPane.INFORMATION_MESSAGE);
+			int maxSteps;
+			try {
+				maxSteps = Integer.parseInt(JOptionPane.showInputDialog(view.getFrame(), "Please insert the maximum amount of moves", "Max Moves", JOptionPane.INFORMATION_MESSAGE));
+				Board tempBoard = new Board(board);
+				Solver ts = new Solver(tempBoard, maxSteps);
+				ArrayList<Integer> moves = ts.findSolution();
+				if (!moves.isEmpty()) {
+					JOptionPane.showMessageDialog(view.getFrame(),
+							"To solve the level move the piece from coordinate " + moves.get(0) + ", " + moves.get(1)
+									+ " to coordinate " + moves.get(2) + ", " + moves.get(3),
+							"Hints", JOptionPane.INFORMATION_MESSAGE);
 
-			} else {
-				JOptionPane.showMessageDialog(view.getFrame(),
-						"This level is unsolvable. Try Undoing or returning to main menu and picking another level.",
-						"Hints", JOptionPane.INFORMATION_MESSAGE);
+				} else {
+					JOptionPane.showMessageDialog(view.getFrame(),
+							"This level is unsolvable. Try Undoing or returning to main menu and picking another level.",
+							"Hints", JOptionPane.INFORMATION_MESSAGE);
+					
+				}
+			} catch(Exception exception){
+				JOptionPane.showMessageDialog(view.getFrame(), "Invalid input. Input numbers only.", "Invalid input", JOptionPane.WARNING_MESSAGE);
+				System.out.println(exception);
 			}
 			break;
 		case "Save 1":

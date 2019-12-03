@@ -23,7 +23,7 @@ public class Board {
 	private ArrayList<Slot> holes;
 	private ActionStorage moves;
 
-	private Board() {
+	public Board() {
 		moves = new ActionStorage();
 		board = new Slot[5][5];
 		holes = new ArrayList<Slot>();
@@ -38,6 +38,7 @@ public class Board {
 			}
 		}
 	}
+	
 
 	/**
 	 * Constructor of the board, that initializes the array lists that will be
@@ -137,6 +138,7 @@ public class Board {
 	public Board(Board copy) {
 		
 		this(copy.getAllPieces());
+//		this(copy.getBoard());
 		
 		ActionStorage possMoves = copy.getMoves();
 		for (int i = 0; i < possMoves.getNumMoves(); i++) {
@@ -164,7 +166,47 @@ public class Board {
 			}
 		}
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
+		this.clearMoves();
 	}
+	
+//	public Board(Slot[][] gameBoard) {
+//		this();
+//		this.board = gameBoard;
+//		for (int i = 0; i < gameBoard.length; i++) {
+//			for (int j = 0; j < gameBoard.length; j++) {
+//				Slot slot = gameBoard[i][j];
+//				if(slot.getClass() == Hole.class) {
+//					Hole hole = (Hole) slot;
+//					holes.add(hole);
+//					if(hole.hasGamePiece()) {
+//						if(hole.hasRabbit()) {
+//							rabbits.add((Rabbit) hole.getGamePiece());
+//						}
+//						else {
+//							mushrooms.add((Mushroom) hole.getGamePiece());
+//						}
+//					}
+//				} else if(slot.getClass() == Mushroom.class) {
+//					mushrooms.add((Mushroom) slot);
+//				} else if(slot.getClass() == Rabbit.class) {
+//					rabbits.add((Rabbit) slot);
+//				} else if(slot.getClass() == Fox.class) {
+//					foxes.add((Fox) slot);
+//				}
+////				if (gameBoard[i][j].getClass() == Rabbit.class || gameBoard[i][j].getClass() == Fox.class
+////						|| gameBoard[i][j].getClass() == Mushroom.class || gameBoard[i][j].getClass() == Hole.class) {
+////					pieces.add(gameBoard[i][j]);
+////					if(gameBoard[i][j].getClass() == Hole.class) {
+////						Hole hole = (Hole) gameBoard[i][j];
+////						if(hole.hasGamePiece()) {
+////							pieces.add(hole.getGamePiece());
+////						}
+////					}
+////				}
+//			}
+//		}
+//	}
+
 
 	/**
 	 * Adds all the pieces in the array lists to the board
@@ -231,7 +273,7 @@ public class Board {
 			}
 		}
 		
-		System.out.println(occupiedHoles + " " +rabbits.size());
+		System.out.println("checkwin" + occupiedHoles + " " +rabbits.size());
 	
 		// If number of occupied holes is the same as number of rabbits on the board
 		if (occupiedHoles == rabbits.size()) {
@@ -309,6 +351,7 @@ public class Board {
 	 * undo itself to either the rabbit or fox class
 	 */
 	public void undo() {
+		System.out.println("undo");
 		int numMoves = moves.getNumMoves();
 
 		if ((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Fox.class) {
@@ -353,6 +396,7 @@ public class Board {
 	 */
 	public boolean canRedo() {
 		return (!moves.getRedox().isEmpty());
+		
 	}
 
 	/**
@@ -363,6 +407,7 @@ public class Board {
 		while (this.canUndo()) {
 			this.undo();
 		}
+		this.clearMoves();
 	}
 
 	public ArrayList<Slot> getRabbits() {

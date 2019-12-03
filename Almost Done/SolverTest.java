@@ -9,7 +9,7 @@ public class SolverTest {
 	@Test
 	public void testSolve() {
 		Board b = new Board(1);
-		Solver solver = new Solver(b);
+		Solver solver = new Solver(b,10);
 //		solver.solve(b,b.getGamePieces().get(1),new ArrayList<Integer>());
 		solver.findSolution();
 		b.reset();
@@ -22,7 +22,7 @@ public class SolverTest {
 		assertTrue(b.checkWin());
 
 		b = new Board(3);
-		Solver s2 = new Solver(b);
+		Solver s2 = new Solver(b,10);
 //		s2.solve(b,b.getGamePieces().get(1),new ArrayList<Integer>());
 		s2.findSolution();
 		b.reset();
@@ -38,7 +38,7 @@ public class SolverTest {
 	@Test
 	public void testFindSolution() {
 		Board b = new Board(1);
-		Solver solver = new Solver(b);
+		Solver solver = new Solver(b,10);
 		solver.findSolution();
 		ArrayList<Integer> solution = solver.getSol();
 		ArrayList<Integer> test = new ArrayList<Integer>();

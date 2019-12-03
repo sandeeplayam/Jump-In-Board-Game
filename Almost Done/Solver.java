@@ -14,23 +14,27 @@ public class Solver {
 	private boolean allChecked;
 	private Board check;
 	private HashMap<MovingPiece, Boolean> exceptions;
+	private int maxMoves;
 
-	public Solver(Board b) {
+	public Solver(Board b, int max) {
 		allChecked = false;
 		q = new LinkedList<ArrayList<Integer>>();
 		solution = new ArrayList<Integer>();
 		this.check = b;
 		lastPiece = Color.PINK;
 		exceptions = new HashMap<MovingPiece, Boolean>();
+		maxMoves = max;
 
 	}
 
 	// setup the board given the current attempt, add exceptions, and check if piece
 	// used as obstacle
 	public void moveSetupCheck(Board b, ArrayList<Integer> current, Slot start) {
-
+ System.out.println(current);
 		for (int z = 0; z < current.size(); z += 4) {
 
+			System.out.println(current.get(z) + " "+current.get(z+1));
+			
 			// piece moved so reset it being used as an obstacle
 			if (b.getBoard()[current.get(z)][current.get(z + 1)] instanceof Hole) {
 
@@ -152,6 +156,7 @@ public class Solver {
 
 			// setup the board using list of given moves (current), and check
 			// exceptions/obstacles
+			b.reset();
 			this.moveSetupCheck(b, current, start);
 
 			// add current list of moves to attempt being made
@@ -168,6 +173,10 @@ public class Solver {
 		while (solution.isEmpty() && !q.isEmpty()) {
 
 			System.out.println(attempt);
+			System.out.println("size "+ attempt.size()/4);
+			if(attempt.size()/4 > maxMoves) {
+				break;
+			}
 
 			if (start.getClass() == Fox.class && lastPiece.equals(((Fox) start).getColor())) {
 				// skip
