@@ -30,10 +30,7 @@ public class Solver {
 	// setup the board given the current attempt, add exceptions, and check if piece
 	// used as obstacle
 	public void moveSetupCheck(Board b, ArrayList<Integer> current, Slot start) {
- System.out.println(current);
 		for (int z = 0; z < current.size(); z += 4) {
-
-			System.out.println(current.get(z) + " "+current.get(z+1));
 			
 			// piece moved so reset it being used as an obstacle
 			if (b.getBoard()[current.get(z)][current.get(z + 1)] instanceof Hole) {
@@ -172,8 +169,6 @@ public class Solver {
 		// found
 		while (solution.isEmpty() && !q.isEmpty()) {
 
-			System.out.println(attempt);
-			System.out.println("size "+ attempt.size()/4);
 			if(attempt.size()/4 > maxMoves) {
 				break;
 			}

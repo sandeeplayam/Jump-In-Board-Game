@@ -115,9 +115,6 @@ public class Controller implements ActionListener {
 			case "Level 4":// if the button is the level 4 button
 				levelNumber = 4;
 				break;
-			case "Level 5":// if the button is the level 4 button
-				levelNumber = 5;
-				break;
 			case "Custom 1":
 				levelNumber = -1;
 				break;
@@ -132,7 +129,6 @@ public class Controller implements ActionListener {
 					if (levelNumber > 0) { // if the level 1 or 2 buttons were pressed and they set a level number
 						board = new Board(levelNumber); // initialize the board object with the level number picked
 					} else {
-						System.out.println(-levelNumber);
 						Loader gameLoader = new Loader(1);
 						board = gameLoader.parseToBoard(0 - levelNumber);
 					}
@@ -333,7 +329,6 @@ public class Controller implements ActionListener {
 				}
 			} catch(Exception exception){
 				JOptionPane.showMessageDialog(view.getFrame(), "Invalid input. Input numbers only.", "Invalid input", JOptionPane.WARNING_MESSAGE);
-				System.out.println(exception);
 			}
 			break;
 		case "Save 1":

@@ -176,7 +176,7 @@ public class Saver {
 				saves.setBoardSave3(stringBoard);
 				break;
 			}
-			saverHelper.marshal(saves, System.out);
+			
 			saverHelper.marshal(saves, new FileOutputStream(fileName));
 		}
 	}

@@ -38,7 +38,6 @@ public class Board {
 			}
 		}
 	}
-	
 
 	/**
 	 * Constructor of the board, that initializes the array lists that will be
@@ -106,28 +105,12 @@ public class Board {
 			mushrooms.add(new Mushroom(3, 2));
 			foxes.add(new Fox(1, 3, 0, 3, Color.BLACK));
 			break;
-
-		case 5:
-			rabbits.add(new Rabbit(1, 3, Color.WHITE));
-			rabbits.add(new Rabbit(2, 4, Color.ORANGE));
-			rabbits.add(new Rabbit(4, 3, Color.GRAY));
-			foxes.add(new Fox(1, 1, 1, 0, Color.RED));
-			foxes.add(new Fox(3, 1, 2, 1, Color.BLACK));
-			holes.add(new Hole(0, 0));
-			holes.add(new Hole(0, 4));
-			holes.add(new Hole(2, 2));
-			holes.add(new Hole(4, 0));
-			holes.add(new Hole(4, 4));
-			mushrooms.add(new Mushroom(0, 4));
-			mushrooms.add(new Mushroom(4, 0));
-			mushrooms.add(new Mushroom(3, 2));
-			break;
 		}
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
 	}
-	
-	public ArrayList<Slot> getAllPieces(){
-		
+
+	public ArrayList<Slot> getAllPieces() {
+
 		ArrayList<Slot> pieces = new ArrayList<Slot>(this.getFoxes());
 		pieces.addAll(this.getHoles());
 		pieces.addAll(this.getMushrooms());
@@ -136,10 +119,10 @@ public class Board {
 	}
 
 	public Board(Board copy) {
-		
+
 		this(copy.getAllPieces());
 //		this(copy.getBoard());
-		
+
 		ActionStorage possMoves = copy.getMoves();
 		for (int i = 0; i < possMoves.getNumMoves(); i++) {
 			this.move(possMoves.getX(i), possMoves.getY(i), possMoves.getX(i + 1), possMoves.getY(i + 1), 1);
@@ -168,7 +151,7 @@ public class Board {
 		this.addPiecesToBoard(); // Adds all the pieces in the arraylists to the board
 		this.clearMoves();
 	}
-	
+
 //	public Board(Slot[][] gameBoard) {
 //		this();
 //		this.board = gameBoard;
@@ -206,7 +189,6 @@ public class Board {
 //			}
 //		}
 //	}
-
 
 	/**
 	 * Adds all the pieces in the array lists to the board
@@ -272,9 +254,7 @@ public class Board {
 				occupiedHoles++;
 			}
 		}
-		
-		System.out.println("checkwin" + occupiedHoles + " " +rabbits.size());
-	
+
 		// If number of occupied holes is the same as number of rabbits on the board
 		if (occupiedHoles == rabbits.size()) {
 			return true;
@@ -351,7 +331,6 @@ public class Board {
 	 * undo itself to either the rabbit or fox class
 	 */
 	public void undo() {
-		System.out.println("undo");
 		int numMoves = moves.getNumMoves();
 
 		if ((board[moves.getX(numMoves)][moves.getY(numMoves)]).getClass() == Fox.class) {
@@ -396,7 +375,7 @@ public class Board {
 	 */
 	public boolean canRedo() {
 		return (!moves.getRedox().isEmpty());
-		
+
 	}
 
 	/**

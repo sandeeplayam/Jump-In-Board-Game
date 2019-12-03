@@ -215,10 +215,6 @@ public class View {
 		JButton level4 = new JButton("Level 4");
 		level4.setFont(new Font("Tahoma", Font.PLAIN, 20));
 		premadeLevels.add(level4);
-		JButton level5 = new JButton("Level 5");
-		level5.setFont(new Font("Tahoma", Font.PLAIN, 20));
-		premadeLevels.add(level5);
-
 		// Creates 3 buttons for the three custom levels the user has made
 		JButton customLevel1 = new JButton("Custom 1");
 		customLevel1.setFont(new Font("Tahoma", Font.PLAIN, 20));
@@ -262,7 +258,6 @@ public class View {
 		level2.addActionListener(controller);
 		level3.addActionListener(controller);
 		level4.addActionListener(controller);
-		level5.addActionListener(controller);
 		customLevel1.addActionListener(controller);
 		customLevel2.addActionListener(controller);
 		customLevel3.addActionListener(controller);
