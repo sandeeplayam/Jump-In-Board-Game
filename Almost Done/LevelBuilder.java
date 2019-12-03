@@ -392,7 +392,6 @@ public class LevelBuilder extends JPanel implements ActionListener {
 			board.reset();
 		} catch(Exception e){
 			JOptionPane.showMessageDialog(view.getFrame(), "Invalid input. Input numbers only.", "Invalid input", JOptionPane.WARNING_MESSAGE);
-			System.out.println(e);
 			
 		}
 	}
